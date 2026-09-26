@@ -1,0 +1,343 @@
+[
+  {
+    "titulo": "Página inicial",
+    "url": "https://www.smir14.com.br/",
+    "caminho": "/",
+    "filhos": []
+  },
+  {
+    "titulo": "Download",
+    "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/",
+    "caminho": "/publicações/",
+    "filhos": [
+      {
+        "titulo": "Mártires do Século XX",
+        "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/livros/",
+        "caminho": "/publicações/livros/",
+        "filhos": []
+      },
+      {
+        "titulo": "Folhetos",
+        "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/folhetos/",
+        "caminho": "/publicações/folhetos/",
+        "filhos": [
+          {
+            "titulo": "O Retorno Mais Esperado",
+            "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/folhetos/o-retorno-mais-esperado/",
+            "caminho": "/publicações/folhetos/o-retorno-mais-esperado/",
+            "filhos": []
+          },
+          {
+            "titulo": "Importa a Diferença",
+            "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/folhetos/importa-a-diferenca/",
+            "caminho": "/publicações/folhetos/importa-a-diferenca/",
+            "filhos": []
+          },
+          {
+            "titulo": "24 Razões para Guardar o Sábado",
+            "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/folhetos/a24-razoes-para-guardar-o-sabado/",
+            "caminho": "/publicações/folhetos/a24-razoes-para-guardar-o-sabado/",
+            "filhos": []
+          },
+          {
+            "titulo": "Vida Depois da Morte?",
+            "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/folhetos/vida-depois-da-morte/",
+            "caminho": "/publicações/folhetos/vida-depois-da-morte/",
+            "filhos": []
+          },
+          {
+            "titulo": "Estenda Sua Mão",
+            "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/folhetos/estenda-sua-mao/",
+            "caminho": "/publicações/folhetos/estenda-sua-mao/",
+            "filhos": []
+          }
+        ]
+      },
+      {
+        "titulo": "Semana da Mordomia Cristã",
+        "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/semana-da-mordomia-crist%C3%A3/",
+        "caminho": "/publicações/semana-da-mordomia-cristã/",
+        "filhos": []
+      },
+      {
+        "titulo": "Semana de Oração",
+        "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/semana-de-ora%C3%A7%C3%A3o/",
+        "caminho": "/publicações/semana-de-oração/",
+        "filhos": []
+      },
+      {
+        "titulo": "Semana do Calvário",
+        "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/semana-do-calvario/",
+        "caminho": "/publicações/semana-do-calvario/",
+        "filhos": []
+      },
+      {
+        "titulo": "Semana Juvenil",
+        "url": "https://www.smir14.com.br/publica%C3%A7%C3%B5es/semana-juvenil/",
+        "caminho": "/publicações/semana-juvenil/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Transmissões ao Vivo",
+    "url": "https://www.smir14.com.br/videos-/",
+    "caminho": "/videos-/",
+    "filhos": []
+  },
+  {
+    "titulo": "Departamentos",
+    "url": "https://www.smir14.com.br/departamento/",
+    "caminho": "/departamento/",
+    "filhos": [
+      {
+        "titulo": "EVANGELISMO",
+        "url": "https://www.smir14.com.br/departamento/evangelismo/",
+        "caminho": "/departamento/evangelismo/",
+        "filhos": []
+      },
+      {
+        "titulo": "Saúde",
+        "url": "https://www.smir14.com.br/departamento/saude/",
+        "caminho": "/departamento/saude/",
+        "filhos": [
+          {
+            "titulo": "Materiais",
+            "url": "https://www.smir14.com.br/departamento/saude/materiais/",
+            "caminho": "/departamento/saude/materiais/",
+            "filhos": []
+          }
+        ]
+      },
+      {
+        "titulo": "Jovens",
+        "url": "https://www.smir14.com.br/departamento/jovens/",
+        "caminho": "/departamento/jovens/",
+        "filhos": [
+          {
+            "titulo": "Semana da Juventude",
+            "url": "https://www.smir14.com.br/departamento/jovens/semana-da-juventude/",
+            "caminho": "/departamento/jovens/semana-da-juventude/",
+            "filhos": []
+          }
+        ]
+      },
+      {
+        "titulo": "Escola Sabatina",
+        "url": "https://www.smir14.com.br/departamento/escola-sabatina/",
+        "caminho": "/departamento/escola-sabatina/",
+        "filhos": []
+      },
+      {
+        "titulo": "Secretária",
+        "url": "https://www.smir14.com.br/departamento/secretaria/",
+        "caminho": "/departamento/secretaria/",
+        "filhos": []
+      },
+      {
+        "titulo": "Família",
+        "url": "https://www.smir14.com.br/departamento/familia/",
+        "caminho": "/departamento/familia/",
+        "filhos": []
+      },
+      {
+        "titulo": "Bom Samaritano",
+        "url": "https://www.smir14.com.br/departamento/bom-samaritano/",
+        "caminho": "/departamento/bom-samaritano/",
+        "filhos": []
+      },
+      {
+        "titulo": "Educação",
+        "url": "https://www.smir14.com.br/departamento/educa%C3%A7%C3%A3o/",
+        "caminho": "/departamento/educação/",
+        "filhos": []
+      },
+      {
+        "titulo": "Literário",
+        "url": "https://www.smir14.com.br/departamento/literario/",
+        "caminho": "/departamento/literario/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Doutrinas",
+    "url": "https://www.smir14.com.br/doutrinas/",
+    "caminho": "/doutrinas/",
+    "filhos": [
+      {
+        "titulo": "Princípios de Fé",
+        "url": "https://www.smir14.com.br/doutrinas/principios-de-fe/",
+        "caminho": "/doutrinas/principios-de-fe/",
+        "filhos": []
+      },
+      {
+        "titulo": "Manual de Igreja",
+        "url": "https://www.smir14.com.br/doutrinas/manual-de-igreja/",
+        "caminho": "/doutrinas/manual-de-igreja/",
+        "filhos": []
+      },
+      {
+        "titulo": "Manual de Normas e Funções",
+        "url": "https://www.smir14.com.br/doutrinas/manual-de-normas-e-fun%C3%A7%C3%B5es/",
+        "caminho": "/doutrinas/manual-de-normas-e-funções/",
+        "filhos": []
+      },
+      {
+        "titulo": "Evangelismo e liturgia",
+        "url": "https://www.smir14.com.br/doutrinas/evangelismo-e-liturgia/",
+        "caminho": "/doutrinas/evangelismo-e-liturgia/",
+        "filhos": []
+      },
+      {
+        "titulo": "Renovação de Nossa Fidelidade",
+        "url": "https://www.smir14.com.br/doutrinas/renova%C3%A7%C3%A3o-de-nossa-fidelidade/",
+        "caminho": "/doutrinas/renovação-de-nossa-fidelidade/",
+        "filhos": []
+      },
+      {
+        "titulo": "Laodicéia",
+        "url": "https://www.smir14.com.br/doutrinas/laodiceia/",
+        "caminho": "/doutrinas/laodiceia/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Nossa História",
+    "url": "https://www.smir14.com.br/nossa-historia/",
+    "caminho": "/nossa-historia/",
+    "filhos": []
+  },
+  {
+    "titulo": "Contatos",
+    "url": "https://www.smir14.com.br/contatos/",
+    "caminho": "/contatos/",
+    "filhos": [
+      {
+        "titulo": "São Paulo",
+        "url": "https://www.smir14.com.br/contatos/s%C3%A3o-paulo/",
+        "caminho": "/contatos/são-paulo/",
+        "filhos": []
+      },
+      {
+        "titulo": "Rio de Janeiro",
+        "url": "https://www.smir14.com.br/contatos/rio-de-janeiro/",
+        "caminho": "/contatos/rio-de-janeiro/",
+        "filhos": []
+      },
+      {
+        "titulo": "Belo Horizonte",
+        "url": "https://www.smir14.com.br/contatos/belo-horizonte/",
+        "caminho": "/contatos/belo-horizonte/",
+        "filhos": []
+      },
+      {
+        "titulo": "Bahia",
+        "url": "https://www.smir14.com.br/contatos/bahia/",
+        "caminho": "/contatos/bahia/",
+        "filhos": []
+      },
+      {
+        "titulo": "Amazonas",
+        "url": "https://www.smir14.com.br/contatos/amazonas/",
+        "caminho": "/contatos/amazonas/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Radio SmidiaWeb 24hs",
+    "url": "https://www.smir14.com.br/radio-smidiaweb-24hs/",
+    "caminho": "/radio-smidiaweb-24hs/",
+    "filhos": []
+  },
+  {
+    "titulo": "Diversos",
+    "url": "https://www.smir14.com.br/diversos2/",
+    "caminho": "/diversos2/",
+    "filhos": [
+      {
+        "titulo": "Diversos",
+        "url": "https://www.smir14.com.br/diversos/",
+        "caminho": "/diversos/",
+        "filhos": [
+          {
+            "titulo": "Sermões",
+            "url": "https://www.smir14.com.br/diversos/serm%C3%B5es/",
+            "caminho": "/diversos/sermões/",
+            "filhos": [
+              {
+                "titulo": "Cristo e o Natal",
+                "url": "https://www.smir14.com.br/diversos/serm%C3%B5es/cristo-e-o-natal/",
+                "caminho": "/diversos/sermões/cristo-e-o-natal/",
+                "filhos": []
+              },
+              {
+                "titulo": "A Oração de Jabez",
+                "url": "https://www.smir14.com.br/diversos/serm%C3%B5es/a-ora%C3%A7%C3%A3o-de-jabez/",
+                "caminho": "/diversos/sermões/a-oração-de-jabez/",
+                "filhos": []
+              },
+              {
+                "titulo": "Como o Senhor da Vida dá Vida?",
+                "url": "https://www.smir14.com.br/diversos/serm%C3%B5es/como-o-senhor-da-vida-da-vida-/",
+                "caminho": "/diversos/sermões/como-o-senhor-da-vida-da-vida-/",
+                "filhos": []
+              },
+              {
+                "titulo": "Pr. Adalicio",
+                "url": "https://www.smir14.com.br/diversos/serm%C3%B5es/pr-adalicio/",
+                "caminho": "/diversos/sermões/pr-adalicio/",
+                "filhos": []
+              }
+            ]
+          },
+          {
+            "titulo": "Bíblia Online",
+            "url": "https://www.smir14.com.br/diversos/biblia-online/",
+            "caminho": "/diversos/biblia-online/",
+            "filhos": []
+          },
+          {
+            "titulo": "Estatuto",
+            "url": "https://www.smir14.com.br/diversos/estatuto/",
+            "caminho": "/diversos/estatuto/",
+            "filhos": []
+          },
+          {
+            "titulo": "Nossa História",
+            "url": "https://www.smir14.com.br/diversos/nossa-historia/",
+            "caminho": "/diversos/nossa-historia/",
+            "filhos": [
+              {
+                "titulo": "Histórico",
+                "url": "https://www.smir14.com.br/diversos/nossa-historia/historico-/",
+                "caminho": "/diversos/nossa-historia/historico-/",
+                "filhos": []
+              }
+            ]
+          },
+          {
+            "titulo": "Contato",
+            "url": "https://www.smir14.com.br/diversos/contato/",
+            "caminho": "/diversos/contato/",
+            "filhos": []
+          },
+          {
+            "titulo": "Testemunhos ELLEN G.WHITE",
+            "url": "https://www.smir14.com.br/diversos/testemunhos-ellen-g-white/",
+            "caminho": "/diversos/testemunhos-ellen-g-white/",
+            "filhos": []
+          },
+          {
+            "titulo": "Protocolo",
+            "url": "https://www.smir14.com.br/diversos/protocolo-/",
+            "caminho": "/diversos/protocolo-/",
+            "filhos": []
+          }
+        ]
+      }
+    ]
+  }
+]
