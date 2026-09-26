@@ -3,7 +3,10 @@
 //
 // Estados (controlados pelos atributos data-* e pelo script no fim do arquivo):
 //  - data-sobre-arte="true": transparente por cima da faixa azul com arte, texto e logo brancos
-//  - data-esconder-logo="true": só na página inicial, onde o topo já mostra o logo grande
+//  - data-esconder-logo="true": só na página inicial, onde a intro já mostra o logo grande.
+//    O logo do menu só aparece quando a intro sai INTEIRA da tela (data-intro-visivel="false"),
+//    descendo para dentro da barra; some de novo ao voltar para a intro. Ele nunca fica
+//    transparente nem deformado (manual, seção 5): só desliza, 100% opaco.
 //  - data-rolado="true": a página rolou; ganha fundo azul, texto e logo brancos
 // O logo nunca é animado nem fica transparente (manual, seção 5): ele só troca de versão
 // (azul/branca) instantaneamente.
@@ -24,6 +27,7 @@ const { atual, sobreArte = false, esconderLogoNoTopo = false } = Astro.props;
   id="cabecalho"
   data-sobre-arte={sobreArte ? "true" : "false"}
   data-esconder-logo={esconderLogoNoTopo ? "true" : "false"}
+  data-intro-visivel={esconderLogoNoTopo ? "true" : "false"}
   data-rolado="false"
   class:list={[
     "group/cab inset-x-0 top-0 z-30 text-azul transition-[background-color,box-shadow] duration-300",
@@ -33,11 +37,7 @@ const { atual, sobreArte = false, esconderLogoNoTopo = false } = Astro.props;
 >
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-8">
     <!-- logo com área de segurança (margem livre em volta) -->
-    <a
-      href="/"
-      class="shrink-0 p-1.5 group-data-[esconder-logo=true]/cab:group-data-[rolado=false]/cab:invisible"
-      aria-label={`${NOME_DO_SITE} — página inicial`}
-    >
+    <a href="/" class="logo-cabecalho shrink-0 overflow-hidden p-1.5" aria-label={`${NOME_DO_SITE} — página inicial`}>
       <img
         src="/marca/smi-horizontal-azul.svg"
         alt=""
@@ -125,6 +125,12 @@ const { atual, sobreArte = false, esconderLogoNoTopo = false } = Astro.props;
   const atualizarRolagem = () => (cabecalho.dataset.rolado = String(window.scrollY > 12));
   atualizarRolagem();
   window.addEventListener("scroll", atualizarRolagem, { passive: true });
+
+  // Página inicial: o logo do menu só aparece quando a intro sai inteira da tela
+  const intro = document.querySelector("[data-intro]");
+  if (intro && cabecalho.dataset.esconderLogo === "true") {
+    new IntersectionObserver(([e]) => (cabecalho.dataset.introVisivel = String(e.isIntersecting))).observe(intro);
+  }
 
   const painel = document.getElementById("menu-celular")!;
   const abrir = document.getElementById("abrir-menu")!;

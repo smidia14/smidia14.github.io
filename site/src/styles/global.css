@@ -553,3 +553,150 @@ html {
 #topo {
   scroll-margin-top: 0;
 }
+
+/* ==========================================================================
+   PÁGINA INICIAL — seções abaixo da intro (src/pages/index.astro)
+   ========================================================================== */
+
+/* Acesso rápido: cartões brancos sobre o cinza com a Trama 2 */
+.cartao-acesso {
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+  justify-content: space-between;
+  border-radius: 1.25rem;
+  background: var(--color-branco);
+  padding: 1.25rem 1.25rem 1.1rem;
+  box-shadow:
+    0 1px 2px rgb(14 58 96 / 0.05),
+    0 10px 28px -20px rgb(14 58 96 / 0.3);
+  outline: 1px solid rgb(21 77 125 / 0.06);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease,
+    outline-color 0.3s ease;
+}
+.cartao-acesso:hover {
+  transform: translateY(-4px);
+  outline-color: var(--color-dourado);
+  box-shadow:
+    0 1px 2px rgb(14 58 96 / 0.05),
+    0 18px 36px -18px rgb(14 58 96 / 0.4);
+}
+@media (min-width: 640px) {
+  .cartao-acesso {
+    padding: 1.6rem 1.5rem 1.4rem;
+  }
+}
+
+/* Capas de literatura: no celular, faixa horizontal que desliza (com "encaixe");
+   no computador, uma fileira que quebra em linhas */
+.faixa-capas {
+  display: flex;
+  gap: 1.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding: 0.5rem 1.25rem 1.25rem;
+  margin: 0 -1.25rem; /* a faixa vai até a borda da tela no celular */
+  scrollbar-width: thin;
+}
+.faixa-capas > li {
+  flex: 0 0 auto;
+  width: min(62vw, 13.5rem);
+  scroll-snap-align: start;
+}
+@media (min-width: 768px) {
+  .faixa-capas {
+    flex-wrap: wrap;
+    overflow: visible;
+    gap: 2rem;
+    padding: 0.5rem 0 0;
+    margin: 0;
+  }
+  .faixa-capas > li {
+    width: 12.5rem;
+  }
+}
+@media (min-width: 1280px) {
+  .faixa-capas > li {
+    width: 13.5rem;
+  }
+}
+.capa {
+  display: block;
+}
+.capa-imagem {
+  display: flex;
+  aspect-ratio: 3 / 4;
+  align-items: flex-end;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: var(--color-cinza);
+  box-shadow: 0 12px 26px -18px rgb(14 58 96 / 0.45);
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease;
+}
+.capa-imagem img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+.capa:hover .capa-imagem,
+.capa:focus-visible .capa-imagem {
+  transform: translateY(-6px) rotate(-0.6deg);
+  box-shadow: 0 24px 40px -22px rgb(14 58 96 / 0.6);
+}
+
+/* Departamentos: cartões com imagem */
+.cartao-departamento {
+  display: block;
+  overflow: hidden;
+  border-radius: 1.1rem;
+  background: var(--color-branco);
+  box-shadow:
+    0 1px 2px rgb(14 58 96 / 0.05),
+    0 10px 28px -20px rgb(14 58 96 / 0.3);
+  transition:
+    transform 0.3s ease,
+    box-shadow 0.3s ease;
+}
+.cartao-departamento:hover {
+  transform: translateY(-4px);
+  box-shadow:
+    0 1px 2px rgb(14 58 96 / 0.05),
+    0 18px 36px -18px rgb(14 58 96 / 0.4);
+}
+
+/* Sem animações de passar o mouse para quem pediu "reduzir movimento" */
+@media (prefers-reduced-motion: reduce) {
+  .cartao-acesso,
+  .cartao-acesso:hover,
+  .capa-imagem,
+  .capa:hover .capa-imagem,
+  .cartao-departamento,
+  .cartao-departamento:hover {
+    transition: none;
+    transform: none;
+  }
+}
+
+/* Logo do menu na página inicial: escondido enquanto a intro aparece na tela; quando ela
+   sai inteira, o logo desce para dentro da barra (sem transparência, sem deformar). */
+.logo-cabecalho > img {
+  transition: transform 0.45s cubic-bezier(0.2, 0.7, 0.1, 1);
+}
+[data-esconder-logo="true"][data-intro-visivel="true"] .logo-cabecalho > img {
+  transform: translateY(-160%);
+  visibility: hidden;
+  transition:
+    transform 0.3s ease-in,
+    visibility 0s linear 0.3s;
+}
+@media (prefers-reduced-motion: reduce) {
+  .logo-cabecalho > img,
+  [data-esconder-logo="true"][data-intro-visivel="true"] .logo-cabecalho > img {
+    transition: none;
+  }
+}

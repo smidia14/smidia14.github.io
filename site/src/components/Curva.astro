@@ -1,0 +1,22 @@
+---
+// Transição suave entre duas seções: a cor de cima "escorre" num arco assimétrico
+// (lembra as curvas do símbolo) sobre a cor de baixo, em vez de um corte reto.
+interface Props {
+  de: string; // cor da seção de cima (nome da cor do tema: "azul", "cinza", "branco")
+  para: string; // cor da seção de baixo
+  espelhar?: boolean; // inverte o sentido do arco (para alternar entre as seções)
+}
+const { de, para, espelhar = false } = Astro.props;
+---
+
+<div aria-hidden="true" class="-mb-px block leading-none" style={`background: var(--color-${para})`}>
+  <svg
+    viewBox="0 0 1440 90"
+    preserveAspectRatio="none"
+    overflow="visible"
+    class:list={["block h-[clamp(2.25rem,5.5vw,5rem)] w-full", espelhar && "-scale-x-100"]}
+  >
+    <!-- começa um pouco acima da borda (y = -4) para não sobrar um fio da outra cor -->
+    <path d="M0 -4H1440V6C1180 78 780 96 420 70C250 58 110 38 0 20Z" fill={`var(--color-${de})`}></path>
+  </svg>
+</div>

@@ -1,24 +1,45 @@
 ---
-// Página inicial: topo com degradê corporativo + arte dos arcos, logo branco e título
-// parados por cima; depois, atalhos para as seções (com a Trama 2) e o conteúdo do site antigo.
-import { getEntry, render } from "astro:content";
+// Página inicial.
+//  1. Intro: degradê corporativo + arte dos arcos, logo branco e título por cima.
+//  2. Abaixo dela, seções alternando fundos (cinza · branco · azul · cinza), ligadas por
+//     curvas suaves. O conteúdo vem de src/data/inicio.json, copiado da página inicial do
+//     site antigo (nenhum texto foi inventado).
+import { getEntry } from "astro:content";
 import Base from "../layouts/Base.astro";
 import ArteTopo from "../components/ArteTopo.astro";
-import { menu } from "../lib/menu";
+import Curva from "../components/Curva.astro";
+import { menu, type ItemMenu } from "../lib/menu";
 import { NOME_DO_SITE } from "../lib/site";
+import inicioDados from "../data/inicio.json";
 
 const inicio = await getEntry("paginas", "inicio");
 if (!inicio) throw new Error("Página inicial não encontrada. Rode: npm run importar");
-const { Content } = await render(inicio);
-const coluna = await getEntry("blocos", "coluna-esquerda");
-const { Content: Coluna } = coluna ? await render(coluna) : { Content: null };
-const secoes = menu.filter((item) => item.href !== "/");
+
+// Acesso rápido: nomes vindos do menu (se o menu mudar de nome, o cartão acompanha)
+const todosDoMenu: ItemMenu[] = [];
+const juntar = (itens: ItemMenu[]) => itens.forEach((i) => (todosDoMenu.push(i), juntar(i.filhos)));
+juntar(menu);
+const acesso = inicioDados.acessoRapido
+  .map((href) => todosDoMenu.find((i) => i.href === href))
+  .filter((i): i is ItemMenu => Boolean(i));
+
+// Ícones de linha simples (traço fino, sem preenchimento) para o acesso rápido
+const icones: Record<string, string> = {
+  "/doutrinas/": "M5 5.5A2.5 2.5 0 0 1 7.5 3H19v15H7.5A2.5 2.5 0 0 0 5 20.5v-15ZM5 20.5A2.5 2.5 0 0 0 7.5 23H19M9 7.5h6",
+  "/download/": "M12 3v12m0 0-4.5-4.5M12 15l4.5-4.5M4.5 17.5V20a1 1 0 0 0 1 1h13a1 1 0 0 0 1-1v-2.5",
+  "/departamentos/":
+    "M8.5 10a3 3 0 1 0 0-6 3 3 0 0 0 0 6Zm7.5 1a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5ZM3 20c0-3 2.5-5.5 5.5-5.5S14 17 14 20M14.5 14.6c.5-.1 1-.1 1.5-.1 2.8 0 5 2.2 5 5",
+  "/transmissoes-ao-vivo/": "M3.5 6.5h17v11h-17zM10 9.5v5l4.5-2.5L10 9.5ZM7.5 21h9",
+  "/contatos/": "M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
+};
+const externo = (link: string) => /^https?:/.test(link);
+const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1] ?? "";
 ---
 
-<Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo>
+<Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo rodapeColado>
   <!-- Topo ocupando a tela: degradê corporativo + arte dos arcos; menu transparente por cima.
        O logo NÃO tem animação (manual, seção 5). O título entra suavemente ao abrir a página. -->
-  <section class="degrade-corporativo relative flex h-svh min-h-[36rem] items-center overflow-hidden text-branco">
+  <section data-intro class="degrade-corporativo relative flex h-svh min-h-[36rem] items-center overflow-hidden text-branco">
     <ArteTopo modo="forte" class="absolute inset-0 h-full w-full" />
     <div class="relative mx-auto w-full max-w-7xl px-5 pt-16 sm:px-8">
       <!-- Versão do título, escolhida pelo endereço: ?titulo=1 (padrão), ?titulo=2 ou ?titulo=3.
@@ -67,33 +88,174 @@ const secoes = menu.filter((item) => item.href !== "/");
     </div>
   </section>
 
-  <!-- Atalhos para as seções do menu, sobre a Trama 2 (textura suave dos arcos) -->
-  <nav aria-label="Seções do site" class="trama bg-cinza py-14 sm:py-20">
-    <ul class="mx-auto grid max-w-7xl px-5 sm:grid-cols-2 sm:px-8 lg:grid-cols-4">
+  <!-- ============ 2. ACESSO RÁPIDO — fundo cinza com a Trama 2 ============ -->
+  <section aria-label="Acesso rápido" class="trama bg-cinza">
+    <Curva de="azul" para="cinza" />
+    <div class="mx-auto max-w-7xl px-5 pt-10 pb-20 sm:px-8 sm:pt-12 sm:pb-24">
+      <ul class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
+        {
+          acesso.map((item, i) => (
+            <li
+              class:list={["surgir", i === acesso.length - 1 && acesso.length % 2 === 1 && "col-span-2 md:col-span-1"]}
+              style={`transition-delay:${i * 70}ms`}
+            >
+              <a href={item.href} class="cartao-acesso group">
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="1.4"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  class="size-8 text-azul sm:size-9"
+                  aria-hidden="true"
+                >
+                  <path d={icones[item.href]} />
+                </svg>
+                <span class="mt-5 flex items-end justify-between gap-3 font-titulo text-lg leading-tight font-medium text-azul sm:text-xl">
+                  {item.titulo}
+                  <span aria-hidden="true" class="text-verde transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+  </section>
+
+  <!-- ============ 3. LITERATURAS e LIVROS DIVERSOS — fundo branco ============ -->
+  <section class="bg-branco">
+    <Curva de="cinza" para="branco" espelhar />
+    <div class="mx-auto max-w-7xl px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-28">
       {
-        secoes.map((item) => (
-          <li class="surgir border-b border-azul/15">
-            <a href={item.href} class="group flex h-full items-center justify-between gap-4 py-6 pr-6 font-titulo text-xl font-medium text-azul hover:text-azul-escuro sm:text-2xl">
-              {item.titulo}
-              <span aria-hidden="true" class="text-verde transition-transform group-hover:translate-x-1">
-                →
-              </span>
-            </a>
-          </li>
+        [inicioDados.literaturas, inicioDados.livrosDiversos].map((grupo, g) => (
+          <div class:list={[g > 0 && "mt-16 sm:mt-20"]}>
+            <h2
+              class:list={[
+                "surgir titulo-com-arco font-titulo font-medium text-azul",
+                g === 0 ? "text-3xl sm:text-5xl" : "text-2xl sm:text-3xl",
+              ]}
+            >
+              {grupo.titulo}
+            </h2>
+            <!-- no celular: faixa horizontal que desliza; no computador: fileira de capas -->
+            <ul class="faixa-capas mt-8">
+              {grupo.capas.map((capa, i) => (
+                <li class="surgir" style={`transition-delay:${i * 90}ms`}>
+                  <a
+                    href={capa.link}
+                    class="capa group"
+                    target={externo(capa.link) ? "_blank" : undefined}
+                    rel={externo(capa.link) ? "noopener" : undefined}
+                  >
+                    <span class="capa-imagem">
+                      <img src={capa.imagem} alt="" loading="lazy" decoding="async" />
+                    </span>
+                    <span class="mt-4 block font-informativo text-[0.95rem] leading-snug font-semibold text-texto group-hover:text-azul">
+                      {capa.legenda}
+                    </span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          </div>
         ))
       }
-    </ul>
-  </nav>
+    </div>
+  </section>
 
-  <article class="surgir texto prose prose-lg mx-auto mt-20 max-w-4xl px-5 text-center sm:px-8">
-    <Content />
-  </article>
+  <!-- ============ 4. TRANSMISSÕES e RÁDIO — seção de destaque em azul ============ -->
+  <section class="relative bg-azul text-branco">
+    <Curva de="branco" para="azul" />
+    <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-24 lg:grid-cols-2 lg:gap-16">
+      <div class="surgir">
+        <h2 class="titulo-com-arco font-titulo text-3xl leading-tight font-medium text-balance sm:text-5xl">
+          {inicioDados.transmissoes.titulo}
+        </h2>
+        <a
+          href={inicioDados.transmissoes.link}
+          target="_blank"
+          rel="noopener"
+          class="mt-8 block overflow-hidden rounded-2xl ring-1 ring-branco/15 transition-transform duration-300 hover:-translate-y-1"
+        >
+          <img src={inicioDados.transmissoes.imagem} alt="Canal do YouTube" loading="lazy" decoding="async" class="block h-auto w-full" />
+        </a>
+      </div>
+      <div class="surgir" style="transition-delay:120ms">
+        <h3 class="font-titulo text-2xl font-medium text-azul-claro">{inicioDados.transmissoes.radio.titulo}</h3>
+        <!-- prévia leve: mostra a miniatura do vídeo; o player do YouTube só carrega ao clicar -->
+        <div class="video-previa mt-5 aspect-video overflow-hidden rounded-2xl bg-azul-escuro ring-1 ring-branco/15">
+          <button
+            type="button"
+            class="group relative block h-full w-full"
+            data-video={inicioDados.transmissoes.radio.video}
+            aria-label={`Reproduzir vídeo: ${inicioDados.transmissoes.radio.titulo}`}
+          >
+            <img
+              src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
+              alt=""
+              loading="lazy"
+              decoding="async"
+              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
+            />
+            <span class="absolute inset-0 grid place-items-center bg-azul-escuro/25">
+              <span class="grid size-16 place-items-center rounded-full bg-branco text-azul shadow-lg ring-4 ring-dourado/60 transition-transform group-hover:scale-110 sm:size-20">
+                <svg viewBox="0 0 24 24" class="ml-1 size-7 sm:size-8" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" /></svg>
+              </span>
+            </span>
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
 
-  {
-    Coluna && (
-      <aside class="surgir texto prose mx-auto mt-16 max-w-4xl px-5 text-center sm:px-8">
-        <Coluna />
-      </aside>
-    )
-  }
+  <!-- ============ 5. DEPARTAMENTOS — fundo cinza ============ -->
+  <section class="bg-cinza">
+    <Curva de="azul" para="cinza" espelhar />
+    <div class="mx-auto max-w-7xl px-5 pt-10 pb-16 sm:px-8 sm:pt-14 sm:pb-24">
+      <h2 class="surgir titulo-com-arco font-titulo text-3xl font-medium text-azul sm:text-5xl">
+        {inicioDados.departamentos.titulo}
+      </h2>
+      <ul class="mt-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+        {
+          inicioDados.departamentos.itens.map((dep, i) => (
+            <li class="surgir" style={`transition-delay:${(i % 4) * 70}ms`}>
+              <a href={dep.link} class="cartao-departamento group">
+                <span class="block aspect-[4/3] overflow-hidden bg-branco">
+                  <img
+                    src={dep.imagem}
+                    alt=""
+                    loading="lazy"
+                    decoding="async"
+                    class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                </span>
+                <span class="flex items-center justify-between gap-2 px-4 py-3.5 font-informativo text-[0.95rem] font-bold text-azul sm:text-base">
+                  {dep.nome}
+                  <span aria-hidden="true" class="text-verde transition-transform group-hover:translate-x-1">→</span>
+                </span>
+              </a>
+            </li>
+          ))
+        }
+      </ul>
+    </div>
+    <Curva de="cinza" para="azul" />
+  </section>
 </Base>
+
+<script>
+  // Prévia do vídeo: ao clicar, troca a miniatura pelo player do YouTube (já tocando)
+  document.querySelectorAll<HTMLButtonElement>(".video-previa [data-video]").forEach((botao) => {
+    botao.addEventListener("click", () => {
+      const quadro = document.createElement("iframe");
+      quadro.src = botao.dataset.video + (botao.dataset.video!.includes("?") ? "&" : "?") + "autoplay=1";
+      quadro.title = botao.getAttribute("aria-label") ?? "Vídeo";
+      quadro.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
+      quadro.allowFullscreen = true;
+      quadro.className = "h-full w-full border-0";
+      botao.replaceWith(quadro);
+    });
+  });
+</script>
