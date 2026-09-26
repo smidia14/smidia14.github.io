@@ -1,7 +1,15 @@
 /* ==========================================================================
    TEMA DO SITE — cores e fontes em um só lugar
-   Para trocar pela identidade da igreja, mude só os valores abaixo.
-   Cores: use o formato #RRGGBB. Depois de salvar, o site atualiza sozinho.
+   Paleta PROVISÓRIA: azul escuro, azul bebê, branco e dourado.
+   Para trocar pela identidade oficial, mude só os códigos #RRGGBB abaixo.
+   A arte animada do topo usa estas mesmas cores.
+
+   Contraste de leitura (mínimo recomendado para texto: 4,5 : 1):
+     texto sobre fundo ........ 16,5 : 1      suave sobre fundo ........ 6,9 : 1
+     link sobre fundo ......... 7,5 : 1       dourado-texto sobre fundo  5,3 : 1
+     claro sobre principal .... 13,2 : 1      dourado sobre principal-escuro 7,2 : 1
+   ATENÇÃO: o dourado puro sobre branco tem só 2,4 : 1 — use-o para linhas,
+   detalhes e botões (com texto azul escuro), nunca para texto sobre branco.
    ========================================================================== */
 
 /* ---- Fontes (instaladas no projeto, não dependem da internet) ----
@@ -15,17 +23,21 @@
   --font-titulo: "Fraunces Variable", Georgia, serif; /* títulos grandes */
   --font-texto: "Inter Variable", system-ui, sans-serif; /* textos e menu */
 
-  /* Cores principais */
-  --color-fundo: #fafaf7; /* fundo das páginas */
-  --color-superficie: #ffffff; /* caixas e menus abertos */
-  --color-texto: #1c1c22; /* texto principal */
-  --color-suave: #6b6b76; /* textos secundários, legendas */
-  --color-linha: #e6e4de; /* linhas finas e bordas */
-  --color-destaque: #3d3fb8; /* links e botões */
-  --color-destaque-escuro: #2a2c8a; /* link ao passar o mouse */
+  /* Cores da identidade */
+  --color-principal: #12305a; /* azul escuro: cor principal */
+  --color-principal-escuro: #0a1b33; /* azul mais fundo: fundo do topo da página inicial */
+  --color-apoio: #a9d2f2; /* azul bebê: cor de apoio */
+  --color-apoio-claro: #e8f3fc; /* azul bebê bem claro: faixas e fundos suaves */
+  --color-dourado: #c8a24c; /* dourado: destaque (linhas finas, detalhes, botões) */
+  --color-dourado-texto: #8a6516; /* dourado escurecido, para quando precisar ser texto sobre branco */
 
-  /* Cores da arte animada (fundo da página inicial e topo das páginas) */
-  --color-arte-1: #3d3fb8; /* azul-índigo */
-  --color-arte-2: #1f9e8f; /* verde-água */
-  --color-arte-3: #e0795a; /* coral */
+  /* Cores de uso geral */
+  --color-fundo: #ffffff; /* fundo das páginas */
+  --color-superficie: #ffffff; /* menus abertos e caixas */
+  --color-claro: #ffffff; /* texto sobre fundos escuros */
+  --color-texto: #0e1f38; /* texto principal */
+  --color-suave: #4a5b75; /* textos secundários, legendas */
+  --color-linha: #dbe6f1; /* linhas finas e bordas neutras */
+  --color-link: #1d5694; /* links */
+  --color-link-hover: #12305a; /* link ao passar o mouse */
 }

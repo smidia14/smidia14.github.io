@@ -1,0 +1,32 @@
+---
+// Arte animada do topo. Três propostas para comparar (escolha pelo endereço):
+//   ?arte=a  LUZ ........ gradiente que respira + partículas de luz subindo (padrão)
+//   ?arte=b  ONDAS ...... camadas de ondas com profundidade ao rolar
+//   ?arte=c  CONSTELAÇÃO  pontos ligados por linhas, reagem ao mouse / à rolagem
+// O código de cada uma fica em src/lib/arte/. As cores vêm de src/styles/tema.css.
+//
+// modo "forte": topo da página inicial | modo "sutil": topo das páginas internas
+interface Props {
+  modo?: "forte" | "sutil";
+  class?: string;
+}
+const { modo = "forte", class: classe = "" } = Astro.props;
+---
+
+<canvas class:list={["arte-topo pointer-events-none block", classe]} data-modo={modo} aria-hidden="true"></canvas>
+
+<script>
+  import { iniciarArte, type FabricaDeCena } from "../lib/arte/motor";
+  import { propostaAtiva } from "../lib/arte/escolha";
+  import { luz } from "../lib/arte/luz";
+  import { ondas } from "../lib/arte/ondas";
+  import { constelacao } from "../lib/arte/constelacao";
+
+  const cenas: Record<string, FabricaDeCena> = { a: luz, b: ondas, c: constelacao };
+  const proposta = propostaAtiva();
+  document.documentElement.dataset.arte = proposta;
+
+  document.querySelectorAll<HTMLCanvasElement>("canvas.arte-topo").forEach((canvas) => {
+    iniciarArte(canvas, canvas.dataset.modo === "sutil" ? "sutil" : "forte", cenas[proposta]);
+  });
+</script>

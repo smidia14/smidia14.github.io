@@ -24,7 +24,7 @@ const { itens, atual, nivel = 0 } = Astro.props;
               class:list={[
                 "block flex-1 py-2.5",
                 nivel === 0 ? "font-titulo text-2xl" : "text-lg",
-                item.href === atual ? "text-destaque" : "text-texto",
+                item.href === atual ? "text-link" : "text-texto",
               ]}
             >
               {item.titulo}

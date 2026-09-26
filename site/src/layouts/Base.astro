@@ -9,8 +9,9 @@ interface Props {
   titulo: string; // título desta página
   descricao: string; // descrição (aparece no Google); "PENDENTE" enquanto não houver
   atual: string; // endereço desta página
+  cabecalhoSobreArte?: boolean; // página inicial: menu transparente por cima da arte
 }
-const { titulo, descricao, atual } = Astro.props;
+const { titulo, descricao, atual, cabecalhoSobreArte = false } = Astro.props;
 const tituloCompleto = titulo === NOME_DO_SITE ? titulo : `${titulo} · ${NOME_DO_SITE}`;
 ---
 
@@ -28,7 +29,7 @@ const tituloCompleto = titulo === NOME_DO_SITE ? titulo : `${titulo} · ${NOME_D
     </script>
   </head>
   <body class="flex min-h-svh flex-col antialiased">
-    <Cabecalho atual={atual} />
+    <Cabecalho atual={atual} sobreArte={cabecalhoSobreArte} />
     <main class="flex-1">
       <slot />
     </main>

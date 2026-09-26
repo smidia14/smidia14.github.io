@@ -19,11 +19,11 @@ html {
 }
 
 ::selection {
-  background: color-mix(in srgb, var(--color-destaque) 20%, transparent);
+  background: color-mix(in srgb, var(--color-link) 20%, transparent);
 }
 
 :focus-visible {
-  outline: 2px solid var(--color-destaque);
+  outline: 2px solid var(--color-link);
   outline-offset: 3px;
   border-radius: 2px;
 }
@@ -33,7 +33,7 @@ html {
   --tw-prose-body: var(--color-texto);
   --tw-prose-headings: var(--color-texto);
   --tw-prose-bold: var(--color-texto);
-  --tw-prose-links: var(--color-destaque);
+  --tw-prose-links: var(--color-link);
   --tw-prose-hr: var(--color-linha);
   --tw-prose-quotes: var(--color-suave);
   --tw-prose-bullets: var(--color-suave);
@@ -53,7 +53,7 @@ html {
 }
 
 .texto a:hover {
-  color: var(--color-destaque-escuro);
+  color: var(--color-link-hover);
 }
 
 /* O site antigo coloca várias capas lado a lado dentro de títulos e parágrafos */

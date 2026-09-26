@@ -19,8 +19,8 @@ const { itens, atual, nivel = 1 } = Astro.props;
           href={item.href}
           aria-current={item.href === atual ? "page" : undefined}
           class:list={[
-            "block rounded px-2 py-1.5 text-[0.95rem] leading-snug transition-colors hover:bg-fundo hover:text-destaque",
-            item.href === atual ? "text-destaque" : contem(item, atual) ? "text-texto" : "text-suave",
+            "block rounded px-2 py-1.5 text-[0.95rem] leading-snug transition-colors hover:bg-fundo hover:text-link",
+            item.href === atual ? "text-link" : contem(item, atual) ? "text-texto" : "text-suave",
           ]}
         >
           {item.titulo}

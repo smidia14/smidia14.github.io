@@ -7,11 +7,12 @@ import { NOME_DO_SITE } from "../lib/site";
 
 interface Props {
   atual: string; // endereço da página aberta (para destacar o item do menu)
+  sobreArte?: boolean; // página inicial: cabeçalho transparente, com texto claro, por cima da arte
 }
-const { atual } = Astro.props;
+const { atual, sobreArte = false } = Astro.props;
 ---
 
-<header class="relative z-30">
+<header class:list={["z-30", sobreArte ? "absolute inset-x-0 top-0 text-claro" : "relative text-texto"]}>
   <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-8">
     <a href="/" class="max-w-[13.5rem] font-titulo text-lg leading-tight tracking-tight">{NOME_DO_SITE}</a>
 
@@ -25,8 +26,10 @@ const { atual } = Astro.props;
                 href={item.href}
                 aria-current={item.href === atual ? "page" : undefined}
                 class:list={[
-                  "block rounded-full px-2.5 py-2 text-[0.875rem] whitespace-nowrap transition-colors hover:text-destaque",
-                  contem(item, atual) ? "text-destaque" : "text-texto",
+                  "block px-2.5 py-2 text-[0.875rem] whitespace-nowrap underline-offset-8 transition-colors",
+                  // item ativo: fio dourado fino embaixo (detalhe da cor de destaque)
+                  contem(item, atual) && "underline decoration-dourado decoration-1",
+                  sobreArte ? "text-claro/90 hover:text-dourado" : "text-texto hover:text-link",
                 ]}
               >
                 {item.titulo}
@@ -38,7 +41,7 @@ const { atual } = Astro.props;
                     i >= menu.length - 3 ? "right-0" : "left-0",
                   ]}
                 >
-                  <div class="max-h-[75vh] w-72 overflow-y-auto rounded-xl border border-linha bg-superficie p-3 shadow-xl shadow-black/5">
+                  <div class="max-h-[75vh] w-72 overflow-y-auto rounded-xl border border-linha border-t-dourado bg-superficie p-3 text-texto shadow-xl shadow-principal/10">
                     <Submenu itens={item.filhos} atual={atual} />
                   </div>
                 </div>
@@ -55,7 +58,10 @@ const { atual } = Astro.props;
       id="abrir-menu"
       aria-controls="menu-celular"
       aria-expanded="false"
-      class="flex items-center gap-2 rounded-full border border-linha px-4 py-2 text-sm xl:hidden"
+      class:list={[
+        "flex items-center gap-2 rounded-full border px-4 py-2 text-sm xl:hidden",
+        sobreArte ? "border-claro/40 text-claro" : "border-linha",
+      ]}
     >
       <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
         <path d="M3 6h14M3 10h14M3 14h14" />
@@ -64,7 +70,7 @@ const { atual } = Astro.props;
     </button>
   </div>
 
-  <div id="menu-celular" hidden class="fixed inset-0 z-50 overflow-y-auto bg-fundo xl:hidden">
+  <div id="menu-celular" hidden class="fixed inset-0 z-50 overflow-y-auto bg-fundo text-texto xl:hidden">
     <div class="mx-auto max-w-xl px-6 pt-5 pb-16">
       <div class="mb-6 flex items-center justify-between">
         <span class="font-titulo text-lg">{NOME_DO_SITE}</span>

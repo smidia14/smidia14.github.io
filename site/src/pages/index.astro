@@ -2,7 +2,7 @@
 // Página inicial: arte generativa em destaque + conteúdo da página inicial do site antigo.
 import { getEntry, render } from "astro:content";
 import Base from "../layouts/Base.astro";
-import ArteGenerativa from "../components/ArteGenerativa.astro";
+import ArteTopo from "../components/ArteTopo.astro";
 import { menu } from "../lib/menu";
 import { NOME_DO_SITE } from "../lib/site";
 
@@ -14,12 +14,17 @@ const { Content: Coluna } = coluna ? await render(coluna) : { Content: null };
 const secoes = menu.filter((item) => item.href !== "/");
 ---
 
-<Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/">
-  <section class="relative -mt-[76px] flex min-h-[88svh] items-end overflow-hidden pt-[76px]">
-    <ArteGenerativa modo="forte" class="absolute inset-0 h-full w-full" />
-    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-fundo"></div>
-    <div class="relative mx-auto w-full max-w-7xl px-5 pb-16 sm:px-8 sm:pb-24">
-      <h1 class="surgir max-w-4xl font-titulo text-5xl leading-[1.02] font-medium tracking-tight text-balance sm:text-7xl lg:text-8xl">
+<Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte>
+  <!-- Topo ocupando a tela: arte animada ao fundo, título por cima, menu transparente -->
+  <section
+    class="relative flex h-svh min-h-[34rem] items-end overflow-hidden bg-gradient-to-b from-principal-escuro to-principal text-claro"
+  >
+    <ArteTopo modo="forte" class="absolute inset-0 h-full w-full" />
+    <!-- véu escuro discreto atrás do título, para a leitura nunca depender da arte -->
+    <div class="pointer-events-none absolute inset-x-0 bottom-0 h-2/3 bg-gradient-to-t from-principal-escuro/70 to-transparent"></div>
+    <div class="relative mx-auto w-full max-w-7xl px-5 pb-20 sm:px-8 sm:pb-28">
+      <span class="surgir mb-8 block h-px w-16 bg-dourado" aria-hidden="true"></span>
+      <h1 class="surgir max-w-4xl font-titulo text-5xl leading-[1.02] font-light tracking-tight text-balance sm:text-7xl lg:text-8xl">
         {NOME_DO_SITE}
       </h1>
     </div>
@@ -27,13 +32,13 @@ const secoes = menu.filter((item) => item.href !== "/");
 
   <!-- Atalhos para as seções do menu -->
   <nav aria-label="Seções do site" class="mx-auto max-w-7xl px-5 sm:px-8">
-    <ul class="grid border-t border-linha sm:grid-cols-2 lg:grid-cols-4">
+    <ul class="grid sm:grid-cols-2 lg:grid-cols-4">
       {
         secoes.map((item) => (
           <li class="surgir border-b border-linha">
-            <a href={item.href} class="group flex h-full items-center justify-between gap-4 py-6 pr-6 font-titulo text-xl hover:text-destaque sm:text-2xl">
+            <a href={item.href} class="group flex h-full items-center justify-between gap-4 py-6 pr-6 font-titulo text-xl text-principal hover:text-link sm:text-2xl">
               {item.titulo}
-              <span aria-hidden="true" class="text-suave transition-transform group-hover:translate-x-1 group-hover:text-destaque">
+              <span aria-hidden="true" class="text-dourado transition-transform group-hover:translate-x-1">
                 →
               </span>
             </a>

@@ -2,7 +2,7 @@
 // Arquivo: páginas do site antigo que não estão no menu (antigas notícias, etc.).
 import { getCollection } from "astro:content";
 import Base from "../../layouts/Base.astro";
-import ArteGenerativa from "../../components/ArteGenerativa.astro";
+import ArteTopo from "../../components/ArteTopo.astro";
 
 const fora = await getCollection("paginas", (p) => !p.data.esta_no_menu);
 
@@ -16,17 +16,20 @@ for (const p of fora.sort((a, b) => a.data.titulo.localeCompare(b.data.titulo, "
 
 <Base titulo="Arquivo" descricao="PENDENTE" atual="/arquivo/">
   <section class="relative">
-    <ArteGenerativa
+    <!-- faixa suave no topo: azul bebê bem claro que se desfaz no branco + arte sutil -->
+    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-apoio-claro to-fundo"></div>
+    <ArteTopo
       modo="sutil"
-      class="absolute inset-x-0 -top-24 h-[26rem] w-full [mask-image:linear-gradient(to_bottom,black_30%,transparent)]"
+      class="absolute inset-x-0 -top-28 h-[28rem] w-full [mask-image:linear-gradient(to_bottom,black_35%,transparent)]"
     />
     <div class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
-      <h1 class="surgir font-titulo text-4xl leading-[1.08] font-medium tracking-tight sm:text-6xl">Arquivo</h1>
+      <h1 class="surgir font-titulo text-4xl leading-[1.08] font-normal tracking-tight text-principal sm:text-6xl">Arquivo</h1>
+      <span class="surgir mt-8 block h-px w-12 bg-dourado" aria-hidden="true"></span>
       <p class="surgir mt-6 text-suave">PENDENTE</p>
     </div>
   </section>
 
-  <div class="mx-auto max-w-3xl space-y-14 px-5 sm:px-8">
+  <div class="relative mx-auto max-w-3xl space-y-14 px-5 sm:px-8">
     {
       [...grupos].map(([inicio, paginas]) => (
         <section class="surgir">
@@ -34,7 +37,7 @@ for (const p of fora.sort((a, b) => a.data.titulo.localeCompare(b.data.titulo, "
           <ul class="mt-3 divide-y divide-linha border-y border-linha">
             {paginas.map((p) => (
               <li>
-                <a href={`/${p.data.rota}/`} class="group flex items-baseline justify-between gap-4 py-4 hover:text-destaque">
+                <a href={`/${p.data.rota}/`} class="group flex items-baseline justify-between gap-4 py-4 hover:text-link">
                   <span class="font-titulo text-xl">{p.data.titulo}</span>
                   <span class="shrink-0 text-xs text-suave">{decodeURI(new URL(p.data.url_original).pathname)}</span>
                 </a>

@@ -1,0 +1,151 @@
+// Parte comum das artes animadas: tamanho, laço de animação, pausas,
+// "reduzir movimento", versão leve no celular, mouse e rolagem.
+// Cada proposta (luz.ts, ondas.ts, constelacao.ts) só desenha a sua cena.
+
+export type Modo = "forte" | "sutil"; // forte: topo da página inicial; sutil: topo das páginas internas
+
+export interface Ambiente {
+  modo: Modo;
+  leve: boolean; // celular/tela pequena: menos elementos
+  largura: number;
+  altura: number;
+  /** Cor do tema (src/styles/tema.css) com transparência: cor("dourado", 0.5) */
+  cor: (nome: string, alfa?: number) => string;
+  /** Posição do mouse sobre a arte (ativo = mouse presente) */
+  ponteiro: { x: number; y: number; ativo: boolean };
+  /** Quanto a página já rolou, em pixels */
+  rolagem: () => number;
+}
+
+export interface Cena {
+  /** Resolução máxima (1 = normal, 2 = telas "retina"). Formas suaves ficam bem com menos, e pesam bem menos. */
+  resolucaoMaxima?: number;
+  /** Chamado quando o tamanho muda (e na primeira vez) */
+  redimensionar(): void;
+  /** Desenha um quadro. t = tempo em ms; dt = ms desde o último quadro (0 = imagem parada) */
+  quadro(t: number, dt: number): void;
+}
+
+export type FabricaDeCena = (ctx: CanvasRenderingContext2D, amb: Ambiente) => Cena;
+
+const movimentoReduzido = window.matchMedia("(prefers-reduced-motion: reduce)");
+const telaPequena = window.matchMedia("(max-width: 767px), (pointer: coarse)");
+
+function lerCores() {
+  const estilo = getComputedStyle(document.documentElement);
+  const cache = new Map<string, [number, number, number]>();
+  return (nome: string, alfa = 1) => {
+    let rgb = cache.get(nome);
+    if (!rgb) {
+      const hex = estilo.getPropertyValue(`--color-${nome}`).trim().replace("#", "") || "888888";
+      const h = hex.length === 3 ? hex.replace(/./g, "$&$&") : hex;
+      rgb = [0, 2, 4].map((i) => parseInt(h.slice(i, i + 2), 16)) as [number, number, number];
+      cache.set(nome, rgb);
+    }
+    return `rgba(${rgb[0]},${rgb[1]},${rgb[2]},${alfa})`;
+  };
+}
+
+export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: FabricaDeCena) {
+  const ctx = canvas.getContext("2d");
+  if (!ctx) return;
+
+  const amb: Ambiente = {
+    modo,
+    leve: telaPequena.matches,
+    largura: 0,
+    altura: 0,
+    cor: lerCores(),
+    ponteiro: { x: -9999, y: -9999, ativo: false },
+    rolagem: () => window.scrollY,
+  };
+  const cena = fabrica(ctx, amb);
+
+  let tempo = 20000 + Math.random() * 20000; // começa num momento "já em movimento"
+  let visivel = false;
+  let rodando = false;
+  let ultimo = 0;
+
+  function ajustarTamanho() {
+    const r = canvas.getBoundingClientRect();
+    if (!r.width || !r.height) return false;
+    // resolução: suficiente para ficar nítido, sem pesar em telas muito densas
+    const limite = modo === "sutil" ? 1 : Math.min(cena.resolucaoMaxima ?? 2, amb.leve ? 1.5 : 2);
+    const dpr = Math.min(window.devicePixelRatio || 1, limite);
+    amb.largura = r.width;
+    amb.altura = r.height;
+    amb.leve = telaPequena.matches;
+    canvas.width = Math.round(r.width * dpr);
+    canvas.height = Math.round(r.height * dpr);
+    ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    cena.redimensionar();
+    return true;
+  }
+
+  function quadro(agora: number) {
+    if (!rodando) return;
+    const dt = ultimo ? Math.min(50, agora - ultimo) : 16; // evita saltos depois de pausas
+    ultimo = agora;
+    tempo += dt;
+    cena.quadro(tempo, dt);
+    requestAnimationFrame(quadro);
+  }
+
+  function imagemParada() {
+    if (amb.largura) cena.quadro(tempo, 0);
+  }
+
+  // Decide se anima, fica parado ou pausa
+  function atualizar() {
+    const deveRodar = visivel && !document.hidden && !movimentoReduzido.matches;
+    if (deveRodar && !rodando) {
+      rodando = true;
+      ultimo = 0;
+      requestAnimationFrame(quadro);
+    } else if (!deveRodar) {
+      rodando = false;
+    }
+  }
+
+  if (ajustarTamanho()) imagemParada(); // primeira imagem aparece na hora
+
+  new IntersectionObserver(([e]) => {
+    visivel = e.isIntersecting;
+    atualizar();
+  }).observe(canvas);
+  document.addEventListener("visibilitychange", atualizar);
+  movimentoReduzido.addEventListener("change", () => {
+    atualizar();
+    imagemParada();
+  });
+
+  // Mouse (só no computador; no celular as cenas reagem à rolagem)
+  window.addEventListener(
+    "pointermove",
+    (e) => {
+      if (e.pointerType !== "mouse") return;
+      const r = canvas.getBoundingClientRect();
+      amb.ponteiro.x = e.clientX - r.left;
+      amb.ponteiro.y = e.clientY - r.top;
+      amb.ponteiro.ativo = amb.ponteiro.y >= 0 && amb.ponteiro.y <= r.height;
+    },
+    { passive: true },
+  );
+  document.documentElement.addEventListener("pointerleave", () => (amb.ponteiro.ativo = false));
+
+  let espera: number | undefined;
+  let medidas = [canvas.clientWidth, canvas.clientHeight];
+  new ResizeObserver(() => {
+    // no celular a barra do navegador muda um pouco a altura ao rolar: ignora mudanças pequenas
+    const [w, h] = [canvas.clientWidth, canvas.clientHeight];
+    if (Math.abs(w - medidas[0]) < 2 && Math.abs(h - medidas[1]) < 120) return;
+    medidas = [w, h];
+    clearTimeout(espera);
+    espera = window.setTimeout(() => {
+      if (ajustarTamanho()) imagemParada();
+    }, 150);
+  }).observe(canvas);
+}
+
+/** Número aleatório entre a e b */
+export const entre = (a: number, b: number) => a + Math.random() * (b - a);

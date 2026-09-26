@@ -2,7 +2,7 @@
 // Modelo de todas as páginas internas (tudo menos a página inicial e o Arquivo).
 import { getCollection, render } from "astro:content";
 import Base from "../layouts/Base.astro";
-import ArteGenerativa from "../components/ArteGenerativa.astro";
+import ArteTopo from "../components/ArteTopo.astro";
 import { menu, trilhaNoMenu, itemDoMenu, type ItemMenu } from "../lib/menu";
 
 export async function getStaticPaths() {
@@ -35,9 +35,11 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
 <Base titulo={pagina.data.titulo} descricao={pagina.data.descricao} atual={href}>
   <section class="relative">
     <!-- arte sutil no topo, que desaparece em direção ao texto -->
-    <ArteGenerativa
+    <!-- faixa suave no topo: azul bebê bem claro que se desfaz no branco + arte sutil -->
+    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-apoio-claro to-fundo"></div>
+    <ArteTopo
       modo="sutil"
-      class="absolute inset-x-0 -top-24 h-[26rem] w-full [mask-image:linear-gradient(to_bottom,black_30%,transparent)]"
+      class="absolute inset-x-0 -top-28 h-[28rem] w-full [mask-image:linear-gradient(to_bottom,black_35%,transparent)]"
     />
     <div class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
       <nav aria-label="Você está em" class="surgir text-sm text-suave">
@@ -45,9 +47,9 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
           {
             caminho.map((item, i) => (
               <li class="flex items-center gap-2">
-                {i > 0 && <span aria-hidden="true">›</span>}
+                {i > 0 && <span aria-hidden="true" class="text-dourado-texto">›</span>}
                 {i < caminho.length - 1 ? (
-                  <a href={item.href} class="hover:text-destaque">
+                  <a href={item.href} class="hover:text-link">
                     {item.titulo}
                   </a>
                 ) : (
@@ -60,13 +62,15 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
           }
         </ol>
       </nav>
-      <h1 class="surgir mt-6 font-titulo text-4xl leading-[1.08] font-medium tracking-tight text-balance sm:text-6xl">
+      <h1 class="surgir mt-6 font-titulo text-4xl leading-[1.08] font-normal tracking-tight text-balance text-principal sm:text-6xl">
         {pagina.data.titulo}
       </h1>
+      <span class="surgir mt-8 block h-px w-12 bg-dourado" aria-hidden="true"></span>
     </div>
   </section>
 
-  <article class="surgir texto prose prose-lg mx-auto max-w-3xl px-5 sm:px-8">
+  <!-- "relative": o texto fica sempre na frente da faixa de arte do topo -->
+  <article class="surgir texto prose prose-lg relative mx-auto max-w-3xl px-5 sm:px-8">
     <Content />
   </article>
 
@@ -76,9 +80,9 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
         <ul class="divide-y divide-linha border-y border-linha">
           {subitens.map((sub) => (
             <li>
-              <a href={sub.href} class="group flex items-center justify-between gap-4 py-5 font-titulo text-2xl hover:text-destaque">
+              <a href={sub.href} class="group flex items-center justify-between gap-4 py-5 font-titulo text-2xl text-principal hover:text-link">
                 {sub.titulo}
-                <span aria-hidden="true" class="text-suave transition-transform group-hover:translate-x-1 group-hover:text-destaque">
+                <span aria-hidden="true" class="text-dourado transition-transform group-hover:translate-x-1">
                   →
                 </span>
               </a>
