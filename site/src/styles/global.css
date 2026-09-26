@@ -150,7 +150,7 @@ html {
   height: auto;
   margin: 0.5rem;
   vertical-align: middle;
-  border-radius: 4px;
+  border-radius: 10px; /* cantos suaves */
 }
 
 .texto a:has(> img),
@@ -169,7 +169,7 @@ html {
   width: 100%;
   aspect-ratio: 16 / 9;
   margin: 2rem 0;
-  border-radius: 6px;
+  border-radius: 12px; /* cantos suaves */
   overflow: hidden;
   background: var(--color-linha);
 }
@@ -208,4 +208,127 @@ html {
 .sem-js .surgir {
   opacity: 1;
   transform: none;
+}
+
+/* ==========================================================================
+   MOLDE DAS PÁGINAS INTERNAS (src/layouts/MoldeInterno.astro)
+   ========================================================================== */
+
+/* Halo verde mais leve na faixa azul das páginas internas: 30% de verde no centro
+   (branco sobre ele: 6,2 : 1). */
+.halo-verde-suave {
+  inset: -45% -20%;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-verde) 30%, var(--color-azul)) 0%,
+    color-mix(in srgb, color-mix(in srgb, var(--color-verde) 30%, var(--color-azul)) 50%, transparent) 45%,
+    color-mix(in srgb, color-mix(in srgb, var(--color-verde) 30%, var(--color-azul)) 15%, transparent) 75%,
+    transparent 100%
+  );
+}
+
+/* "Folha" branca onde fica o texto, sobre o fundo cinza */
+.folha {
+  background: var(--color-branco);
+  border-radius: 1.25rem;
+  box-shadow:
+    0 1px 2px rgb(14 58 96 / 0.05),
+    0 12px 32px -20px rgb(14 58 96 / 0.22);
+  padding: 2.25rem 1.25rem 2rem;
+}
+@media (min-width: 640px) {
+  .folha {
+    padding: 3.5rem 3rem 2.5rem;
+  }
+}
+@media (min-width: 1024px) {
+  .folha {
+    padding: 4rem 4.5rem 3rem;
+  }
+}
+
+/* Leitura confortável: Roboto em tamanho generoso e boa entrelinha */
+.folha .texto {
+  font-size: 1.125rem;
+  line-height: 1.8;
+}
+@media (min-width: 1024px) {
+  .folha .texto {
+    font-size: 1.1875rem;
+  }
+}
+
+/* Citações e versículos em destaque: filete dourado e fundo levemente azulado */
+.texto blockquote {
+  border-left: 3px solid var(--color-dourado);
+  background: color-mix(in srgb, var(--color-azul) 6%, var(--color-branco));
+  border-radius: 0 0.75rem 0.75rem 0;
+  padding: 1rem 1.5rem;
+  font-style: normal;
+  color: var(--color-texto);
+  quotes: none;
+}
+.texto blockquote p::before,
+.texto blockquote p::after {
+  content: none;
+}
+
+/* Listas e tabelas bem espaçadas */
+.texto :where(li) {
+  margin-block: 0.5em;
+}
+.texto :where(table) {
+  display: block;
+  overflow-x: auto; /* tabelas largas rolam de lado no celular, sem quebrar a página */
+}
+.texto :where(th, td) {
+  padding: 0.75em 1em;
+}
+.texto :where(thead th) {
+  color: var(--color-azul);
+  border-bottom-color: var(--color-dourado);
+}
+
+/* Botões "anterior / próxima" */
+.navegacao-vizinha {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  border-radius: 1rem;
+  background: var(--color-branco);
+  padding: 1rem 1.25rem;
+  box-shadow: 0 1px 2px rgb(14 58 96 / 0.05);
+  outline: 1px solid rgb(21 77 125 / 0.08);
+  transition: box-shadow 0.2s, outline-color 0.2s;
+}
+.navegacao-vizinha:hover {
+  outline-color: var(--color-dourado);
+  box-shadow: 0 8px 24px -16px rgb(14 58 96 / 0.35);
+}
+.navegacao-rotulo {
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  font-family: var(--font-informativo);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--color-suave);
+}
+.navegacao-titulo {
+  font-family: var(--font-titulo);
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: var(--color-azul);
+}
+
+/* Rodapé: Trama 2 em branco bem suave sobre o azul */
+.trama-clara {
+  --cor-da-trama: color-mix(in srgb, var(--color-branco) 5%, transparent);
+}
+
+/* O cabeçalho fica fixo por cima da faixa azul: ao pular para "#topo", nada fica escondido */
+#topo {
+  scroll-margin-top: 0;
 }

@@ -1,9 +1,9 @@
 ---
-// Modelo de todas as páginas internas (tudo menos a página inicial e o Arquivo).
+// Todas as páginas de conteúdo (tudo menos a página inicial e o Arquivo).
+// O visual vem do molde src/layouts/MoldeInterno.astro.
 import { getCollection, render } from "astro:content";
-import Base from "../layouts/Base.astro";
-import ArteTopo from "../components/ArteTopo.astro";
-import { menu, trilhaNoMenu, itemDoMenu, type ItemMenu } from "../lib/menu";
+import MoldeInterno from "../layouts/MoldeInterno.astro";
+import { menu, trilhaNoMenu, type ItemMenu } from "../lib/menu";
 
 export async function getStaticPaths() {
   const paginas = await getCollection("paginas", (p) => p.data.rota !== "");
@@ -14,7 +14,7 @@ const { pagina } = Astro.props;
 const { Content } = await render(pagina);
 const href = `/${pagina.data.rota}/`;
 
-// Caminho de navegação ("Página inicial › Doutrinas › ...")
+// Migalhas ("Página inicial › Doutrinas › ...")
 function trilha(): ItemMenu[] {
   const inicio = menu[0];
   if (pagina.data.esta_no_menu) return [inicio, ...trilhaNoMenu(href)].filter((x, i, a) => a.indexOf(x) === i);
@@ -28,75 +28,17 @@ function trilha(): ItemMenu[] {
   }
   return [inicio, { titulo: pagina.data.titulo, href, filhos: [] }];
 }
-const caminho = trilha();
-const subitens = itemDoMenu(href)?.filhos ?? [];
 ---
 
-<Base titulo={pagina.data.titulo} descricao={pagina.data.descricao} atual={href}>
-  <section class="relative">
-    <!-- arte sutil no topo, que desaparece em direção ao texto -->
-    <!-- faixa suave no topo: azul bebê bem claro que se desfaz no branco + arte sutil -->
-    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-cinza to-fundo"></div>
-    <ArteTopo
-      modo="sutil"
-      class="absolute inset-x-0 -top-28 h-[28rem] w-full [mask-image:linear-gradient(to_bottom,black_35%,transparent)]"
-    />
-    <div data-arte-protege class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
-      <nav aria-label="Você está em" class="surgir font-informativo text-sm font-semibold text-suave">
-        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
-          {
-            caminho.map((item, i) => (
-              <li class="flex items-center gap-2">
-                {i > 0 && <span aria-hidden="true" class="text-verde">›</span>}
-                {i < caminho.length - 1 ? (
-                  <a href={item.href} class="hover:text-link">
-                    {item.titulo}
-                  </a>
-                ) : (
-                  <span aria-current="page" class="text-texto">
-                    {item.titulo}
-                  </span>
-                )}
-              </li>
-            ))
-          }
-        </ol>
-      </nav>
-      <h1 class="surgir mt-6 font-titulo text-4xl leading-[1.08] font-medium tracking-tight text-balance text-azul sm:text-6xl">
-        {pagina.data.titulo}
-      </h1>
-      <span class="surgir mt-8 block h-px w-12 bg-dourado" aria-hidden="true"></span>
-    </div>
-  </section>
-
-  <!-- "relative": o texto fica sempre na frente da faixa de arte do topo -->
-  <article class="surgir texto prose prose-lg relative mx-auto max-w-3xl px-5 sm:px-8">
+<MoldeInterno titulo={pagina.data.titulo} descricao={pagina.data.descricao} atual={href} trilha={trilha()}>
+  <div class="texto prose prose-lg mx-auto max-w-[68ch]">
     <Content />
-  </article>
+  </div>
 
-  {
-    subitens.length > 0 && (
-      <nav aria-label={`Páginas em ${pagina.data.titulo}`} class="surgir mx-auto mt-20 max-w-3xl px-5 sm:px-8">
-        <ul class="divide-y divide-linha border-y border-linha">
-          {subitens.map((sub) => (
-            <li>
-              <a href={sub.href} class="group flex items-center justify-between gap-4 py-5 font-titulo text-2xl text-azul hover:text-link">
-                {sub.titulo}
-                <span aria-hidden="true" class="text-dourado transition-transform group-hover:translate-x-1">
-                  →
-                </span>
-              </a>
-            </li>
-          ))}
-        </ul>
-      </nav>
-    )
-  }
-
-  <p class="mx-auto mt-16 max-w-3xl px-5 text-xs break-all text-suave sm:px-8">
+  <p class="mx-auto mt-14 max-w-[68ch] border-t border-linha pt-5 text-xs break-all text-suave">
     Endereço no site antigo:{" "}
     <a href={pagina.data.url_original} class="underline decoration-1 underline-offset-2" target="_blank" rel="noopener">
       {decodeURI(pagina.data.url_original)}
     </a>
   </p>
-</Base>
+</MoldeInterno>

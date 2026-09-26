@@ -52,13 +52,18 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
     balanco: Math.sin((t / 90000) * Math.PI * 2) * 0.05, // balanço lento: ±0,05 rad a cada 90 s
   });
 
-  // quantos trios ao mesmo tempo (menos no celular e nas páginas internas)
-  const alvo = () => (sutil ? 1 : amb.leve ? 1 : 2);
+  // quantos trios ao mesmo tempo (menos no celular; nas páginas internas, bem pouco)
+  const alvo = () => (amb.leve ? 1 : sutil ? 2 : 2);
 
   function cores() {
     return [0, 1, 2].map(() => {
       const r = Math.random();
-      if (sutil) return r < 0.12 ? { cor: amb.cor("dourado"), alfa: 0.22 } : { cor: amb.cor("azul"), alfa: entre(0.07, 0.11) };
+      // páginas internas: faixa azul do topo, versão bem mais discreta que a da página inicial
+      if (sutil) {
+        if (r < 0.1) return { cor: amb.cor("dourado"), alfa: entre(0.28, 0.36) };
+        if (r < 0.55) return { cor: amb.cor("branco"), alfa: entre(0.07, 0.12) };
+        return { cor: amb.cor("azul-claro"), alfa: entre(0.1, 0.16) };
+      }
       if (r < 0.1) return { cor: amb.cor("dourado"), alfa: entre(0.45, 0.6) }; // toque raro
       if (r < 0.55) return { cor: amb.cor("branco"), alfa: entre(0.14, 0.24) };
       return { cor: amb.cor("azul-claro"), alfa: entre(0.22, 0.34) };
@@ -135,9 +140,9 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
     const some = entre(3000, 4500);
     const inicio = jaPronto ? agora - desenho - 2 * ATRASO_ENTRE_ARCOS - entre(0, vida * 0.6) : agora;
     for (let tentativa = 0; tentativa < 40; tentativa++) {
-      const telaX = sutil ? entre(L * 0.6, L * 1.02) : entre(L * 0.25, L * 1.08);
-      const telaY = sutil ? entre(A * 0.05, A * 0.5) : entre(A * 0.05, A * 0.95);
-      const escala = sutil ? entre(A * 0.7, A * 1.1) : entre(base * 0.38, base * 0.72);
+      const telaX = sutil ? entre(L * 0.3, L * 1.05) : entre(L * 0.25, L * 1.08);
+      const telaY = sutil ? entre(A * 0.1, A * 0.9) : entre(A * 0.05, A * 0.95);
+      const escala = sutil ? entre(A * 0.55, A * 0.95) : entre(base * 0.38, base * 0.72);
       const p = noPlano(telaX, telaY, inicio);
       if (pertoDeOutro(p.x, p.y, escala) || invadeProtegida(p.x, p.y, escala, inicio)) continue;
       trios.push({ x: p.x, y: p.y, escala, cores: cores(), nasce: inicio, desenho, vida, some });

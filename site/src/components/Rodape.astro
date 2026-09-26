@@ -1,17 +1,25 @@
 ---
-// Rodapé: logo com o nome completo (branco sobre azul, combinação permitida pelo manual),
-// contato e demais itens da barra lateral do site antigo, e o link para o Arquivo.
+// Rodapé: fundo azul com a textura sutil da Trama 2, logo com o nome completo (branco sobre
+// azul, combinação permitida pelo manual), links principais do menu, o link do Arquivo e o
+// contato/itens da barra lateral do site antigo.
 import { getEntry, render } from "astro:content";
 import { NOME_DO_SITE } from "../lib/site";
+import { menu } from "../lib/menu";
+
+interface Props {
+  colado?: boolean; // páginas internas: sem espaço em branco acima (encosta na área cinza)
+}
+const { colado = false } = Astro.props;
 
 const lateral = await getEntry("blocos", "barra-lateral");
 const rodape = await getEntry("blocos", "rodape");
 const { Content: Lateral } = lateral ? await render(lateral) : { Content: null };
 const { Content: TextoRodape } = rodape ? await render(rodape) : { Content: null };
+const principais = menu.filter((item) => item.href !== "/");
 ---
 
-<footer class="mt-32 bg-azul text-branco">
-  <div class="mx-auto grid max-w-7xl gap-14 px-5 py-16 sm:px-8 md:grid-cols-[1fr_2fr]">
+<footer class:list={["trama trama-clara bg-azul text-branco", !colado && "mt-32"]}>
+  <div class="mx-auto grid max-w-7xl gap-12 px-5 py-16 sm:px-8 md:grid-cols-2 lg:grid-cols-[1.1fr_0.9fr_1.6fr] lg:gap-14">
     <div>
       <!-- logo com área de segurança (margem livre em volta) -->
       <div class="-m-3 inline-block p-3">
@@ -26,15 +34,28 @@ const { Content: TextoRodape } = rodape ? await render(rodape) : { Content: null
       </div>
       {TextoRodape && <div class="mt-8 font-informativo text-sm text-azul-claro"><TextoRodape /></div>}
       <span class="mt-8 block h-0.5 w-10 bg-dourado" aria-hidden="true"></span>
-      <p class="mt-6">
-        <a href="/arquivo/" class="font-informativo text-sm font-semibold underline decoration-verde decoration-2 underline-offset-4 hover:decoration-dourado">
-          Arquivo
-        </a>
-      </p>
     </div>
+
+    <nav aria-label="Links principais">
+      <ul class="space-y-2.5 font-informativo text-[0.95rem] font-semibold">
+        {
+          principais.map((item) => (
+            <li>
+              <a href={item.href} class="underline decoration-transparent decoration-2 underline-offset-4 hover:decoration-verde">
+                {item.titulo}
+              </a>
+            </li>
+          ))
+        }
+        <li class="pt-3">
+          <a href="/arquivo/" class="underline decoration-verde decoration-2 underline-offset-4 hover:decoration-dourado">Arquivo</a>
+        </li>
+      </ul>
+    </nav>
+
     {
       Lateral && (
-        <div class="rodape-texto prose prose-sm max-w-none sm:columns-2 sm:gap-12 [&_h2]:mt-0 [&_h2]:break-after-avoid [&_img]:ml-0 [&_img]:max-h-28">
+        <div class="rodape-texto prose prose-sm max-w-none md:col-span-2 lg:col-span-1 sm:columns-2 sm:gap-10 [&_h2]:mt-0 [&_h2]:break-after-avoid [&_img]:ml-0 [&_img]:max-h-28">
           <Lateral />
         </div>
       )
@@ -58,6 +79,6 @@ const { Content: TextoRodape } = rodape ? await render(rodape) : { Content: null
   .rodape-texto :global(img) {
     display: inline-block;
     width: auto;
-    border-radius: 4px;
+    border-radius: 6px;
   }
 </style>

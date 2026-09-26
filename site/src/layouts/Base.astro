@@ -9,9 +9,11 @@ interface Props {
   titulo: string; // título desta página
   descricao: string; // descrição (aparece no Google); "PENDENTE" enquanto não houver
   atual: string; // endereço desta página
-  cabecalhoSobreArte?: boolean; // página inicial: menu transparente por cima da arte
+  cabecalhoSobreArte?: boolean; // menu transparente por cima da faixa azul com arte
+  esconderLogoNoTopo?: boolean; // só na página inicial (o topo já mostra o logo grande)
+  rodapeColado?: boolean; // páginas internas: o rodapé encosta na área cinza de leitura
 }
-const { titulo, descricao, atual, cabecalhoSobreArte = false } = Astro.props;
+const { titulo, descricao, atual, cabecalhoSobreArte = false, esconderLogoNoTopo = false, rodapeColado = false } = Astro.props;
 const tituloCompleto = titulo === NOME_DO_SITE ? titulo : `${titulo} · ${NOME_DO_SITE}`;
 // imagem de compartilhamento (WhatsApp/redes): precisa do endereço completo
 const imagemCompartilhar = new URL("/compartilhar.jpg", Astro.site).href;
@@ -47,11 +49,11 @@ const enderecoCompleto = new URL(Astro.url.pathname, Astro.site).href;
     </script>
   </head>
   <body class="flex min-h-svh flex-col antialiased">
-    <Cabecalho atual={atual} sobreArte={cabecalhoSobreArte} />
+    <Cabecalho atual={atual} sobreArte={cabecalhoSobreArte} esconderLogoNoTopo={esconderLogoNoTopo} />
     <main class="flex-1">
       <slot />
     </main>
-    <Rodape />
+    <Rodape colado={rodapeColado} />
 
     <script>
       // Elementos com a classe "surgir" aparecem suavemente quando entram na tela

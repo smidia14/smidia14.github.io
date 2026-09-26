@@ -1,0 +1,170 @@
+---
+// MOLDE DAS PÁGINAS INTERNAS (todas as páginas de conteúdo e o Arquivo).
+//
+//  1. Topo: faixa azul com a arte sutil dos arcos e um halo verde leve; migalhas,
+//     título e descrição (a descrição só aparece se não for "PENDENTE").
+//  2. Leitura: fundo cinza com o texto numa "folha" branca.
+//  3. Lateral (computador): páginas irmãs do menu, com a atual destacada.
+//     No celular, a lista vai para o fim da página.
+//  4. Fim: botões "anterior / próxima" entre as irmãs e "voltar ao topo".
+// O conteúdo da página entra no lugar do <slot />.
+import Base from "./Base.astro";
+import ArteTopo from "../components/ArteTopo.astro";
+import { secaoDaPagina, vizinhas, trilhaNoMenu, type ItemMenu } from "../lib/menu";
+
+interface Props {
+  titulo: string;
+  descricao: string;
+  atual: string; // endereço desta página
+  trilha: { titulo: string; href: string }[]; // migalhas, da página inicial até esta
+}
+const { titulo, descricao, atual, trilha } = Astro.props;
+const temDescricao = descricao && descricao.trim().toUpperCase() !== "PENDENTE";
+const secao = secaoDaPagina(atual);
+const { anterior, proxima } = vizinhas(atual);
+const itemAtual = (i: ItemMenu) => i.href === atual;
+// subpáginas que a lateral não mostra (quando a lateral mostra as irmãs, as filhas vão para o fim da folha)
+const noMenu = trilhaNoMenu(atual);
+const filhasNaFolha = noMenu.length >= 2 ? (noMenu.at(-1)?.filhos ?? []) : [];
+---
+
+<Base titulo={titulo} descricao={descricao} atual={atual} cabecalhoSobreArte rodapeColado>
+  <!-- 1. TOPO: faixa azul com arte sutil (o menu fica transparente por cima) -->
+  <section id="topo" class="relative overflow-hidden bg-azul text-branco">
+    <ArteTopo modo="sutil" class="absolute inset-0 h-full w-full" />
+    <div class="relative mx-auto max-w-6xl px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-20">
+      <div class="relative isolate max-w-4xl">
+        <div class="halo-verde halo-verde-suave" aria-hidden="true"></div>
+        <!-- data-arte-protege: a arte não passa por cima das migalhas, do título e da descrição -->
+        <nav aria-label="Você está em">
+          <ol data-arte-protege class="flex w-fit flex-wrap items-center gap-x-2 gap-y-1 font-informativo text-sm font-semibold sm:text-[0.95rem]">
+            {
+              trilha.map((item, i) => (
+                <li class="flex items-center gap-2">
+                  {i > 0 && (
+                    <span aria-hidden="true" class="text-verde">
+                      ›
+                    </span>
+                  )}
+                  {i < trilha.length - 1 ? (
+                    <a href={item.href} class="underline decoration-transparent decoration-2 underline-offset-4 hover:decoration-verde">
+                      {item.titulo}
+                    </a>
+                  ) : (
+                    <span aria-current="page">{item.titulo}</span>
+                  )}
+                </li>
+              ))
+            }
+          </ol>
+        </nav>
+        <h1
+          data-arte-protege
+          class="mt-5 font-titulo text-[clamp(2.25rem,1.4rem+3.6vw,4.75rem)] leading-[1.05] font-medium tracking-tight text-balance"
+        >
+          {titulo}
+        </h1>
+        <span class="mt-6 block h-0.5 w-14 bg-dourado" aria-hidden="true"></span>
+        {
+          temDescricao && (
+            <p data-arte-protege class="mt-6 max-w-2xl font-informativo text-lg leading-relaxed sm:text-xl">
+              {descricao}
+            </p>
+          )
+        }
+      </div>
+    </div>
+  </section>
+
+  <!-- 2. ÁREA DE LEITURA: fundo cinza, texto na folha branca; lateral no computador -->
+  <div class="bg-cinza">
+    <div
+      class:list={[
+        "mx-auto grid max-w-6xl gap-8 px-3 py-8 sm:px-6 sm:py-14 lg:gap-12",
+        secao && "lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start",
+      ]}
+    >
+      <div class="min-w-0">
+        <article class="folha surgir">
+          <slot />
+          {
+            filhasNaFolha.length > 0 && (
+              <ul class="mx-auto mt-12 max-w-[68ch] divide-y divide-linha border-y border-linha">
+                {filhasNaFolha.map((f) => (
+                  <li>
+                    <a href={f.href} class="group flex items-center justify-between gap-4 py-4 font-titulo text-xl font-medium text-azul hover:text-azul-escuro">
+                      {f.titulo}
+                      <span aria-hidden="true" class="text-verde transition-transform group-hover:translate-x-1">→</span>
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            )
+          }
+        </article>
+
+        <!-- 4. FIM DA PÁGINA: anterior / próxima entre as irmãs, e voltar ao topo -->
+        {
+          (anterior || proxima) && (
+            <nav aria-label="Páginas vizinhas" class="surgir mt-8 grid gap-3 sm:grid-cols-2">
+              {anterior ? (
+                <a href={anterior.href} class="navegacao-vizinha group">
+                  <span class="navegacao-rotulo">
+                    <span aria-hidden="true" class="transition-transform group-hover:-translate-x-1">←</span> Anterior
+                  </span>
+                  <span class="navegacao-titulo">{anterior.titulo}</span>
+                </a>
+              ) : (
+                <span class="hidden sm:block" />
+              )}
+              {proxima && (
+                <a href={proxima.href} class="navegacao-vizinha group sm:text-right">
+                  <span class="navegacao-rotulo sm:justify-end">
+                    Próxima <span aria-hidden="true" class="transition-transform group-hover:translate-x-1">→</span>
+                  </span>
+                  <span class="navegacao-titulo">{proxima.titulo}</span>
+                </a>
+              )}
+            </nav>
+          )
+        }
+        <p class="mt-8 text-center">
+          <a href="#topo" class="inline-flex items-center gap-2 rounded-full bg-branco px-5 py-2.5 font-informativo text-sm font-bold text-azul shadow-sm ring-1 ring-azul/10 hover:bg-azul hover:text-branco">
+            <span aria-hidden="true">↑</span> Voltar ao topo
+          </a>
+        </p>
+      </div>
+
+      <!-- 3. LATERAL: páginas irmãs (no celular, fica no fim da página) -->
+      {
+        secao && (
+          <aside class="surgir lg:sticky lg:top-24" aria-label={`Páginas em ${secao.titulo}`}>
+            <div class="rounded-2xl bg-branco p-5 shadow-[0_1px_2px_rgba(14,58,96,0.06),0_10px_30px_-18px_rgba(14,58,96,0.25)]">
+              <a href={secao.href} class="titulo-com-arco block font-titulo text-lg font-semibold text-azul hover:text-azul-escuro">
+                {secao.titulo}
+              </a>
+              <ul class="mt-3 space-y-0.5 border-t border-linha pt-3">
+                {secao.itens.map((item) => (
+                  <li>
+                    <a
+                      href={item.href}
+                      aria-current={itemAtual(item) ? "page" : undefined}
+                      class:list={[
+                        "block rounded-lg border-l-2 px-3 py-2 font-informativo text-[0.95rem] leading-snug transition-colors",
+                        itemAtual(item)
+                          ? "border-dourado bg-azul/[0.07] font-bold text-azul"
+                          : "border-transparent font-semibold text-suave hover:bg-cinza/70 hover:text-azul",
+                      ]}
+                    >
+                      {item.titulo}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </aside>
+        )
+      }
+    </div>
+  </div>
+</Base>

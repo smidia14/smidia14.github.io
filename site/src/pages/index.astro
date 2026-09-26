@@ -15,7 +15,7 @@ const { Content: Coluna } = coluna ? await render(coluna) : { Content: null };
 const secoes = menu.filter((item) => item.href !== "/");
 ---
 
-<Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte>
+<Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo>
   <!-- Topo ocupando a tela: degradê corporativo + arte dos arcos; menu transparente por cima.
        Logo e título NÃO têm animação (manual, seção 5): ficam parados e nítidos. -->
   <section class="degrade-corporativo relative flex h-svh min-h-[36rem] items-center overflow-hidden text-branco">
