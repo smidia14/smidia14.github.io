@@ -21,27 +21,26 @@ const secoes = menu.filter((item) => item.href !== "/");
   <section class="degrade-corporativo relative flex h-svh min-h-[36rem] items-center overflow-hidden text-branco">
     <ArteTopo modo="forte" class="absolute inset-0 h-full w-full" />
     <div class="relative mx-auto w-full max-w-7xl px-5 pt-16 sm:px-8">
-      <!-- data-arte-protege: a arte não passa por cima deste bloco (logo e título sempre nítidos) -->
-      <div data-arte-protege class="w-fit max-w-3xl">
-      <!-- logo branco com área de segurança (margem livre em volta) -->
-      <div class="inline-block p-3 -m-3">
-        <img
-          src="/marca/smi-vertical-branco.svg"
-          alt="SMI"
-          width="130"
-          height="162"
-          class="h-32 w-auto sm:h-44"
-          fetchpriority="high"
-        />
-      </div>
-      <h1 class="mt-10 max-w-3xl font-titulo text-4xl leading-[1.08] font-medium tracking-tight text-balance sm:text-6xl lg:text-7xl">
-        {NOME_DO_SITE}
-      </h1>
-      <span class="mt-7 block h-0.5 w-14 bg-dourado" aria-hidden="true"></span>
-      <!-- subtítulo do próprio logo oficial -->
-      <p class="mt-6 font-informativo text-base font-semibold text-azul-claro sm:text-lg">
-        Igreja Adventista do Sétimo Dia · Movimento de Reforma
-      </p>
+      <!-- data-arte-protege: a arte não passa por cima do logo, de cada linha do título e do
+           subtítulo (sempre nítidos). Os tamanhos são fluidos (clamp): crescem com a tela. -->
+      <div class="topo-bloco relative isolate w-fit max-w-6xl">
+        <!-- halo verde suave atrás do título (degradê corporativo azul → verde) -->
+        <div class="halo-verde" aria-hidden="true"></div>
+        <!-- logo branco com área de segurança (margem livre em volta) -->
+        <div data-arte-protege class="-m-3 inline-block p-3">
+          <img
+            src="/marca/smi-vertical-branco.svg"
+            alt="SMI"
+            width="130"
+            height="162"
+            class="topo-logo w-auto"
+            fetchpriority="high"
+          />
+        </div>
+        <h1 data-arte-protege class="topo-titulo font-titulo font-medium tracking-tight text-balance">{NOME_DO_SITE}</h1>
+        <span data-arte-protege class="topo-linha block bg-dourado" aria-hidden="true"></span>
+        <!-- subtítulo do próprio logo oficial -->
+        <p data-arte-protege class="topo-subtitulo font-informativo font-semibold">Igreja Adventista do Sétimo Dia · Movimento de Reforma</p>
       </div>
     </div>
   </section>

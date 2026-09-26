@@ -17,7 +17,8 @@ export interface Ambiente {
   /** Quanto a página já rolou, em pixels */
   rolagem: () => number;
   /** Áreas onde a arte não deve passar (logo, título), em px relativos ao canvas.
-   *  Vêm dos elementos marcados com o atributo data-arte-protege. */
+   *  Vêm dos elementos marcados com o atributo data-arte-protege. Em elementos de texto,
+   *  cada LINHA vira uma área (e não a caixa inteira, que pode ser bem mais larga que o texto). */
   protegidas: { x0: number; y0: number; x1: number; y1: number }[];
 }
 
@@ -84,9 +85,14 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
     canvas.width = Math.round(r.width * dpr);
     canvas.height = Math.round(r.height * dpr);
     ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-    amb.protegidas = [...(canvas.parentElement?.querySelectorAll("[data-arte-protege]") ?? [])].map((el) => {
-      const p = el.getBoundingClientRect();
-      return { x0: p.left - r.left, y0: p.top - r.top, x1: p.right - r.left, y1: p.bottom - r.top };
+    amb.protegidas = [...(canvas.parentElement?.querySelectorAll("[data-arte-protege]") ?? [])].flatMap((el) => {
+      let caixas: DOMRect[] = [el.getBoundingClientRect()];
+      if (el.children.length === 0 && el.textContent?.trim()) {
+        const faixa = document.createRange();
+        faixa.selectNodeContents(el);
+        caixas = [...faixa.getClientRects()].filter((c) => c.width > 0);
+      }
+      return caixas.map((p) => ({ x0: p.left - r.left, y0: p.top - r.top, x1: p.right - r.left, y1: p.bottom - r.top }));
     });
     cena.redimensionar();
     return true;

@@ -70,18 +70,50 @@ html {
    O verde só aparece no canto de baixo, à direita; o texto fica sobre a parte azul. */
 .degrade-corporativo {
   background-color: var(--color-azul);
-  background-image:
-    radial-gradient(ellipse 60% 55% at 100% 100%, color-mix(in srgb, var(--color-verde) 85%, transparent), transparent 70%),
-    linear-gradient(165deg, var(--color-azul-escuro) 0%, var(--color-azul) 55%);
+  background-image: linear-gradient(165deg, var(--color-azul-escuro) 0%, var(--color-azul) 55%);
 }
 
-@media (max-width: 767px) {
-  /* no celular o título ocupa a largura toda: o verde fica só na faixa de baixo */
-  .degrade-corporativo {
-    background-image:
-      radial-gradient(ellipse 95% 28% at 100% 100%, color-mix(in srgb, var(--color-verde) 85%, transparent), transparent 70%),
-      linear-gradient(170deg, var(--color-azul-escuro) 0%, var(--color-azul) 55%);
-  }
+/* O verde do degradê fica num halo suave atrás do bloco do título (acompanha o título
+   em qualquer tamanho de tela). No centro: 40% de verde misturado ao azul, onde o
+   branco ainda tem contraste de ~5,5 : 1. Vai sumindo até a borda, sem linha visível. */
+.halo-verde {
+  position: absolute;
+  inset: -30% -25%;
+  z-index: -1;
+  pointer-events: none;
+  background: radial-gradient(
+    closest-side,
+    color-mix(in srgb, var(--color-verde) 40%, var(--color-azul)) 0%,
+    color-mix(in srgb, color-mix(in srgb, var(--color-verde) 40%, var(--color-azul)) 55%, transparent) 45%,
+    color-mix(in srgb, color-mix(in srgb, var(--color-verde) 40%, var(--color-azul)) 18%, transparent) 75%,
+    transparent 100%
+  );
+}
+
+/* Tamanhos fluidos do topo da página inicial: mínimo (celular) · crescimento · máximo.
+   O título cresce rápido nas telas pequenas (15vw) e mais devagar nas grandes (5,8vw);
+   o menor dos dois vale. Assim "Internacional", a palavra mais longa, ocupa ~85% da
+   largura no celular e nunca é cortada (conferido de 320 px a 1920 px). */
+.topo-logo {
+  height: clamp(8.5rem, 3.8rem + 9.4vw, 14.5rem);
+}
+.topo-titulo {
+  margin-top: clamp(1.75rem, 1rem + 2vw, 3.5rem);
+  font-size: clamp(2.4rem, min(15vw - 6px, 1.9rem + 5.8vw), 8.25rem);
+  line-height: 1.02;
+  hyphens: none;
+  overflow-wrap: normal;
+  word-break: keep-all;
+}
+.topo-linha {
+  margin-top: clamp(1.5rem, 1rem + 1.4vw, 2.75rem);
+  height: clamp(2px, 0.1rem + 0.1vw, 3px);
+  width: clamp(3.5rem, 2rem + 3.5vw, 7rem);
+}
+.topo-subtitulo {
+  margin-top: clamp(1.25rem, 0.9rem + 1vw, 2.25rem);
+  font-size: clamp(1.1rem, 0.78rem + 0.95vw, 1.8rem);
+  color: var(--color-branco); /* branco: continua legível sobre o halo verde */
 }
 
 /* ---- Trama 2 (manual, seção 6): repetição dos arcos, como textura bem suave ---- */

@@ -1,142 +1,168 @@
 // ARTE DOS ARCOS — feita com os arcos curvos do símbolo da SMI
 // (o "elemento desprendido" da Trama 2, manual seção 6).
 //
-// Os arcos surgem, se desenham devagar (da base até a ponta, como uma vela subindo),
-// fluem lentamente e somem. Às vezes aparecem os três juntos, na posição original do
-// símbolo. Cores: branco e azul claro translúcidos, com raros toques de dourado.
-// O logo NÃO é animado: só estes arcos soltos se movem.
+// Os arcos aparecem sempre em trios, na posição exata do símbolo (como as velas, linhas
+// paralelas que nunca se cruzam). Cada arco se desenha devagar (da base até a ponta),
+// fica um tempo e some.
+//
+// Para que nunca se cruzem nem se amontoem:
+//  - todos os trios têm a MESMA orientação (ficam paralelos entre si);
+//  - todos ficam num mesmo "plano" que desliza e balança devagar como um bloco só:
+//    a distância entre eles nunca muda depois que nascem;
+//  - um trio novo só nasce se ficar a uma distância mínima de todos os outros.
+// O logo NÃO é animado: só estes arcos se movem, e nunca passam por cima do logo/título.
 import { entre, type FabricaDeCena } from "./motor";
 import { ARCOS } from "./arcos-do-simbolo";
 
-interface Arco {
-  grupo: number; // arcos que nasceram juntos têm o mesmo número
-  forma: number; // qual dos 3 arcos do símbolo
-  x: number; // posição do centro do símbolo (px)
+interface Trio {
+  x: number; // centro do símbolo, no "plano" dos arcos (px)
   y: number;
   escala: number; // altura do símbolo, em px
-  giro: number; // rotação (rad)
-  vx: number; // deriva (px/s)
-  vy: number;
-  vgiro: number; // rad/s
-  cor: string;
-  alfa: number; // opacidade máxima
-  nasce: number; // momento em que começa a se desenhar (ms)
-  desenho: number; // duração do "se desenhar" (ms)
+  cores: { cor: string; alfa: number }[]; // uma por arco
+  nasce: number; // quando o primeiro arco começa a se desenhar (ms)
+  desenho: number; // duração do "se desenhar" de cada arco (ms)
   vida: number; // quanto tempo fica inteiro (ms)
   some: number; // duração do sumiço (ms)
 }
 
 const suave = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
+const ATRASO_ENTRE_ARCOS = 900; // os três arcos se desenham um depois do outro (ms)
+const DURACAO_MAXIMA = 8200 + 2 * ATRASO_ENTRE_ARCOS + 16000 + 4500;
+
+// caixa que contém os três arcos juntos (coordenadas do símbolo: altura = 1)
+const CAIXA_TRIO = ARCOS.reduce(
+  (c, a) => [Math.min(c[0], a.caixa[0]), Math.min(c[1], a.caixa[1]), Math.max(c[2], a.caixa[2]), Math.max(c[3], a.caixa[3])],
+  [Infinity, Infinity, -Infinity, -Infinity],
+);
 
 export const arcos: FabricaDeCena = (ctx, amb) => {
   const sutil = amb.modo === "sutil";
   const formas = ARCOS.map((a) => new Path2D(a.d));
-  let lista: Arco[] = [];
+  let trios: Trio[] = [];
   let recomecar = true;
-  let proximo = 0; // quando nasce o próximo grupo
-  let numeroDoGrupo = 0;
+  let proximo = 0;
 
-  // quantos grupos ao mesmo tempo (um grupo = um arco solto ou os três juntos)
-  const alvo = () => (sutil ? (amb.leve ? 1 : 2) : amb.leve ? 2 : 3);
+  // O "plano" dos arcos: todos com a mesma orientação, deslizando e balançando juntos
+  const orientacao = entre(-0.3, 0.25); // rotação comum a todos os trios (rad)
+  const direcao = entre(Math.PI * 0.9, Math.PI * 1.3); // desliza devagar (para a esquerda, com leve subida/descida)
+  const velocidade = sutil ? 1.2 : 2.2; // px/s
+  const plano = (t: number) => ({
+    dx: (Math.cos(direcao) * velocidade * t) / 1000,
+    dy: (Math.sin(direcao) * velocidade * t) / 1000,
+    balanco: Math.sin((t / 90000) * Math.PI * 2) * 0.05, // balanço lento: ±0,05 rad a cada 90 s
+  });
+
+  // quantos trios ao mesmo tempo (menos no celular e nas páginas internas)
+  const alvo = () => (sutil ? 1 : amb.leve ? 1 : 2);
 
   function cores() {
-    const r = Math.random();
-    if (sutil) {
-      if (r < 0.1) return { cor: amb.cor("dourado"), alfa: entre(0.18, 0.26) };
-      return { cor: amb.cor("azul"), alfa: entre(0.06, 0.11) };
-    }
-    if (r < 0.1) return { cor: amb.cor("dourado"), alfa: entre(0.45, 0.6) }; // toque raro
-    if (r < 0.55) return { cor: amb.cor("branco"), alfa: entre(0.12, 0.22) };
-    return { cor: amb.cor("azul-claro"), alfa: entre(0.2, 0.34) };
+    return [0, 1, 2].map(() => {
+      const r = Math.random();
+      if (sutil) return r < 0.12 ? { cor: amb.cor("dourado"), alfa: 0.22 } : { cor: amb.cor("azul"), alfa: entre(0.07, 0.11) };
+      if (r < 0.1) return { cor: amb.cor("dourado"), alfa: entre(0.45, 0.6) }; // toque raro
+      if (r < 0.55) return { cor: amb.cor("branco"), alfa: entre(0.14, 0.24) };
+      return { cor: amb.cor("azul-claro"), alfa: entre(0.22, 0.34) };
+    });
   }
 
-  const DURACAO_MAXIMA = 8200 + 16000 + 4500; // desenho + vida + sumiço (ms)
-  const MARGEM = 24; // px de folga em volta das áreas protegidas
-
-  /** O arco (com a deriva que vai ter ao longo da vida) passaria por cima do logo/título? */
-  function invadeProtegida(x: number, y: number, escala: number, quais: number[], vel: number) {
-    const deriva = (vel * DURACAO_MAXIMA) / 1000 + MARGEM;
-    // caixa dos arcos escolhidos, com folga para a rotação (±0,35 rad) e a deriva
-    let [x0, y0, x1, y1] = [Infinity, Infinity, -Infinity, -Infinity];
-    for (const q of quais) {
-      const c = ARCOS[q].caixa;
-      x0 = Math.min(x0, c[0]); y0 = Math.min(y0, c[1]); x1 = Math.max(x1, c[2]); y1 = Math.max(y1, c[3]);
-    }
-    const folgaGiro = 0.12 * escala;
-    const caixa = {
-      x0: x + x0 * escala - folgaGiro - deriva,
-      y0: y + y0 * escala - folgaGiro - deriva,
-      x1: x + x1 * escala + folgaGiro + deriva,
-      y1: y + y1 * escala + folgaGiro + deriva,
-    };
-    return amb.protegidas.some((p) => caixa.x0 < p.x1 && caixa.x1 > p.x0 && caixa.y0 < p.y1 && caixa.y1 > p.y0);
+  /** Ponto do "plano" dos arcos → ponto na tela, no momento t. */
+  function naTela(x: number, y: number, t: number) {
+    const { dx, dy, balanco } = plano(t);
+    const cx = amb.largura / 2;
+    const cy = amb.altura / 2;
+    const c = Math.cos(balanco);
+    const s = Math.sin(balanco);
+    return { x: cx + (x - cx) * c - (y - cy) * s + dx, y: cy + (x - cx) * s + (y - cy) * c + dy, giro: balanco };
   }
 
-  /** Cria um grupo: um arco solto ou os três arcos juntos (como no símbolo).
-   *  Sorteia posições até achar uma que não passe por cima do logo/título. */
-  function novoGrupo(agora: number, jaPronto: boolean) {
+  /** Ponto na tela → ponto do "plano", no momento t (para escolher onde nasce um trio). */
+  function noPlano(x: number, y: number, t: number) {
+    const { dx, dy, balanco } = plano(t);
+    const cx = amb.largura / 2;
+    const cy = amb.altura / 2;
+    const px = x - dx - cx;
+    const py = y - dy - cy;
+    const c = Math.cos(-balanco);
+    const s = Math.sin(-balanco);
+    return { x: cx + px * c - py * s, y: cy + px * s + py * c };
+  }
+
+  /** Caixa (na tela) de um trio centrado em (x, y) com rotação 'giro'. */
+  function caixaNaTela(x: number, y: number, escala: number, giro: number) {
+    const [a0, b0, a1, b1] = CAIXA_TRIO;
+    const c = Math.cos(giro);
+    const s = Math.sin(giro);
+    const xs: number[] = [];
+    const ys: number[] = [];
+    for (const [px, py] of [[a0, b0], [a1, b0], [a0, b1], [a1, b1]]) {
+      xs.push(x + (px * c - py * s) * escala);
+      ys.push(y + (px * s + py * c) * escala);
+    }
+    return { x0: Math.min(...xs), y0: Math.min(...ys), x1: Math.max(...xs), y1: Math.max(...ys) };
+  }
+
+  /** Durante toda a vida do trio, ele passaria perto do logo/título? */
+  function invadeProtegida(x: number, y: number, escala: number, inicio: number) {
+    const margem = 28;
+    for (let dt = 0; dt <= DURACAO_MAXIMA; dt += 1000) {
+      const p = naTela(x, y, inicio + dt);
+      const cx = caixaNaTela(p.x, p.y, escala, orientacao + p.giro);
+      const bate = amb.protegidas.some(
+        (z) => cx.x0 < z.x1 + margem && cx.x1 > z.x0 - margem && cx.y0 < z.y1 + margem && cx.y1 > z.y0 - margem,
+      );
+      if (bate) return true;
+    }
+    return false;
+  }
+
+  /** Fica a menos da distância mínima de algum trio que ainda está na tela?
+   *  (Todos têm a mesma orientação e se movem juntos, então basta comparar agora.) */
+  function pertoDeOutro(x: number, y: number, escala: number) {
+    const minha = caixaNaTela(x, y, escala, orientacao);
+    return trios.some((o) => {
+      const dele = caixaNaTela(o.x, o.y, o.escala, orientacao);
+      const folga = Math.max(32, 0.08 * Math.max(escala, o.escala)); // espaçamento mínimo entre trios
+      return minha.x0 < dele.x1 + folga && minha.x1 > dele.x0 - folga && minha.y0 < dele.y1 + folga && minha.y1 > dele.y0 - folga;
+    });
+  }
+
+  /** Tenta criar um trio num lugar livre. Devolve false se não houver lugar agora. */
+  function novoTrio(agora: number, jaPronto: boolean) {
     const { largura: L, altura: A } = amb;
     const base = Math.min(L, A);
-    const juntos = Math.random() < (sutil ? 0.35 : 0.4);
-    const quais = juntos ? [0, 1, 2] : [Math.floor(Math.random() * 3)];
-    const vel = sutil ? entre(1, 2.5) : entre(1, 3);
-    let x = 0, y = 0, escala = 0, achou = false;
-    for (let tentativa = 0; tentativa < 30 && !achou; tentativa++) {
-      x = sutil ? entre(L * 0.55, L * 1.05) : entre(L * 0.2, L * 1.1);
-      y = sutil ? entre(A * 0.05, A * 0.55) : entre(-A * 0.05, A * 1.05);
-      escala = sutil ? entre(A * 0.7, A * 1.2) : juntos ? entre(base * 0.42, base * 0.8) : entre(base * 0.45, base * 0.95);
-      achou = !invadeProtegida(x, y, escala, quais, vel);
-    }
-    if (!achou) return false; // sem lugar livre agora; tenta de novo mais tarde
-    const giro = entre(-0.35, 0.35);
-    const direcao = entre(0, Math.PI * 2);
-    const { cor, alfa } = cores();
     const desenho = entre(5200, 8200);
-    const vida = entre(9000, 16000);
+    const vida = entre(10000, 16000);
     const some = entre(3000, 4500);
-    const inicio = jaPronto ? agora - desenho - entre(0, vida * 0.6) : agora;
-    const grupo = ++numeroDoGrupo;
-    quais.forEach((forma, k) =>
-      lista.push({
-        grupo,
-        forma,
-        x,
-        y,
-        escala,
-        giro,
-        vx: Math.cos(direcao) * vel,
-        vy: Math.sin(direcao) * vel,
-        vgiro: entre(-0.012, 0.012),
-        cor,
-        alfa,
-        nasce: inicio + (jaPronto ? 0 : k * 900), // os três se desenham um depois do outro
-        desenho,
-        vida,
-        some,
-      }),
-    );
-    return true;
+    const inicio = jaPronto ? agora - desenho - 2 * ATRASO_ENTRE_ARCOS - entre(0, vida * 0.6) : agora;
+    for (let tentativa = 0; tentativa < 40; tentativa++) {
+      const telaX = sutil ? entre(L * 0.6, L * 1.02) : entre(L * 0.25, L * 1.08);
+      const telaY = sutil ? entre(A * 0.05, A * 0.5) : entre(A * 0.05, A * 0.95);
+      const escala = sutil ? entre(A * 0.7, A * 1.1) : entre(base * 0.38, base * 0.72);
+      const p = noPlano(telaX, telaY, inicio);
+      if (pertoDeOutro(p.x, p.y, escala) || invadeProtegida(p.x, p.y, escala, inicio)) continue;
+      trios.push({ x: p.x, y: p.y, escala, cores: cores(), nasce: inicio, desenho, vida, some });
+      return true;
+    }
+    return false;
   }
 
-  function desenhar(a: Arco, t: number) {
-    const idade = t - a.nasce;
+  function desenharArco(tr: Trio, forma: number, t: number) {
+    const idade = t - tr.nasce - forma * ATRASO_ENTRE_ARCOS;
     if (idade < 0) return;
-    const progresso = suave(idade / a.desenho); // 0 → 1 enquanto se desenha
-    const fim = a.desenho + a.vida;
-    const saida = idade > fim ? 1 - suave((idade - fim) / a.some) : 1;
-    const alfa = a.alfa * saida * (0.35 + 0.65 * progresso);
+    const progresso = suave(idade / tr.desenho); // 0 → 1 enquanto se desenha
+    const fim = tr.desenho + (2 - forma) * ATRASO_ENTRE_ARCOS + tr.vida; // os três somem juntos
+    const saida = idade > fim ? 1 - suave((idade - fim) / tr.some) : 1;
+    const { cor, alfa: alfaMax } = tr.cores[forma];
+    const alfa = alfaMax * saida * (0.35 + 0.65 * progresso);
     if (alfa <= 0.003) return;
 
-    const s = idade / 1000;
-    const caixa = ARCOS[a.forma].caixa;
     ctx.save();
-    ctx.translate(a.x + a.vx * s, a.y + a.vy * s);
-    ctx.rotate(a.giro + a.vgiro * s);
-    ctx.scale(a.escala, a.escala);
-
+    ctx.translate(tr.x, tr.y);
+    ctx.rotate(orientacao);
+    ctx.scale(tr.escala, tr.escala);
     if (progresso < 1) {
       // "se desenhar": mostra o arco da base (embaixo à esquerda) até a ponta (em cima à direita)
-      const [x0, y0, x1, y1] = caixa;
+      const [x0, y0, x1, y1] = ARCOS[forma].caixa;
       const dx = x1 - x0;
       const dy = y0 - y1;
       const comprimento = Math.hypot(dx, dy);
@@ -149,8 +175,8 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
       ctx.clip();
     }
     ctx.globalAlpha = alfa;
-    ctx.fillStyle = a.cor;
-    ctx.fill(formas[a.forma]);
+    ctx.fillStyle = cor;
+    ctx.fill(formas[forma]);
     ctx.restore();
   }
 
@@ -164,26 +190,28 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
     quadro(t) {
       const { largura: L, altura: A } = amb;
       if (recomecar) {
-        // começa com a tela já composta se estiver parado; senão, os arcos vão surgindo
-        lista = [];
-        for (let i = 0; i < alvo(); i++) {
-          if (amb.parado) novoGrupo(t, true);
-          else novoGrupo(t + i * 2600 - 2600, false);
-        }
-        // (novoGrupo pode desistir se não houver lugar livre; os que faltarem nascem depois)
+        // parado ("reduzir movimento"): começa com a tela já composta; senão, os trios vão surgindo
+        trios = [];
+        for (let i = 0; i < alvo(); i++) novoTrio(amb.parado ? t : t - 2600 + i * 3500, amb.parado);
         proximo = t + entre(3000, 6000);
         recomecar = false;
       }
 
       // tira os que já sumiram; faz nascer novos para manter a quantidade
-      lista = lista.filter((a) => t - a.nasce < a.desenho + a.vida + a.some);
-      const grupos = new Set(lista.map((a) => a.grupo)).size;
-      if (!amb.parado && t >= proximo && grupos < alvo()) {
-        proximo = t + (novoGrupo(t, false) ? entre(4500, 8000) : 1500);
+      trios = trios.filter((tr) => t - tr.nasce < tr.desenho + 2 * ATRASO_ENTRE_ARCOS + tr.vida + tr.some);
+      if (!amb.parado && t >= proximo && trios.length < alvo()) {
+        proximo = t + (novoTrio(t, false) ? entre(5000, 9000) : 1500);
       }
 
       ctx.clearRect(0, 0, L, A);
-      for (const a of lista) desenhar(a, t);
+      // move o "plano" inteiro: todos os trios juntos, sem mudar a distância entre eles
+      const { dx, dy, balanco } = plano(t);
+      ctx.save();
+      ctx.translate(L / 2 + dx, A / 2 + dy);
+      ctx.rotate(balanco);
+      ctx.translate(-L / 2, -A / 2);
+      for (const tr of trios) for (let forma = 0; forma < 3; forma++) desenharArco(tr, forma, t);
+      ctx.restore();
       ctx.globalAlpha = 1;
     },
   };
