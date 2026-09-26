@@ -1,0 +1,31 @@
+---
+// Rodapé: contato e demais itens da barra lateral do site antigo + link para o Arquivo.
+import { getEntry, render } from "astro:content";
+import { NOME_DO_SITE } from "../lib/site";
+
+const lateral = await getEntry("blocos", "barra-lateral");
+const rodape = await getEntry("blocos", "rodape");
+const { Content: Lateral } = lateral ? await render(lateral) : { Content: null };
+const { Content: TextoRodape } = rodape ? await render(rodape) : { Content: null };
+---
+
+<footer class="mt-32 border-t border-linha">
+  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-8 md:grid-cols-[1fr_2fr]">
+    <div>
+      <p class="font-titulo text-2xl leading-tight">{NOME_DO_SITE}</p>
+      {TextoRodape && <div class="mt-3 text-sm text-suave"><TextoRodape /></div>}
+      <p class="mt-8">
+        <a href="/arquivo/" class="text-sm text-destaque underline decoration-1 underline-offset-4 hover:text-destaque-escuro">
+          Arquivo
+        </a>
+      </p>
+    </div>
+    {
+      Lateral && (
+        <div class="texto prose prose-sm max-w-none text-suave sm:columns-2 sm:gap-12 [&_h2]:mt-0 [&_h2]:break-after-avoid [&_img]:ml-0 [&_img]:max-h-28">
+          <Lateral />
+        </div>
+      )
+    }
+  </div>
+</footer>

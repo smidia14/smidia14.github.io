@@ -1,0 +1,98 @@
+---
+// Modelo de todas as páginas internas (tudo menos a página inicial e o Arquivo).
+import { getCollection, render } from "astro:content";
+import Base from "../layouts/Base.astro";
+import ArteGenerativa from "../components/ArteGenerativa.astro";
+import { menu, trilhaNoMenu, itemDoMenu, type ItemMenu } from "../lib/menu";
+
+export async function getStaticPaths() {
+  const paginas = await getCollection("paginas", (p) => p.data.rota !== "");
+  return paginas.map((pagina) => ({ params: { rota: pagina.data.rota }, props: { pagina } }));
+}
+
+const { pagina } = Astro.props;
+const { Content } = await render(pagina);
+const href = `/${pagina.data.rota}/`;
+
+// Caminho de navegação ("Página inicial › Doutrinas › ...")
+function trilha(): ItemMenu[] {
+  const inicio = menu[0];
+  if (pagina.data.esta_no_menu) return [inicio, ...trilhaNoMenu(href)].filter((x, i, a) => a.indexOf(x) === i);
+  if (pagina.data.rota.startsWith("arquivo/"))
+    return [inicio, { titulo: "Arquivo", href: "/arquivo/", filhos: [] }, { titulo: pagina.data.titulo, href, filhos: [] }];
+  // páginas 2, 3... de galerias: ficam abaixo da página "mãe"
+  const partes = pagina.data.rota.split("/");
+  for (let i = partes.length - 1; i > 0; i--) {
+    const mae = trilhaNoMenu(`/${partes.slice(0, i).join("/")}/`);
+    if (mae.length) return [inicio, ...mae, { titulo: pagina.data.titulo, href, filhos: [] }];
+  }
+  return [inicio, { titulo: pagina.data.titulo, href, filhos: [] }];
+}
+const caminho = trilha();
+const subitens = itemDoMenu(href)?.filhos ?? [];
+---
+
+<Base titulo={pagina.data.titulo} descricao={pagina.data.descricao} atual={href}>
+  <section class="relative">
+    <!-- arte sutil no topo, que desaparece em direção ao texto -->
+    <ArteGenerativa
+      modo="sutil"
+      class="absolute inset-x-0 -top-24 h-[26rem] w-full [mask-image:linear-gradient(to_bottom,black_30%,transparent)]"
+    />
+    <div class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
+      <nav aria-label="Você está em" class="surgir text-sm text-suave">
+        <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
+          {
+            caminho.map((item, i) => (
+              <li class="flex items-center gap-2">
+                {i > 0 && <span aria-hidden="true">›</span>}
+                {i < caminho.length - 1 ? (
+                  <a href={item.href} class="hover:text-destaque">
+                    {item.titulo}
+                  </a>
+                ) : (
+                  <span aria-current="page" class="text-texto">
+                    {item.titulo}
+                  </span>
+                )}
+              </li>
+            ))
+          }
+        </ol>
+      </nav>
+      <h1 class="surgir mt-6 font-titulo text-4xl leading-[1.08] font-medium tracking-tight text-balance sm:text-6xl">
+        {pagina.data.titulo}
+      </h1>
+    </div>
+  </section>
+
+  <article class="surgir texto prose prose-lg mx-auto max-w-3xl px-5 sm:px-8">
+    <Content />
+  </article>
+
+  {
+    subitens.length > 0 && (
+      <nav aria-label={`Páginas em ${pagina.data.titulo}`} class="surgir mx-auto mt-20 max-w-3xl px-5 sm:px-8">
+        <ul class="divide-y divide-linha border-y border-linha">
+          {subitens.map((sub) => (
+            <li>
+              <a href={sub.href} class="group flex items-center justify-between gap-4 py-5 font-titulo text-2xl hover:text-destaque">
+                {sub.titulo}
+                <span aria-hidden="true" class="text-suave transition-transform group-hover:translate-x-1 group-hover:text-destaque">
+                  →
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    )
+  }
+
+  <p class="mx-auto mt-16 max-w-3xl px-5 text-xs break-all text-suave sm:px-8">
+    Endereço no site antigo:{" "}
+    <a href={pagina.data.url_original} class="underline decoration-1 underline-offset-2" target="_blank" rel="noopener">
+      {decodeURI(pagina.data.url_original)}
+    </a>
+  </p>
+</Base>

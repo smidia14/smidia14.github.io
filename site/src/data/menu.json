@@ -1,0 +1,288 @@
+[
+  {
+    "titulo": "Página inicial",
+    "href": "/",
+    "filhos": []
+  },
+  {
+    "titulo": "Download",
+    "href": "/download/",
+    "filhos": [
+      {
+        "titulo": "Mártires do Século XX",
+        "href": "/download/martires-do-seculo-xx/",
+        "filhos": []
+      },
+      {
+        "titulo": "Folhetos",
+        "href": "/download/folhetos/",
+        "filhos": [
+          {
+            "titulo": "O Retorno Mais Esperado",
+            "href": "/download/folhetos/o-retorno-mais-esperado/",
+            "filhos": []
+          },
+          {
+            "titulo": "Importa a Diferença",
+            "href": "/download/folhetos/importa-a-diferenca/",
+            "filhos": []
+          },
+          {
+            "titulo": "24 Razões para Guardar o Sábado",
+            "href": "/download/folhetos/24-razoes-para-guardar-o-sabado/",
+            "filhos": []
+          },
+          {
+            "titulo": "Vida Depois da Morte?",
+            "href": "/download/folhetos/vida-depois-da-morte/",
+            "filhos": []
+          },
+          {
+            "titulo": "Estenda Sua Mão",
+            "href": "/download/folhetos/estenda-sua-mao/",
+            "filhos": []
+          }
+        ]
+      },
+      {
+        "titulo": "Semana da Mordomia Cristã",
+        "href": "/download/semana-da-mordomia-crista/",
+        "filhos": []
+      },
+      {
+        "titulo": "Semana de Oração",
+        "href": "/download/semana-de-oracao/",
+        "filhos": []
+      },
+      {
+        "titulo": "Semana do Calvário",
+        "href": "/download/semana-do-calvario/",
+        "filhos": []
+      },
+      {
+        "titulo": "Semana Juvenil",
+        "href": "/download/semana-juvenil/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Transmissões ao Vivo",
+    "href": "/transmissoes-ao-vivo/",
+    "filhos": []
+  },
+  {
+    "titulo": "Departamentos",
+    "href": "/departamentos/",
+    "filhos": [
+      {
+        "titulo": "EVANGELISMO",
+        "href": "/departamentos/evangelismo/",
+        "filhos": []
+      },
+      {
+        "titulo": "Saúde",
+        "href": "/departamentos/saude/",
+        "filhos": [
+          {
+            "titulo": "Materiais",
+            "href": "/departamentos/saude/materiais/",
+            "filhos": []
+          }
+        ]
+      },
+      {
+        "titulo": "Jovens",
+        "href": "/departamentos/jovens/",
+        "filhos": [
+          {
+            "titulo": "Semana da Juventude",
+            "href": "/departamentos/jovens/semana-da-juventude/",
+            "filhos": []
+          }
+        ]
+      },
+      {
+        "titulo": "Escola Sabatina",
+        "href": "/departamentos/escola-sabatina/",
+        "filhos": []
+      },
+      {
+        "titulo": "Secretária",
+        "href": "/departamentos/secretaria/",
+        "filhos": []
+      },
+      {
+        "titulo": "Família",
+        "href": "/departamentos/familia/",
+        "filhos": []
+      },
+      {
+        "titulo": "Bom Samaritano",
+        "href": "/departamentos/bom-samaritano/",
+        "filhos": []
+      },
+      {
+        "titulo": "Educação",
+        "href": "/departamentos/educacao/",
+        "filhos": []
+      },
+      {
+        "titulo": "Literário",
+        "href": "/departamentos/literario/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Doutrinas",
+    "href": "/doutrinas/",
+    "filhos": [
+      {
+        "titulo": "Princípios de Fé",
+        "href": "/doutrinas/principios-de-fe/",
+        "filhos": []
+      },
+      {
+        "titulo": "Manual de Igreja",
+        "href": "/doutrinas/manual-de-igreja/",
+        "filhos": []
+      },
+      {
+        "titulo": "Manual de Normas e Funções",
+        "href": "/doutrinas/manual-de-normas-e-funcoes/",
+        "filhos": []
+      },
+      {
+        "titulo": "Evangelismo e liturgia",
+        "href": "/doutrinas/evangelismo-e-liturgia/",
+        "filhos": []
+      },
+      {
+        "titulo": "Renovação de Nossa Fidelidade",
+        "href": "/doutrinas/renovacao-de-nossa-fidelidade/",
+        "filhos": []
+      },
+      {
+        "titulo": "Laodicéia",
+        "href": "/doutrinas/laodiceia/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Nossa História",
+    "href": "/nossa-historia/",
+    "filhos": []
+  },
+  {
+    "titulo": "Contatos",
+    "href": "/contatos/",
+    "filhos": [
+      {
+        "titulo": "São Paulo",
+        "href": "/contatos/sao-paulo/",
+        "filhos": []
+      },
+      {
+        "titulo": "Rio de Janeiro",
+        "href": "/contatos/rio-de-janeiro/",
+        "filhos": []
+      },
+      {
+        "titulo": "Belo Horizonte",
+        "href": "/contatos/belo-horizonte/",
+        "filhos": []
+      },
+      {
+        "titulo": "Bahia",
+        "href": "/contatos/bahia/",
+        "filhos": []
+      },
+      {
+        "titulo": "Amazonas",
+        "href": "/contatos/amazonas/",
+        "filhos": []
+      }
+    ]
+  },
+  {
+    "titulo": "Radio SmidiaWeb 24hs",
+    "href": "/radio-smidiaweb-24hs/",
+    "filhos": []
+  },
+  {
+    "titulo": "Diversos",
+    "href": "/diversos/",
+    "filhos": [
+      {
+        "titulo": "Diversos",
+        "href": "/diversos/diversos/",
+        "filhos": [
+          {
+            "titulo": "Sermões",
+            "href": "/diversos/diversos/sermoes/",
+            "filhos": [
+              {
+                "titulo": "Cristo e o Natal",
+                "href": "/diversos/diversos/sermoes/cristo-e-o-natal/",
+                "filhos": []
+              },
+              {
+                "titulo": "A Oração de Jabez",
+                "href": "/diversos/diversos/sermoes/a-oracao-de-jabez/",
+                "filhos": []
+              },
+              {
+                "titulo": "Como o Senhor da Vida dá Vida?",
+                "href": "/diversos/diversos/sermoes/como-o-senhor-da-vida-da-vida/",
+                "filhos": []
+              },
+              {
+                "titulo": "Pr. Adalicio",
+                "href": "/diversos/diversos/sermoes/pr-adalicio/",
+                "filhos": []
+              }
+            ]
+          },
+          {
+            "titulo": "Bíblia Online",
+            "href": "/diversos/diversos/biblia-online/",
+            "filhos": []
+          },
+          {
+            "titulo": "Estatuto",
+            "href": "/diversos/diversos/estatuto/",
+            "filhos": []
+          },
+          {
+            "titulo": "Nossa História",
+            "href": "/diversos/diversos/nossa-historia/",
+            "filhos": [
+              {
+                "titulo": "Histórico",
+                "href": "/diversos/diversos/nossa-historia/historico/",
+                "filhos": []
+              }
+            ]
+          },
+          {
+            "titulo": "Contato",
+            "href": "/diversos/diversos/contato/",
+            "filhos": []
+          },
+          {
+            "titulo": "Testemunhos ELLEN G.WHITE",
+            "href": "/diversos/diversos/testemunhos-ellen-g-white/",
+            "filhos": []
+          },
+          {
+            "titulo": "Protocolo",
+            "href": "/diversos/diversos/protocolo/",
+            "filhos": []
+          }
+        ]
+      }
+    ]
+  }
+]

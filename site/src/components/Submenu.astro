@@ -1,0 +1,32 @@
+---
+// Lista de subitens do menu (repete-se para cada nível).
+import type { ItemMenu } from "../lib/menu";
+import { contem } from "../lib/menu";
+
+interface Props {
+  itens: ItemMenu[];
+  atual: string;
+  nivel?: number;
+}
+const { itens, atual, nivel = 1 } = Astro.props;
+---
+
+<ul class:list={["space-y-0.5", nivel > 1 && "mt-0.5 ml-3 border-l border-linha pl-3"]}>
+  {
+    itens.map((item) => (
+      <li>
+        <a
+          href={item.href}
+          aria-current={item.href === atual ? "page" : undefined}
+          class:list={[
+            "block rounded px-2 py-1.5 text-[0.95rem] leading-snug transition-colors hover:bg-fundo hover:text-destaque",
+            item.href === atual ? "text-destaque" : contem(item, atual) ? "text-texto" : "text-suave",
+          ]}
+        >
+          {item.titulo}
+        </a>
+        {item.filhos.length > 0 && <Astro.self itens={item.filhos} atual={atual} nivel={nivel + 1} />}
+      </li>
+    ))
+  }
+</ul>

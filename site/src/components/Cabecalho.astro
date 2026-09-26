@@ -1,0 +1,109 @@
+---
+// Cabeçalho com o menu principal. O menu vem de src/data/menu.json.
+import { menu, contem } from "../lib/menu";
+import Submenu from "./Submenu.astro";
+import MenuCelular from "./MenuCelular.astro";
+import { NOME_DO_SITE } from "../lib/site";
+
+interface Props {
+  atual: string; // endereço da página aberta (para destacar o item do menu)
+}
+const { atual } = Astro.props;
+---
+
+<header class="relative z-30">
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-8">
+    <a href="/" class="max-w-[13.5rem] font-titulo text-lg leading-tight tracking-tight">{NOME_DO_SITE}</a>
+
+    <!-- Computador: menu na linha, subitens aparecem ao passar o mouse ou com a tecla Tab -->
+    <nav aria-label="Menu principal" class="hidden xl:block">
+      <ul class="flex items-center">
+        {
+          menu.map((item, i) => (
+            <li class="group relative">
+              <a
+                href={item.href}
+                aria-current={item.href === atual ? "page" : undefined}
+                class:list={[
+                  "block rounded-full px-2.5 py-2 text-[0.875rem] whitespace-nowrap transition-colors hover:text-destaque",
+                  contem(item, atual) ? "text-destaque" : "text-texto",
+                ]}
+              >
+                {item.titulo}
+              </a>
+              {item.filhos.length > 0 && (
+                <div
+                  class:list={[
+                    "invisible absolute top-full z-40 pt-2 opacity-0 transition-all duration-200 group-focus-within:visible group-focus-within:opacity-100 group-hover:visible group-hover:opacity-100",
+                    i >= menu.length - 3 ? "right-0" : "left-0",
+                  ]}
+                >
+                  <div class="max-h-[75vh] w-72 overflow-y-auto rounded-xl border border-linha bg-superficie p-3 shadow-xl shadow-black/5">
+                    <Submenu itens={item.filhos} atual={atual} />
+                  </div>
+                </div>
+              )}
+            </li>
+          ))
+        }
+      </ul>
+    </nav>
+
+    <!-- Celular e tablet: botão que abre o menu em tela cheia -->
+    <button
+      type="button"
+      id="abrir-menu"
+      aria-controls="menu-celular"
+      aria-expanded="false"
+      class="flex items-center gap-2 rounded-full border border-linha px-4 py-2 text-sm xl:hidden"
+    >
+      <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+        <path d="M3 6h14M3 10h14M3 14h14" />
+      </svg>
+      Menu
+    </button>
+  </div>
+
+  <div id="menu-celular" hidden class="fixed inset-0 z-50 overflow-y-auto bg-fundo xl:hidden">
+    <div class="mx-auto max-w-xl px-6 pt-5 pb-16">
+      <div class="mb-6 flex items-center justify-between">
+        <span class="font-titulo text-lg">{NOME_DO_SITE}</span>
+        <button type="button" id="fechar-menu" class="rounded-full border border-linha px-4 py-2 text-sm">Fechar</button>
+      </div>
+      <nav aria-label="Menu principal">
+        <MenuCelular itens={menu} atual={atual} />
+      </nav>
+    </div>
+  </div>
+</header>
+
+<script>
+  const painel = document.getElementById("menu-celular")!;
+  const abrir = document.getElementById("abrir-menu")!;
+  const fechar = document.getElementById("fechar-menu")!;
+
+  function mostrar(sim: boolean) {
+    painel.hidden = !sim;
+    abrir.setAttribute("aria-expanded", String(sim));
+    document.documentElement.style.overflow = sim ? "hidden" : "";
+    (sim ? fechar : abrir).focus();
+  }
+  abrir.addEventListener("click", () => mostrar(true));
+  fechar.addEventListener("click", () => mostrar(false));
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && !painel.hidden) mostrar(false);
+  });
+
+  // Botões que abrem/fecham os subitens
+  painel.querySelectorAll<HTMLButtonElement>("[data-alternar]").forEach((botao) => {
+    const lista = botao.closest("li")!.querySelector<HTMLElement>(":scope > div[hidden], :scope > div:not(.flex)")!;
+    const girar = () => botao.querySelector("svg")!.classList.toggle("rotate-180", botao.ariaExpanded === "true");
+    girar();
+    botao.addEventListener("click", () => {
+      const aberto = botao.getAttribute("aria-expanded") === "true";
+      botao.setAttribute("aria-expanded", String(!aberto));
+      lista.hidden = aberto;
+      girar();
+    });
+  });
+</script>

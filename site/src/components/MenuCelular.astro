@@ -1,0 +1,55 @@
+---
+// Itens do menu no celular: cada item com subitens tem um botão para abrir/fechar.
+import type { ItemMenu } from "../lib/menu";
+import { contem } from "../lib/menu";
+
+interface Props {
+  itens: ItemMenu[];
+  atual: string;
+  nivel?: number;
+}
+const { itens, atual, nivel = 0 } = Astro.props;
+---
+
+<ul class:list={[nivel > 0 && "ml-4 border-l border-linha pl-4"]}>
+  {
+    itens.map((item) => {
+      const aberto = item.filhos.length > 0 && contem(item, atual) && item.href !== atual;
+      return (
+        <li>
+          <div class="flex items-center justify-between gap-2">
+            <a
+              href={item.href}
+              aria-current={item.href === atual ? "page" : undefined}
+              class:list={[
+                "block flex-1 py-2.5",
+                nivel === 0 ? "font-titulo text-2xl" : "text-lg",
+                item.href === atual ? "text-destaque" : "text-texto",
+              ]}
+            >
+              {item.titulo}
+            </a>
+            {item.filhos.length > 0 && (
+              <button
+                type="button"
+                data-alternar
+                aria-expanded={aberto ? "true" : "false"}
+                aria-label={`Subitens de ${item.titulo}`}
+                class="grid size-11 shrink-0 place-items-center rounded-full text-suave hover:bg-linha/60"
+              >
+                <svg class="size-5 transition-transform" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M5 8l5 5 5-5" />
+                </svg>
+              </button>
+            )}
+          </div>
+          {item.filhos.length > 0 && (
+            <div hidden={!aberto}>
+              <Astro.self itens={item.filhos} atual={atual} nivel={nivel + 1} />
+            </div>
+          )}
+        </li>
+      );
+    })
+  }
+</ul>

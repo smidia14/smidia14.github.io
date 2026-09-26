@@ -1,0 +1,31 @@
+/* ==========================================================================
+   TEMA DO SITE — cores e fontes em um só lugar
+   Para trocar pela identidade da igreja, mude só os valores abaixo.
+   Cores: use o formato #RRGGBB. Depois de salvar, o site atualiza sozinho.
+   ========================================================================== */
+
+/* ---- Fontes (instaladas no projeto, não dependem da internet) ----
+   Para trocar: instale outra em https://fontsource.org (ex.: npm install
+   @fontsource-variable/lora), troque a linha @import e o nome em --font-... */
+@import "@fontsource-variable/fraunces";
+@import "@fontsource-variable/inter";
+
+@theme static {
+  /* Fontes */
+  --font-titulo: "Fraunces Variable", Georgia, serif; /* títulos grandes */
+  --font-texto: "Inter Variable", system-ui, sans-serif; /* textos e menu */
+
+  /* Cores principais */
+  --color-fundo: #fafaf7; /* fundo das páginas */
+  --color-superficie: #ffffff; /* caixas e menus abertos */
+  --color-texto: #1c1c22; /* texto principal */
+  --color-suave: #6b6b76; /* textos secundários, legendas */
+  --color-linha: #e6e4de; /* linhas finas e bordas */
+  --color-destaque: #3d3fb8; /* links e botões */
+  --color-destaque-escuro: #2a2c8a; /* link ao passar o mouse */
+
+  /* Cores da arte animada (fundo da página inicial e topo das páginas) */
+  --color-arte-1: #3d3fb8; /* azul-índigo */
+  --color-arte-2: #1f9e8f; /* verde-água */
+  --color-arte-3: #e0795a; /* coral */
+}

@@ -1,2 +1,4 @@
 cache_html/
 __pycache__/
+.claude/
+site/.claude/
