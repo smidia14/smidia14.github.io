@@ -10,7 +10,9 @@
 //  - todos ficam num mesmo "plano" que desliza e balança devagar como um bloco só:
 //    a distância entre eles nunca muda depois que nascem;
 //  - um trio novo só nasce se ficar a uma distância mínima de todos os outros.
-// O logo NÃO é animado: só estes arcos se movem, e nunca passam por cima do logo/título.
+// O logo NÃO é animado e nenhum arco passa por cima dele (área protegida).
+// Os arcos podem passar por trás do texto do título, mas ali ficam com só 30% da
+// opacidade (área atenuada), para o texto manter contraste de pelo menos 4,5 : 1.
 import { entre, type FabricaDeCena } from "./motor";
 import { ARCOS } from "./arcos-do-simbolo";
 
@@ -24,6 +26,12 @@ interface Trio {
   vida: number; // quanto tempo fica inteiro (ms)
   some: number; // duração do sumiço (ms)
 }
+
+// Opacidade que sobra aos arcos atrás do texto. Pior caso medido (arco branco sobre o centro
+// do halo verde): até 33% da opacidade normal o título ainda tem 4,6 : 1. Usamos 30%.
+const FATOR_ATRAS_DO_TEXTO = 0.3;
+// Atrás de texto pequeno em dourado claro (versão 2 do título), apaga mais: fica 12%.
+const FATOR_ATRAS_DO_TEXTO_FORTE = 0.12;
 
 const suave = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));
 const ATRASO_ENTRE_ARCOS = 900; // os três arcos se desenham um depois do outro (ms)
@@ -53,7 +61,27 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
   });
 
   // quantos trios ao mesmo tempo (menos no celular; nas páginas internas, bem pouco)
-  const alvo = () => (amb.leve ? 1 : sutil ? 2 : 2);
+  const alvo = () => (sutil ? (amb.leve ? 1 : 2) : amb.leve ? 3 : 4);
+
+  // Máscara das áreas atenuadas (atrás do texto): feita em baixa resolução e ampliada,
+  // o que deixa as bordas suaves (sem "corte" visível no meio de um arco).
+  let mascara: HTMLCanvasElement | null = null;
+  function montarMascara() {
+    if (!amb.atenuadas.length || !amb.largura) {
+      mascara = null;
+      return;
+    }
+    const escala = 1 / 12;
+    const folga = 18; // px em volta de cada linha de texto
+    mascara = document.createElement("canvas");
+    mascara.width = Math.ceil(amb.largura * escala);
+    mascara.height = Math.ceil(amb.altura * escala);
+    const m = mascara.getContext("2d")!;
+    for (const z of amb.atenuadas) {
+      m.fillStyle = `rgba(0,0,0,${1 - (z.forte ? FATOR_ATRAS_DO_TEXTO_FORTE : FATOR_ATRAS_DO_TEXTO)})`;
+      m.fillRect((z.x0 - folga) * escala, (z.y0 - folga) * escala, (z.x1 - z.x0 + 2 * folga) * escala, (z.y1 - z.y0 + 2 * folga) * escala);
+    }
+  }
 
   function cores() {
     return [0, 1, 2].map(() => {
@@ -140,7 +168,7 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
     const some = entre(3000, 4500);
     const inicio = jaPronto ? agora - desenho - 2 * ATRASO_ENTRE_ARCOS - entre(0, vida * 0.6) : agora;
     for (let tentativa = 0; tentativa < 40; tentativa++) {
-      const telaX = sutil ? entre(L * 0.3, L * 1.05) : entre(L * 0.25, L * 1.08);
+      const telaX = sutil ? entre(L * 0.3, L * 1.05) : entre(-L * 0.05, L * 1.08);
       const telaY = sutil ? entre(A * 0.1, A * 0.9) : entre(A * 0.05, A * 0.95);
       const escala = sutil ? entre(A * 0.55, A * 0.95) : entre(base * 0.38, base * 0.72);
       const p = noPlano(telaX, telaY, inicio);
@@ -190,6 +218,11 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
 
     redimensionar() {
       recomecar = true;
+      montarMascara();
+    },
+
+    areasMudaram() {
+      montarMascara();
     },
 
     quadro(t) {
@@ -218,6 +251,16 @@ export const arcos: FabricaDeCena = (ctx, amb) => {
       for (const tr of trios) for (let forma = 0; forma < 3; forma++) desenharArco(tr, forma, t);
       ctx.restore();
       ctx.globalAlpha = 1;
+
+      // atrás do texto: apaga 70% do que foi desenhado (fica 30%), com bordas suaves
+      if (mascara) {
+        ctx.save();
+        ctx.setTransform(1, 0, 0, 1, 0, 0);
+        ctx.globalCompositeOperation = "destination-out";
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(mascara, 0, 0, ctx.canvas.width, ctx.canvas.height);
+        ctx.restore();
+      }
     },
   };
 };

@@ -11,7 +11,8 @@
      suave sobre branco ...... 6,2 : 1     suave sobre cinza ....... 5,0 : 1
      azul sobre branco ....... 8,8 : 1     branco sobre azul ....... 8,8 : 1
      azul-claro sobre azul ... 5,7 : 1
-   NÃO USAR COMO TEXTO: verde (2,8 : 1 sobre branco) e dourado (2,4 : 1).
+   NÃO USAR COMO TEXTO: verde (2,8 : 1 sobre branco) e dourado (2,4 : 1 sobre branco;
+   3,6 : 1 sobre azul). Para texto dourado sobre azul, use dourado-claro (6,4 : 1).
    Texto branco sobre o verde também não passa (2,8 : 1): no degradê, o texto
    fica sempre sobre a parte azul.
    ========================================================================== */
@@ -45,6 +46,8 @@
   /* Tons derivados do azul oficial (não estão no manual; usados só na interface) */
   --color-azul-escuro: #0e3a60; /* azul ao passar o mouse; fundo do topo */
   --color-azul-claro: #b9d3e8; /* arte animada e textos pequenos sobre azul */
+  --color-dourado-claro: #e0dbc8; /* dourado clareado, para TEXTO sobre azul (6,4 : 1); o dourado
+                                     oficial só tem 3,6 : 1 sobre o azul e não serve para texto */
 
   /* Cores de uso geral */
   --color-fundo: #ffffff; /* fundo das páginas */

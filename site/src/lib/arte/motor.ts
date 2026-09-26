@@ -19,7 +19,18 @@ export interface Ambiente {
   /** Áreas onde a arte não deve passar (logo, título), em px relativos ao canvas.
    *  Vêm dos elementos marcados com o atributo data-arte-protege. Em elementos de texto,
    *  cada LINHA vira uma área (e não a caixa inteira, que pode ser bem mais larga que o texto). */
-  protegidas: { x0: number; y0: number; x1: number; y1: number }[];
+  protegidas: Area[];
+  /** Áreas onde os arcos PODEM passar, mas bem mais apagados (atrás do texto do título),
+   *  para o texto manter contraste. Vêm dos elementos com data-arte-atenua. */
+  atenuadas: Area[];
+}
+
+export interface Area {
+  x0: number;
+  y0: number;
+  x1: number;
+  y1: number;
+  forte?: boolean; // data-arte-atenua="forte": apaga ainda mais (texto pequeno ou dourado)
 }
 
 export interface Cena {
@@ -27,6 +38,8 @@ export interface Cena {
   resolucaoMaxima?: number;
   /** Chamado quando o tamanho muda (e na primeira vez) */
   redimensionar(): void;
+  /** Chamado quando as áreas protegidas/atenuadas mudam de lugar (fontes carregadas, fim da entrada do título) */
+  areasMudaram?(): void;
   /** Desenha um quadro. t = tempo em ms; dt = ms desde o último quadro (0 = imagem parada) */
   quadro(t: number, dt: number): void;
 }
@@ -65,6 +78,7 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
     ponteiro: { x: -9999, y: -9999, ativo: false },
     rolagem: () => window.scrollY,
     protegidas: [],
+    atenuadas: [],
   };
   const cena = fabrica(ctx, amb);
 
@@ -85,18 +99,41 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
     canvas.width = Math.round(r.width * dpr);
     canvas.height = Math.round(r.height * dpr);
     ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
-    amb.protegidas = [...(canvas.parentElement?.querySelectorAll("[data-arte-protege]") ?? [])].flatMap((el) => {
-      let caixas: DOMRect[] = [el.getBoundingClientRect()];
-      if (el.children.length === 0 && el.textContent?.trim()) {
-        const faixa = document.createRange();
-        faixa.selectNodeContents(el);
-        caixas = [...faixa.getClientRects()].filter((c) => c.width > 0);
-      }
-      return caixas.map((p) => ({ x0: p.left - r.left, y0: p.top - r.top, x1: p.right - r.left, y1: p.bottom - r.top }));
-    });
+    medirAreas();
     cena.redimensionar();
     return true;
   }
+
+  /** Mede as áreas (em px relativos ao canvas). Em elementos de texto, cada LINHA vira uma
+   *  área (e não a caixa inteira, que pode ser bem mais larga que o texto). */
+  function medirAreas() {
+    const r = canvas.getBoundingClientRect();
+    const medir = (seletor: string): Area[] =>
+      [...(canvas.parentElement?.querySelectorAll(seletor) ?? [])].flatMap((el) => {
+        if (getComputedStyle(el).display === "none") return [];
+        let caixas: DOMRect[] = [el.getBoundingClientRect()];
+        if (el.children.length === 0 && el.textContent?.trim()) {
+          const faixa = document.createRange();
+          faixa.selectNodeContents(el);
+          caixas = [...faixa.getClientRects()].filter((c) => c.width > 0);
+        }
+        const forte = (el as HTMLElement).dataset.arteAtenua === "forte";
+        return caixas.map((p) => ({ x0: p.left - r.left, y0: p.top - r.top, x1: p.right - r.left, y1: p.bottom - r.top, forte }));
+      });
+    amb.protegidas = medir("[data-arte-protege]");
+    amb.atenuadas = medir("[data-arte-atenua]");
+  }
+
+  function remedir() {
+    if (!amb.largura) return;
+    medirAreas();
+    cena.areasMudaram?.();
+    if (!rodando) imagemParada();
+  }
+  // o texto muda de lugar quando as fontes terminam de carregar e quando a entrada do título acaba
+  document.fonts?.ready.then(remedir);
+  canvas.parentElement?.addEventListener("animationend", remedir);
+  canvas.parentElement?.addEventListener("transitionend", remedir);
 
   function quadro(agora: number) {
     if (!rodando) return;
