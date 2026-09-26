@@ -1,12 +1,13 @@
 // Parte comum das artes animadas: tamanho, laço de animação, pausas,
 // "reduzir movimento", versão leve no celular, mouse e rolagem.
-// Cada proposta (luz.ts, ondas.ts, constelacao.ts) só desenha a sua cena.
+// A cena (arcos.ts) só desenha; este arquivo decide quando e em que tamanho.
 
 export type Modo = "forte" | "sutil"; // forte: topo da página inicial; sutil: topo das páginas internas
 
 export interface Ambiente {
   modo: Modo;
   leve: boolean; // celular/tela pequena: menos elementos
+  parado: boolean; // "reduzir movimento" ativado: a cena deve montar uma imagem completa e parada
   largura: number;
   altura: number;
   /** Cor do tema (src/styles/tema.css) com transparência: cor("dourado", 0.5) */
@@ -15,6 +16,9 @@ export interface Ambiente {
   ponteiro: { x: number; y: number; ativo: boolean };
   /** Quanto a página já rolou, em pixels */
   rolagem: () => number;
+  /** Áreas onde a arte não deve passar (logo, título), em px relativos ao canvas.
+   *  Vêm dos elementos marcados com o atributo data-arte-protege. */
+  protegidas: { x0: number; y0: number; x1: number; y1: number }[];
 }
 
 export interface Cena {
@@ -53,11 +57,13 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
   const amb: Ambiente = {
     modo,
     leve: telaPequena.matches,
+    parado: movimentoReduzido.matches,
     largura: 0,
     altura: 0,
     cor: lerCores(),
     ponteiro: { x: -9999, y: -9999, ativo: false },
     rolagem: () => window.scrollY,
+    protegidas: [],
   };
   const cena = fabrica(ctx, amb);
 
@@ -78,6 +84,10 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
     canvas.width = Math.round(r.width * dpr);
     canvas.height = Math.round(r.height * dpr);
     ctx!.setTransform(dpr, 0, 0, dpr, 0, 0);
+    amb.protegidas = [...(canvas.parentElement?.querySelectorAll("[data-arte-protege]") ?? [])].map((el) => {
+      const p = el.getBoundingClientRect();
+      return { x0: p.left - r.left, y0: p.top - r.top, x1: p.right - r.left, y1: p.bottom - r.top };
+    });
     cena.redimensionar();
     return true;
   }
@@ -98,6 +108,8 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
   // Decide se anima, fica parado ou pausa
   function atualizar() {
     const deveRodar = visivel && !document.hidden && !movimentoReduzido.matches;
+    // a página pode ter aberto sem tamanho (aba em segundo plano): ajusta antes de animar
+    if (deveRodar && !amb.largura) ajustarTamanho();
     if (deveRodar && !rodando) {
       rodando = true;
       ultimo = 0;
@@ -115,6 +127,8 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
   }).observe(canvas);
   document.addEventListener("visibilitychange", atualizar);
   movimentoReduzido.addEventListener("change", () => {
+    amb.parado = movimentoReduzido.matches;
+    cena.redimensionar();
     atualizar();
     imagemParada();
   });
@@ -135,7 +149,7 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
 
   let espera: number | undefined;
   let medidas = [canvas.clientWidth, canvas.clientHeight];
-  new ResizeObserver(() => {
+  const aoMudarTamanho = () => {
     // no celular a barra do navegador muda um pouco a altura ao rolar: ignora mudanças pequenas
     const [w, h] = [canvas.clientWidth, canvas.clientHeight];
     if (Math.abs(w - medidas[0]) < 2 && Math.abs(h - medidas[1]) < 120) return;
@@ -144,7 +158,9 @@ export function iniciarArte(canvas: HTMLCanvasElement, modo: Modo, fabrica: Fabr
     espera = window.setTimeout(() => {
       if (ajustarTamanho()) imagemParada();
     }, 150);
-  }).observe(canvas);
+  };
+  new ResizeObserver(aoMudarTamanho).observe(canvas);
+  window.addEventListener("resize", aoMudarTamanho, { passive: true });
 }
 
 /** Número aleatório entre a e b */

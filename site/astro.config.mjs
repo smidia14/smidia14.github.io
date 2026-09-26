@@ -5,6 +5,9 @@ import { remarkIncorporados, remarkSemTituloRepetido, rehypeImagensELinks } from
 
 // https://astro.build/config
 export default defineConfig({
+  // Endereço do site publicado (usado na imagem de compartilhamento do WhatsApp/redes).
+  // PENDENTE: confirmar o domínio definitivo do novo site.
+  site: "https://www.smir14.com.br",
   markdown: {
     remarkPlugins: [remarkIncorporados, remarkSemTituloRepetido],
     rehypePlugins: [rehypeImagensELinks],

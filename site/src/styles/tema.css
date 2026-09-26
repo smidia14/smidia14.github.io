@@ -1,43 +1,57 @@
 /* ==========================================================================
-   TEMA DO SITE — cores e fontes em um só lugar
-   Paleta PROVISÓRIA: azul escuro, azul bebê, branco e dourado.
-   Para trocar pela identidade oficial, mude só os códigos #RRGGBB abaixo.
-   A arte animada do topo usa estas mesmas cores.
+   TEMA DO SITE — cores e fontes da identidade visual oficial da SMI
+   Fonte: IDENTIDADE-VISUAL.md (resumo do Manual de Marca 2024), seções 2 e 3.
 
-   Contraste de leitura (mínimo recomendado para texto: 4,5 : 1):
-     texto sobre fundo ........ 16,5 : 1      suave sobre fundo ........ 6,9 : 1
-     link sobre fundo ......... 7,5 : 1       dourado-texto sobre fundo  5,3 : 1
-     claro sobre principal .... 13,2 : 1      dourado sobre principal-escuro 7,2 : 1
-   ATENÇÃO: o dourado puro sobre branco tem só 2,4 : 1 — use-o para linhas,
-   detalhes e botões (com texto azul escuro), nunca para texto sobre branco.
+   PROPORÇÕES DO MANUAL: azul ~50% · branco/cinza ~30% · verde ~15% · dourado ~5%.
+   Azul e branco se alternam como fundo. Verde e dourado SÓ em detalhes e
+   ornamentos (linhas finas, marcadores, arcos) — nunca como fundo dominante.
+
+   CONTRASTE DE LEITURA (mínimo recomendado para texto: 4,5 : 1)
+     texto sobre branco ...... 15,2 : 1    texto sobre cinza ....... 12,3 : 1
+     suave sobre branco ...... 6,2 : 1     suave sobre cinza ....... 5,0 : 1
+     azul sobre branco ....... 8,8 : 1     branco sobre azul ....... 8,8 : 1
+     azul-claro sobre azul ... 5,7 : 1
+   NÃO USAR COMO TEXTO: verde (2,8 : 1 sobre branco) e dourado (2,4 : 1).
+   Texto branco sobre o verde também não passa (2,8 : 1): no degradê, o texto
+   fica sempre sobre a parte azul.
    ========================================================================== */
 
-/* ---- Fontes (instaladas no projeto, não dependem da internet) ----
-   Para trocar: instale outra em https://fontsource.org (ex.: npm install
-   @fontsource-variable/lora), troque a linha @import e o nome em --font-... */
-@import "@fontsource-variable/fraunces";
-@import "@fontsource-variable/inter";
+/* ---- Fontes ----
+   Roboto: oficial (textos longos).
+   Gilroy e Agenor Neue: oficiais, mas não há arquivos de fonte com licença para web
+   em identidade_visual/. Por enquanto, alternativas gratuitas parecidas:
+     PENDENTE: trocar pela fonte oficial Gilroy      (hoje: Outfit)
+     PENDENTE: trocar pela fonte oficial Agenor Neue (hoje: Nunito Sans)
+   Para trocar: coloque os arquivos da fonte (.woff2) em public/fontes/, declare com
+   @font-face aqui e mude o nome em --font-titulo / --font-informativo. */
+@import "@fontsource-variable/outfit";
+@import "@fontsource-variable/nunito-sans";
+@import "@fontsource-variable/roboto/wght.css";
+@import "@fontsource-variable/roboto/wght-italic.css";
 
 @theme static {
   /* Fontes */
-  --font-titulo: "Fraunces Variable", Georgia, serif; /* títulos grandes */
-  --font-texto: "Inter Variable", system-ui, sans-serif; /* textos e menu */
+  --font-titulo: "Outfit Variable", system-ui, sans-serif; /* Gilroy (PENDENTE): títulos e palavras curtas */
+  --font-informativo: "Nunito Sans Variable", system-ui, sans-serif; /* Agenor Neue (PENDENTE): títulos informativos, menu */
+  --font-texto: "Roboto Variable", system-ui, sans-serif; /* Roboto: textos longos */
 
-  /* Cores da identidade */
-  --color-principal: #12305a; /* azul escuro: cor principal */
-  --color-principal-escuro: #0a1b33; /* azul mais fundo: fundo do topo da página inicial */
-  --color-apoio: #a9d2f2; /* azul bebê: cor de apoio */
-  --color-apoio-claro: #e8f3fc; /* azul bebê bem claro: faixas e fundos suaves */
-  --color-dourado: #c8a24c; /* dourado: destaque (linhas finas, detalhes, botões) */
-  --color-dourado-texto: #8a6516; /* dourado escurecido, para quando precisar ser texto sobre branco */
+  /* Cores oficiais (manual, seção 2) */
+  --color-azul: #154d7d; /* principal: fundos, títulos, logo (~50%) */
+  --color-cinza: #e6e7e8; /* "branco cinza 8%": fundos claros (~30%) */
+  --color-branco: #ffffff; /* fundo de leitura e logo sobre azul */
+  --color-verde: #83a371; /* secundária: detalhes e ornamentos sutis (~15%) */
+  --color-dourado: #b2a675; /* secundária: destaques pontuais (~5%) */
+
+  /* Tons derivados do azul oficial (não estão no manual; usados só na interface) */
+  --color-azul-escuro: #0e3a60; /* azul ao passar o mouse; fundo do topo */
+  --color-azul-claro: #b9d3e8; /* arte animada e textos pequenos sobre azul */
 
   /* Cores de uso geral */
   --color-fundo: #ffffff; /* fundo das páginas */
-  --color-superficie: #ffffff; /* menus abertos e caixas */
-  --color-claro: #ffffff; /* texto sobre fundos escuros */
-  --color-texto: #0e1f38; /* texto principal */
-  --color-suave: #4a5b75; /* textos secundários, legendas */
-  --color-linha: #dbe6f1; /* linhas finas e bordas neutras */
-  --color-link: #1d5694; /* links */
-  --color-link-hover: #12305a; /* link ao passar o mouse */
+  --color-superficie: #ffffff; /* menus abertos */
+  --color-texto: #1b2733; /* texto principal (quase preto, puxado para o azul) */
+  --color-suave: #56626e; /* textos secundários, legendas */
+  --color-linha: #d4d9de; /* linhas finas neutras */
+  --color-link: #154d7d; /* links = azul oficial */
+  --color-link-hover: #0e3a60;
 }

@@ -1,5 +1,12 @@
 ---
-// Cabeçalho com o menu principal. O menu vem de src/data/menu.json.
+// Cabeçalho com o logo (símbolo + "SMI") e o menu principal. O menu vem de src/data/menu.json.
+//
+// Estados (controlados pelos atributos data-* e pelo script no fim do arquivo):
+//  - data-sobre-arte="true": página inicial; transparente por cima da arte, texto e logo brancos
+//  - data-rolado="true": a página rolou; ganha fundo azul, texto e logo brancos
+// O logo nunca é animado nem fica transparente (manual, seção 5): ele só troca de versão
+// (azul/branca) instantaneamente. Na página inicial, enquanto o topo com o logo grande
+// está na tela, o logo do cabeçalho fica escondido.
 import { menu, contem } from "../lib/menu";
 import Submenu from "./Submenu.astro";
 import MenuCelular from "./MenuCelular.astro";
@@ -12,9 +19,38 @@ interface Props {
 const { atual, sobreArte = false } = Astro.props;
 ---
 
-<header class:list={["z-30", sobreArte ? "absolute inset-x-0 top-0 text-claro" : "relative text-texto"]}>
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-6 px-4 py-5 sm:px-8">
-    <a href="/" class="max-w-[13.5rem] font-titulo text-lg leading-tight tracking-tight">{NOME_DO_SITE}</a>
+<header
+  id="cabecalho"
+  data-sobre-arte={sobreArte ? "true" : "false"}
+  data-rolado="false"
+  class:list={[
+    "group/cab inset-x-0 top-0 z-30 text-azul transition-[background-color,box-shadow] duration-300",
+    "data-[sobre-arte=true]:text-branco data-[rolado=true]:bg-azul data-[rolado=true]:text-branco data-[rolado=true]:shadow-lg data-[rolado=true]:shadow-azul-escuro/20",
+    sobreArte ? "fixed" : "sticky",
+  ]}
+>
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-8">
+    <!-- logo com área de segurança (margem livre em volta) -->
+    <a
+      href="/"
+      class="shrink-0 p-1.5 group-data-[sobre-arte=true]/cab:group-data-[rolado=false]/cab:invisible"
+      aria-label={`${NOME_DO_SITE} — página inicial`}
+    >
+      <img
+        src="/marca/smi-horizontal-azul.svg"
+        alt=""
+        width="164"
+        height="72"
+        class="h-9 w-auto group-data-[rolado=true]/cab:hidden group-data-[sobre-arte=true]/cab:hidden sm:h-10"
+      />
+      <img
+        src="/marca/smi-horizontal-branco.svg"
+        alt=""
+        width="164"
+        height="72"
+        class="hidden h-9 w-auto group-data-[rolado=true]/cab:block group-data-[sobre-arte=true]/cab:block sm:h-10"
+      />
+    </a>
 
     <!-- Computador: menu na linha, subitens aparecem ao passar o mouse ou com a tecla Tab -->
     <nav aria-label="Menu principal" class="hidden xl:block">
@@ -26,10 +62,9 @@ const { atual, sobreArte = false } = Astro.props;
                 href={item.href}
                 aria-current={item.href === atual ? "page" : undefined}
                 class:list={[
-                  "block px-2.5 py-2 text-[0.875rem] whitespace-nowrap underline-offset-8 transition-colors",
-                  // item ativo: fio dourado fino embaixo (detalhe da cor de destaque)
-                  contem(item, atual) && "underline decoration-dourado decoration-1",
-                  sobreArte ? "text-claro/90 hover:text-dourado" : "text-texto hover:text-link",
+                  "block px-2.5 py-2 font-informativo text-[0.9rem] font-semibold whitespace-nowrap decoration-2 underline-offset-8",
+                  // item ativo: fio dourado embaixo; ao passar o mouse: fio verde (detalhes, manual seção 2)
+                  contem(item, atual) ? "underline decoration-dourado" : "hover:underline hover:decoration-verde",
                 ]}
               >
                 {item.titulo}
@@ -41,7 +76,7 @@ const { atual, sobreArte = false } = Astro.props;
                     i >= menu.length - 3 ? "right-0" : "left-0",
                   ]}
                 >
-                  <div class="max-h-[75vh] w-72 overflow-y-auto rounded-xl border border-linha border-t-dourado bg-superficie p-3 text-texto shadow-xl shadow-principal/10">
+                  <div class="max-h-[75vh] w-72 overflow-y-auto rounded-lg border-t-2 border-dourado bg-superficie p-3 text-texto shadow-xl shadow-azul-escuro/15">
                     <Submenu itens={item.filhos} atual={atual} />
                   </div>
                 </div>
@@ -58,10 +93,7 @@ const { atual, sobreArte = false } = Astro.props;
       id="abrir-menu"
       aria-controls="menu-celular"
       aria-expanded="false"
-      class:list={[
-        "flex items-center gap-2 rounded-full border px-4 py-2 text-sm xl:hidden",
-        sobreArte ? "border-claro/40 text-claro" : "border-linha",
-      ]}
+      class="flex items-center gap-2 rounded-full border border-current/40 px-4 py-2 font-informativo text-sm font-semibold xl:hidden"
     >
       <svg class="size-4" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
         <path d="M3 6h14M3 10h14M3 14h14" />
@@ -71,10 +103,12 @@ const { atual, sobreArte = false } = Astro.props;
   </div>
 
   <div id="menu-celular" hidden class="fixed inset-0 z-50 overflow-y-auto bg-fundo text-texto xl:hidden">
-    <div class="mx-auto max-w-xl px-6 pt-5 pb-16">
-      <div class="mb-6 flex items-center justify-between">
-        <span class="font-titulo text-lg">{NOME_DO_SITE}</span>
-        <button type="button" id="fechar-menu" class="rounded-full border border-linha px-4 py-2 text-sm">Fechar</button>
+    <div class="mx-auto max-w-xl px-6 pt-4 pb-16">
+      <div class="mb-6 flex items-center justify-between gap-6">
+        <span class="p-1.5"><img src="/marca/smi-horizontal-azul.svg" alt={NOME_DO_SITE} width="164" height="72" class="h-9 w-auto" /></span>
+        <button type="button" id="fechar-menu" class="rounded-full border border-linha px-4 py-2 font-informativo text-sm font-semibold text-azul">
+          Fechar
+        </button>
       </div>
       <nav aria-label="Menu principal">
         <MenuCelular itens={menu} atual={atual} />
@@ -84,6 +118,12 @@ const { atual, sobreArte = false } = Astro.props;
 </header>
 
 <script>
+  // Fundo azul quando a página rola
+  const cabecalho = document.getElementById("cabecalho")!;
+  const atualizarRolagem = () => (cabecalho.dataset.rolado = String(window.scrollY > 12));
+  atualizarRolagem();
+  window.addEventListener("scroll", atualizarRolagem, { passive: true });
+
   const painel = document.getElementById("menu-celular")!;
   const abrir = document.getElementById("abrir-menu")!;
   const fechar = document.getElementById("fechar-menu")!;

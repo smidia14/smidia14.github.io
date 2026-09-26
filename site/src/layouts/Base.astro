@@ -13,6 +13,9 @@ interface Props {
 }
 const { titulo, descricao, atual, cabecalhoSobreArte = false } = Astro.props;
 const tituloCompleto = titulo === NOME_DO_SITE ? titulo : `${titulo} · ${NOME_DO_SITE}`;
+// imagem de compartilhamento (WhatsApp/redes): precisa do endereço completo
+const imagemCompartilhar = new URL("/compartilhar.jpg", Astro.site).href;
+const enderecoCompleto = new URL(Astro.url.pathname, Astro.site).href;
 ---
 
 <!doctype html>
@@ -23,6 +26,21 @@ const tituloCompleto = titulo === NOME_DO_SITE ? titulo : `${titulo} · ${NOME_D
     <title>{tituloCompleto}</title>
     <meta name="description" content={descricao} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" href="/favicon.ico" sizes="48x48" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    <meta name="theme-color" content="#154d7d" />
+    <!-- compartilhamento (WhatsApp, Facebook, etc.) -->
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content={NOME_DO_SITE} />
+    <meta property="og:title" content={tituloCompleto} />
+    <meta property="og:description" content={descricao} />
+    <meta property="og:url" content={enderecoCompleto} />
+    <meta property="og:image" content={imagemCompartilhar} />
+    <meta property="og:image:width" content="640" />
+    <meta property="og:image:height" content="640" />
+    <meta property="og:image:alt" content="Logo da SMI" />
+    <meta property="og:locale" content="pt_BR" />
+    <meta name="twitter:card" content="summary" />
     <meta name="generator" content={Astro.generator} />
     <script is:inline>
       document.documentElement.classList.remove("sem-js");

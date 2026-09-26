@@ -31,7 +31,7 @@ html {
 /* ---- Texto das páginas (vindo do site antigo) ---- */
 .texto {
   --tw-prose-body: var(--color-texto);
-  --tw-prose-headings: var(--color-texto);
+  --tw-prose-headings: var(--color-azul);
   --tw-prose-bold: var(--color-texto);
   --tw-prose-links: var(--color-link);
   --tw-prose-hr: var(--color-linha);
@@ -41,10 +41,63 @@ html {
   overflow-wrap: anywhere;
 }
 
-.texto :where(h1, h2, h3, h4) {
+.texto :where(h1, h2) {
   font-family: var(--font-titulo);
   font-weight: 500;
   letter-spacing: -0.01em;
+}
+
+.texto :where(h3, h4, h5, h6) {
+  font-family: var(--font-informativo);
+  font-weight: 700;
+}
+
+/* "Elemento distintivo" (manual, seção 6): um arco do símbolo como marcador dos
+   títulos h2. Títulos que só têm imagens (capas) ficam sem marcador. */
+.texto h2:not(:has(img))::before,
+.titulo-com-arco::before {
+  content: "";
+  display: inline-block;
+  width: 0.85em;
+  height: 0.85em;
+  margin-right: 0.4em;
+  vertical-align: -0.05em;
+  background-color: var(--color-verde);
+  mask: url("/marca/arco.svg") no-repeat center / contain;
+}
+
+/* ---- Degradê corporativo (manual, seção 2): azul → verde, com o azul dominando ----
+   O verde só aparece no canto de baixo, à direita; o texto fica sobre a parte azul. */
+.degrade-corporativo {
+  background-color: var(--color-azul);
+  background-image:
+    radial-gradient(ellipse 60% 55% at 100% 100%, color-mix(in srgb, var(--color-verde) 85%, transparent), transparent 70%),
+    linear-gradient(165deg, var(--color-azul-escuro) 0%, var(--color-azul) 55%);
+}
+
+@media (max-width: 767px) {
+  /* no celular o título ocupa a largura toda: o verde fica só na faixa de baixo */
+  .degrade-corporativo {
+    background-image:
+      radial-gradient(ellipse 95% 28% at 100% 100%, color-mix(in srgb, var(--color-verde) 85%, transparent), transparent 70%),
+      linear-gradient(170deg, var(--color-azul-escuro) 0%, var(--color-azul) 55%);
+  }
+}
+
+/* ---- Trama 2 (manual, seção 6): repetição dos arcos, como textura bem suave ---- */
+.trama {
+  position: relative;
+  isolation: isolate;
+}
+
+.trama::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: -1;
+  pointer-events: none;
+  background-color: var(--cor-da-trama, color-mix(in srgb, var(--color-azul) 5%, transparent));
+  mask: url("/marca/trama-2.svg") repeat 0 0 / 150px 150px;
 }
 
 .texto a {

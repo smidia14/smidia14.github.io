@@ -1,5 +1,6 @@
 ---
-// Rodapé: contato e demais itens da barra lateral do site antigo + link para o Arquivo.
+// Rodapé: logo com o nome completo (branco sobre azul, combinação permitida pelo manual),
+// contato e demais itens da barra lateral do site antigo, e o link para o Arquivo.
 import { getEntry, render } from "astro:content";
 import { NOME_DO_SITE } from "../lib/site";
 
@@ -9,23 +10,54 @@ const { Content: Lateral } = lateral ? await render(lateral) : { Content: null }
 const { Content: TextoRodape } = rodape ? await render(rodape) : { Content: null };
 ---
 
-<footer class="mt-32 border-t border-linha">
-  <div class="mx-auto grid max-w-7xl gap-12 px-4 py-16 sm:px-8 md:grid-cols-[1fr_2fr]">
+<footer class="mt-32 bg-azul text-branco">
+  <div class="mx-auto grid max-w-7xl gap-14 px-5 py-16 sm:px-8 md:grid-cols-[1fr_2fr]">
     <div>
-      <p class="font-titulo text-2xl leading-tight">{NOME_DO_SITE}</p>
-      {TextoRodape && <div class="mt-3 text-sm text-suave"><TextoRodape /></div>}
-      <p class="mt-8">
-        <a href="/arquivo/" class="text-sm text-link underline decoration-1 underline-offset-4 hover:text-link-hover">
+      <!-- logo com área de segurança (margem livre em volta) -->
+      <div class="-m-3 inline-block p-3">
+        <img
+          src="/marca/nome-completo-horizontal-branco.svg"
+          alt={NOME_DO_SITE}
+          width="310"
+          height="110"
+          class="h-auto w-64 sm:w-72"
+          loading="lazy"
+        />
+      </div>
+      {TextoRodape && <div class="mt-8 font-informativo text-sm text-azul-claro"><TextoRodape /></div>}
+      <span class="mt-8 block h-0.5 w-10 bg-dourado" aria-hidden="true"></span>
+      <p class="mt-6">
+        <a href="/arquivo/" class="font-informativo text-sm font-semibold underline decoration-verde decoration-2 underline-offset-4 hover:decoration-dourado">
           Arquivo
         </a>
       </p>
     </div>
     {
       Lateral && (
-        <div class="texto prose prose-sm max-w-none text-suave sm:columns-2 sm:gap-12 [&_h2]:mt-0 [&_h2]:break-after-avoid [&_img]:ml-0 [&_img]:max-h-28">
+        <div class="rodape-texto prose prose-sm max-w-none sm:columns-2 sm:gap-12 [&_h2]:mt-0 [&_h2]:break-after-avoid [&_img]:ml-0 [&_img]:max-h-28">
           <Lateral />
         </div>
       )
     }
   </div>
 </footer>
+
+<style>
+  /* textos do rodapé sobre o azul: branco e azul claro (contraste 8,8 e 5,7 : 1) */
+  .rodape-texto {
+    --tw-prose-body: var(--color-azul-claro);
+    --tw-prose-headings: var(--color-branco);
+    --tw-prose-bold: var(--color-branco);
+    --tw-prose-links: var(--color-branco);
+    overflow-wrap: anywhere;
+  }
+  .rodape-texto :global(h2) {
+    font-family: var(--font-titulo);
+    font-weight: 500;
+  }
+  .rodape-texto :global(img) {
+    display: inline-block;
+    width: auto;
+    border-radius: 4px;
+  }
+</style>

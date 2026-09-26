@@ -36,18 +36,18 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
   <section class="relative">
     <!-- arte sutil no topo, que desaparece em direção ao texto -->
     <!-- faixa suave no topo: azul bebê bem claro que se desfaz no branco + arte sutil -->
-    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-apoio-claro to-fundo"></div>
+    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-cinza to-fundo"></div>
     <ArteTopo
       modo="sutil"
       class="absolute inset-x-0 -top-28 h-[28rem] w-full [mask-image:linear-gradient(to_bottom,black_35%,transparent)]"
     />
-    <div class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
-      <nav aria-label="Você está em" class="surgir text-sm text-suave">
+    <div data-arte-protege class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
+      <nav aria-label="Você está em" class="surgir font-informativo text-sm font-semibold text-suave">
         <ol class="flex flex-wrap items-center gap-x-2 gap-y-1">
           {
             caminho.map((item, i) => (
               <li class="flex items-center gap-2">
-                {i > 0 && <span aria-hidden="true" class="text-dourado-texto">›</span>}
+                {i > 0 && <span aria-hidden="true" class="text-verde">›</span>}
                 {i < caminho.length - 1 ? (
                   <a href={item.href} class="hover:text-link">
                     {item.titulo}
@@ -62,7 +62,7 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
           }
         </ol>
       </nav>
-      <h1 class="surgir mt-6 font-titulo text-4xl leading-[1.08] font-normal tracking-tight text-balance text-principal sm:text-6xl">
+      <h1 class="surgir mt-6 font-titulo text-4xl leading-[1.08] font-medium tracking-tight text-balance text-azul sm:text-6xl">
         {pagina.data.titulo}
       </h1>
       <span class="surgir mt-8 block h-px w-12 bg-dourado" aria-hidden="true"></span>
@@ -80,7 +80,7 @@ const subitens = itemDoMenu(href)?.filhos ?? [];
         <ul class="divide-y divide-linha border-y border-linha">
           {subitens.map((sub) => (
             <li>
-              <a href={sub.href} class="group flex items-center justify-between gap-4 py-5 font-titulo text-2xl text-principal hover:text-link">
+              <a href={sub.href} class="group flex items-center justify-between gap-4 py-5 font-titulo text-2xl text-azul hover:text-link">
                 {sub.titulo}
                 <span aria-hidden="true" class="text-dourado transition-transform group-hover:translate-x-1">
                   →

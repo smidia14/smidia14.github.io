@@ -17,13 +17,13 @@ for (const p of fora.sort((a, b) => a.data.titulo.localeCompare(b.data.titulo, "
 <Base titulo="Arquivo" descricao="PENDENTE" atual="/arquivo/">
   <section class="relative">
     <!-- faixa suave no topo: azul bebê bem claro que se desfaz no branco + arte sutil -->
-    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-apoio-claro to-fundo"></div>
+    <div class="pointer-events-none absolute inset-x-0 -top-28 h-[28rem] bg-gradient-to-b from-cinza to-fundo"></div>
     <ArteTopo
       modo="sutil"
       class="absolute inset-x-0 -top-28 h-[28rem] w-full [mask-image:linear-gradient(to_bottom,black_35%,transparent)]"
     />
-    <div class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
-      <h1 class="surgir font-titulo text-4xl leading-[1.08] font-normal tracking-tight text-principal sm:text-6xl">Arquivo</h1>
+    <div data-arte-protege class="relative mx-auto max-w-3xl px-5 pt-12 pb-10 sm:px-8 sm:pt-20">
+      <h1 class="surgir font-titulo text-4xl leading-[1.08] font-medium tracking-tight text-azul sm:text-6xl">Arquivo</h1>
       <span class="surgir mt-8 block h-px w-12 bg-dourado" aria-hidden="true"></span>
       <p class="surgir mt-6 text-suave">PENDENTE</p>
     </div>
