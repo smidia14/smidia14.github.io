@@ -9,7 +9,7 @@
 
 Na mesma ordem do menu do site atual.
 
-- **Página inicial** — `/` → `paginas/index.md`
+- **Página inicial** — `/` → [paginas/pagina-inicial.md](paginas/pagina-inicial.md)
 - **Download** — `/publicações/` → [paginas/download.md](paginas/download.md)
   - **Mártires do Século XX** — `/publicações/livros/` → [paginas/download/martires-do-seculo-xx.md](paginas/download/martires-do-seculo-xx.md)
   - **Folhetos** — `/publicações/folhetos/` → [paginas/download/folhetos.md](paginas/download/folhetos.md)
@@ -23,33 +23,33 @@ Na mesma ordem do menu do site atual.
   - **Semana do Calvário** — `/publicações/semana-do-calvario/` → [paginas/download/semana-do-calvario.md](paginas/download/semana-do-calvario.md)
   - **Semana Juvenil** — `/publicações/semana-juvenil/` → [paginas/download/semana-juvenil.md](paginas/download/semana-juvenil.md)
 - **Transmissões ao Vivo** — `/videos-/` → [paginas/transmissoes-ao-vivo.md](paginas/transmissoes-ao-vivo.md)
-- **Departamentos** — `/departamento/` → `paginas/departamento/index.md`
-  - **EVANGELISMO** — `/departamento/evangelismo/` → `paginas/departamento/evangelismo/index.md`
-  - **Saúde** — `/departamento/saude/` → `paginas/departamento/saude/index.md`
-    - **Materiais** — `/departamento/saude/materiais/` → `paginas/departamento/saude/materiais/index.md`
-  - **Jovens** — `/departamento/jovens/` → `paginas/departamento/jovens/index.md`
-    - **Semana da Juventude** — `/departamento/jovens/semana-da-juventude/` → `paginas/departamento/jovens/semana-da-juventude/index.md`
-  - **Escola Sabatina** — `/departamento/escola-sabatina/` → `paginas/departamento/escola-sabatina/index.md`
-  - **Secretária** — `/departamento/secretaria/` → `paginas/departamento/secretaria/index.md`
-  - **Família** — `/departamento/familia/` → `paginas/departamento/familia/index.md`
-  - **Bom Samaritano** — `/departamento/bom-samaritano/` → `paginas/departamento/bom-samaritano/index.md`
-  - **Educação** — `/departamento/educação/` → `paginas/departamento/educação/index.md`
-  - **Literário** — `/departamento/literario/` → `paginas/departamento/literario/index.md`
-- **Doutrinas** — `/doutrinas/` → `paginas/doutrinas/index.md`
-  - **Princípios de Fé** — `/doutrinas/principios-de-fe/` → `paginas/doutrinas/principios-de-fe/index.md`
-  - **Manual de Igreja** — `/doutrinas/manual-de-igreja/` → `paginas/doutrinas/manual-de-igreja/index.md`
+- **Departamentos** — `/departamento/` → [paginas/departamentos.md](paginas/departamentos.md)
+  - **EVANGELISMO** — `/departamento/evangelismo/` → [paginas/departamentos/evangelismo.md](paginas/departamentos/evangelismo.md)
+  - **Saúde** — `/departamento/saude/` → [paginas/departamentos/saude.md](paginas/departamentos/saude.md)
+    - **Materiais** — `/departamento/saude/materiais/` → [paginas/departamentos/saude/materiais.md](paginas/departamentos/saude/materiais.md)
+  - **Jovens** — `/departamento/jovens/` → [paginas/departamentos/jovens.md](paginas/departamentos/jovens.md)
+    - **Semana da Juventude** — `/departamento/jovens/semana-da-juventude/` → [paginas/departamentos/jovens/semana-da-juventude.md](paginas/departamentos/jovens/semana-da-juventude.md)
+  - **Escola Sabatina** — `/departamento/escola-sabatina/` → [paginas/departamentos/escola-sabatina.md](paginas/departamentos/escola-sabatina.md)
+  - **Secretária** — `/departamento/secretaria/` → [paginas/departamentos/secretaria.md](paginas/departamentos/secretaria.md)
+  - **Família** — `/departamento/familia/` → [paginas/departamentos/familia.md](paginas/departamentos/familia.md)
+  - **Bom Samaritano** — `/departamento/bom-samaritano/` → [paginas/departamentos/bom-samaritano.md](paginas/departamentos/bom-samaritano.md)
+  - **Educação** — `/departamento/educação/` → [paginas/departamentos/educacao.md](paginas/departamentos/educacao.md)
+  - **Literário** — `/departamento/literario/` → [paginas/departamentos/literario.md](paginas/departamentos/literario.md)
+- **Doutrinas** — `/doutrinas/` → [paginas/doutrinas.md](paginas/doutrinas.md)
+  - **Princípios de Fé** — `/doutrinas/principios-de-fe/` → [paginas/doutrinas/principios-de-fe.md](paginas/doutrinas/principios-de-fe.md)
+  - **Manual de Igreja** — `/doutrinas/manual-de-igreja/` → [paginas/doutrinas/manual-de-igreja.md](paginas/doutrinas/manual-de-igreja.md)
   - **Manual de Normas e Funções** — `/doutrinas/manual-de-normas-e-funções/` → [paginas/doutrinas/manual-de-normas-e-funcoes.md](paginas/doutrinas/manual-de-normas-e-funcoes.md)
-  - **Evangelismo e liturgia** — `/doutrinas/evangelismo-e-liturgia/` → `paginas/doutrinas/evangelismo-e-liturgia/index.md`
+  - **Evangelismo e liturgia** — `/doutrinas/evangelismo-e-liturgia/` → [paginas/doutrinas/evangelismo-e-liturgia.md](paginas/doutrinas/evangelismo-e-liturgia.md)
   - **Renovação de Nossa Fidelidade** — `/doutrinas/renovação-de-nossa-fidelidade/` → [paginas/doutrinas/renovacao-de-nossa-fidelidade.md](paginas/doutrinas/renovacao-de-nossa-fidelidade.md)
-  - **Laodicéia** — `/doutrinas/laodiceia/` → `paginas/doutrinas/laodiceia/index.md`
-- **Nossa História** — `/nossa-historia/` → `paginas/nossa-historia/index.md`
-- **Contatos** — `/contatos/` → `paginas/contatos/index.md`
+  - **Laodicéia** — `/doutrinas/laodiceia/` → [paginas/doutrinas/laodiceia.md](paginas/doutrinas/laodiceia.md)
+- **Nossa História** — `/nossa-historia/` → [paginas/nossa-historia.md](paginas/nossa-historia.md)
+- **Contatos** — `/contatos/` → [paginas/contatos.md](paginas/contatos.md)
   - **São Paulo** — `/contatos/são-paulo/` → [paginas/contatos/sao-paulo.md](paginas/contatos/sao-paulo.md)
-  - **Rio de Janeiro** — `/contatos/rio-de-janeiro/` → `paginas/contatos/rio-de-janeiro/index.md`
-  - **Belo Horizonte** — `/contatos/belo-horizonte/` → `paginas/contatos/belo-horizonte/index.md`
-  - **Bahia** — `/contatos/bahia/` → `paginas/contatos/bahia/index.md`
-  - **Amazonas** — `/contatos/amazonas/` → `paginas/contatos/amazonas/index.md`
-- **Radio SmidiaWeb 24hs** — `/radio-smidiaweb-24hs/` → `paginas/radio-smidiaweb-24hs/index.md`
+  - **Rio de Janeiro** — `/contatos/rio-de-janeiro/` → [paginas/contatos/rio-de-janeiro.md](paginas/contatos/rio-de-janeiro.md)
+  - **Belo Horizonte** — `/contatos/belo-horizonte/` → [paginas/contatos/belo-horizonte.md](paginas/contatos/belo-horizonte.md)
+  - **Bahia** — `/contatos/bahia/` → [paginas/contatos/bahia.md](paginas/contatos/bahia.md)
+  - **Amazonas** — `/contatos/amazonas/` → [paginas/contatos/amazonas.md](paginas/contatos/amazonas.md)
+- **Radio SmidiaWeb 24hs** — `/radio-smidiaweb-24hs/` → [paginas/radio-smidiaweb-24hs.md](paginas/radio-smidiaweb-24hs.md)
 - **Diversos** — `/diversos2/` → [paginas/diversos.md](paginas/diversos.md)
   - **Diversos** — `/diversos/` → [paginas/diversos/diversos.md](paginas/diversos/diversos.md)
     - **Sermões** — `/diversos/sermões/` → [paginas/diversos/diversos/sermoes.md](paginas/diversos/diversos/sermoes.md)
@@ -57,11 +57,11 @@ Na mesma ordem do menu do site atual.
       - **A Oração de Jabez** — `/diversos/sermões/a-oração-de-jabez/` → [paginas/diversos/diversos/sermoes/a-oracao-de-jabez.md](paginas/diversos/diversos/sermoes/a-oracao-de-jabez.md)
       - **Como o Senhor da Vida dá Vida?** — `/diversos/sermões/como-o-senhor-da-vida-da-vida-/` → [paginas/diversos/diversos/sermoes/como-o-senhor-da-vida-da-vida.md](paginas/diversos/diversos/sermoes/como-o-senhor-da-vida-da-vida.md)
       - **Pr. Adalicio** — `/diversos/sermões/pr-adalicio/` → [paginas/diversos/diversos/sermoes/pr-adalicio.md](paginas/diversos/diversos/sermoes/pr-adalicio.md)
-    - **Bíblia Online** — `/diversos/biblia-online/` → `paginas/diversos/biblia-online/index.md`
+    - **Bíblia Online** — `/diversos/biblia-online/` → [paginas/diversos/diversos/biblia-online.md](paginas/diversos/diversos/biblia-online.md)
     - **Estatuto** — `/diversos/estatuto/` → [paginas/diversos/diversos/estatuto.md](paginas/diversos/diversos/estatuto.md)
     - **Nossa História** — `/diversos/nossa-historia/` → [paginas/diversos/diversos/nossa-historia.md](paginas/diversos/diversos/nossa-historia.md)
       - **Histórico** — `/diversos/nossa-historia/historico-/` → [paginas/diversos/diversos/nossa-historia/historico.md](paginas/diversos/diversos/nossa-historia/historico.md)
-    - **Contato** — `/diversos/contato/` → `paginas/diversos/contato/index.md`
+    - **Contato** — `/diversos/contato/` → [paginas/diversos/diversos/contato.md](paginas/diversos/diversos/contato.md)
     - **Testemunhos ELLEN G.WHITE** — `/diversos/testemunhos-ellen-g-white/` → [paginas/diversos/diversos/testemunhos-ellen-g-white.md](paginas/diversos/diversos/testemunhos-ellen-g-white.md)
     - **Protocolo** — `/diversos/protocolo-/` → [paginas/diversos/diversos/protocolo.md](paginas/diversos/diversos/protocolo.md)
 
@@ -69,9 +69,9 @@ Na mesma ordem do menu do site atual.
 
 Achadas pelo sitemap ou por links dentro de outras páginas.
 
-- **Bom Samaritano** — `/departamento/bom-samaritano/photogallerycbm_437071/20/` → `paginas/departamento/bom-samaritano/photogallerycbm_437071/20/index.md`
-- **Família** — `/departamento/familia/photogallerycbm_449653/10/` → `paginas/departamento/familia/photogallerycbm_449653/10/index.md`
-- **Família** — `/departamento/familia/photogallerycbm_449653/20/` → `paginas/departamento/familia/photogallerycbm_449653/20/index.md`
+- **Bom Samaritano** — `/departamento/bom-samaritano/photogallerycbm_437071/20/` → [paginas/departamentos/bom-samaritano/bom-samaritano-fotos-pagina-3.md](paginas/departamentos/bom-samaritano/bom-samaritano-fotos-pagina-3.md)
+- **Família** — `/departamento/familia/photogallerycbm_449653/10/` → [paginas/departamentos/familia/familia-fotos-pagina-2.md](paginas/departamentos/familia/familia-fotos-pagina-2.md)
+- **Família** — `/departamento/familia/photogallerycbm_449653/20/` → [paginas/departamentos/familia/familia-fotos-pagina-3.md](paginas/departamentos/familia/familia-fotos-pagina-3.md)
 - **Bíblia Online** — `/news/biblia-online-/` → [paginas/fora-do-menu/news/biblia-online.md](paginas/fora-do-menu/news/biblia-online.md)
 - **CURSO INTERATIVO "A BIBLIA RESPONDE" PDF** — `/news/curso-interativo-a-biblia-responde/` → [paginas/fora-do-menu/news/curso-interativo-a-biblia-responde-pdf.md](paginas/fora-do-menu/news/curso-interativo-a-biblia-responde-pdf.md)
 - **Congresso de Reorganização 2013** — `/news/doutrinas/` → [paginas/fora-do-menu/news/congresso-de-reorganizacao-2013.md](paginas/fora-do-menu/news/congresso-de-reorganizacao-2013.md)

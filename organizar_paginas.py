@@ -194,6 +194,17 @@ def main():
     def rel_saida(caminho):
         return caminho.relative_to(SAIDA).as_posix()
 
+    # ---------- menu.json: cada item ganha o arquivo local correspondente ----------
+    def anotar(itens):
+        for it in itens:
+            u = achar_pagina(it["url"])
+            it["arquivo"] = rel_saida(novo[u]) if u else None
+            it["filhos"] = anotar(it.get("filhos", []))
+        # "filhos" fica por último, para o arquivo ser fácil de ler
+        return [{k: it[k] for k in ("titulo", "url", "caminho", "arquivo", "filhos")} for it in itens]
+    menu = anotar(menu)
+    (SAIDA / "menu.json").write_text(json.dumps(menu, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+
     # ---------- 4. INDICE.md ----------
     L = ["# Índice do site extraído", "",
          "Clique em uma página para abrir o texto extraído. Ao lado está o endereço no site atual.", "",
@@ -256,16 +267,16 @@ def main():
     # ---------- 6. relatorio.md ----------
     arq_rel = SAIDA / "relatorio.md"
     rel_txt = arq_rel.read_text(encoding="utf-8").split("\n" + MARCA_RELATORIO)[0].rstrip() + "\n"
-    antigos = {}
-    for u, p in paginas.items():
-        antigos[p["antigo"].relative_to(SAIDA).as_posix()] = rel_saida(novo[u])
-
+    # Cada linha da árvore tem o endereço da página: "— `/doutrinas/` → paginas/..."
+    # O arquivo novo é achado por esse endereço (não depende do caminho antigo).
     def sub_caminho(m):
-        caminho = m.group(1)
-        if caminho in antigos:
-            return f"→ [{antigos[caminho]}]({antigos[caminho]})"
+        u = achar_pagina(SITE_BASE + m.group(1))
+        if u:
+            destino = rel_saida(novo[u])
+            return f"— `{m.group(1)}` → [{destino}]({destino})"
         return m.group(0)
-    rel_txt = re.sub(r"→ (?:`|\[)(paginas/[^`\]]+\.md)(?:`|\]\([^)]*\))", sub_caminho, rel_txt)
+    rel_txt = re.sub(r"— `(/[^`]*)` → (?:`paginas/[^`]+\.md`|\[paginas/[^\]]+\.md\]\([^)]*\))",
+                     sub_caminho, rel_txt)
     rel_txt = rel_txt.replace("`paginas/_compartilhado/`", f"`paginas/{PASTA_COMP}/`")
     R = ["", MARCA_RELATORIO, "",
          "Links dentro das páginas que apontam para smir14.com.br, mas para uma página que não foi "
