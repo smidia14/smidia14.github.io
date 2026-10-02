@@ -554,3 +554,39 @@ html {
     transition: none;
   }
 }
+
+/* ==========================================================================
+   INTRO DA PÁGINA INICIAL — ALINHAMENTO NO COMPUTADOR (a partir de 1024 px)
+   Menu, logo do menu, símbolo, título e subtítulo seguem as MESMAS margens do
+   mesmo contêiner (max-w-7xl com 2rem de margem, igual no cabeçalho e na intro):
+   - à esquerda: logo do menu (que aparece ao rolar), símbolo, título e subtítulo;
+   - à direita: o fim do texto do último item do menu;
+   - o filete dourado fica logo à esquerda do título, dentro da margem.
+   No celular e no tablet nada muda.
+   ========================================================================== */
+@media (min-width: 1024px) {
+  /* sem recuo: símbolo, título e subtítulo começam na margem do contêiner */
+  [data-intro] .topo-bloco {
+    padding-left: 0;
+  }
+  /* a letra "S" tem um respiro lateral próprio da fonte; puxa o título para a "tinta"
+     da letra encostar na mesma margem do símbolo */
+  [data-intro] .topo-titulo {
+    margin-left: -0.034em;
+  }
+  [data-intro] .topo-titulo::before {
+    left: calc(-1.25rem + 0.034em); /* filete: 1,25rem à esquerda da letra */
+  }
+  /* o "I" de "Internacional" tem um respiro lateral maior que o "S": compensa a diferença */
+  [data-intro] .topo-titulo-b {
+    margin-left: -0.045em;
+  }
+  /* cabeçalho da página inicial: o logo (que aparece ao rolar) na mesma margem
+     esquerda e o fim do menu na margem direita */
+  [data-esconder-logo="true"] .logo-cabecalho {
+    margin-left: -0.375rem; /* desconta a margem de segurança em volta do logo */
+  }
+  [data-esconder-logo="true"] nav[aria-label="Menu principal"] > ul {
+    margin-right: -0.625rem; /* desconta o espaço interno do último item */
+  }
+}
