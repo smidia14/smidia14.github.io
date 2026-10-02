@@ -35,9 +35,10 @@ const { atual, sobreArte = false, esconderLogoNoTopo = false } = Astro.props;
     sobreArte ? "fixed" : "sticky",
   ]}
 >
-  <div class="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-8">
+  <!-- computador: 3 colunas (logo | menu no centro | espaço igual) para o menu ficar no meio -->
+  <div class="mx-auto flex max-w-7xl items-center justify-between gap-8 px-4 py-3.5 sm:px-8 xl:grid xl:grid-cols-[1fr_auto_1fr]">
     <!-- logo com área de segurança (margem livre em volta) -->
-    <a href="/" class="logo-cabecalho shrink-0 overflow-hidden p-1.5" aria-label={`${NOME_DO_SITE} — página inicial`}>
+    <a href="/" class="logo-cabecalho shrink-0 overflow-hidden p-1.5 xl:justify-self-start" aria-label={`${NOME_DO_SITE} — página inicial`}>
       <img
         src="/marca/smi-horizontal-azul.svg"
         alt=""

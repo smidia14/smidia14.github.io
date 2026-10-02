@@ -586,7 +586,4 @@ html {
   [data-esconder-logo="true"] .logo-cabecalho {
     margin-left: -0.375rem; /* desconta a margem de segurança em volta do logo */
   }
-  [data-esconder-logo="true"] nav[aria-label="Menu principal"] > ul {
-    margin-right: -0.625rem; /* desconta o espaço interno do último item */
-  }
 }
