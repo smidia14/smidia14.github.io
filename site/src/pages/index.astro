@@ -42,12 +42,57 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   <section data-intro class="degrade-corporativo relative flex h-svh min-h-[36rem] items-center overflow-hidden text-branco">
     <ArteTopo modo="forte" class="absolute inset-0 h-full w-full" />
     <div class="relative mx-auto w-full max-w-7xl px-5 pt-16 sm:px-8">
-      <!-- Versão do título, escolhida pelo endereço: ?titulo=1 (padrão), ?titulo=2 ou ?titulo=3.
-           Lida antes de desenhar a página, para não "piscar" (estilos em global.css). -->
+      <!-- A entrada do título só começa quando a fonte do título (Outfit) já chegou: até lá o
+           título fica escondido, sem mostrar a fonte reserva. Se a fonte demorar mais de 3 s
+           (internet lenta ou falha), o título aparece mesmo assim, na fonte reserva ajustada.
+           A regra que esconde é criada aqui mesmo, para valer desde o primeiro instante (antes
+           do CSS principal, que no modo de desenvolvimento chega depois). -->
       <script is:inline>
         (function () {
-          var v = new URLSearchParams(location.search).get("titulo");
-          document.documentElement.dataset.titulo = v === "2" || v === "3" ? v : "1";
+          var raiz = document.documentElement;
+          var estilo = document.createElement("style");
+          estilo.textContent =
+            ".titulo-esperando-fonte .topo-titulo,.titulo-esperando-fonte .topo-subtitulo{visibility:hidden}" +
+            ".titulo-esperando-fonte .topo-bloco *,.titulo-esperando-fonte .topo-titulo::before{animation-play-state:paused!important}";
+          document.head.appendChild(estilo);
+          raiz.classList.add("titulo-esperando-fonte");
+
+          var liberado = false;
+          function liberar() {
+            if (liberado) return;
+            liberado = true;
+            requestAnimationFrame(function () {
+              raiz.classList.remove("titulo-esperando-fonte");
+            });
+          }
+          if (!document.fonts) return liberar();
+          setTimeout(liberar, 3000); // limite de segurança
+
+          // Espera a fonte existir (o CSS com ela já foi aplicado) E terminar de carregar
+          var familias = ["Outfit Variable", "Nunito Sans Variable"];
+          function carregada(familia) {
+            var ok = false;
+            document.fonts.forEach(function (f) {
+              if (f.family.replace(/["']/g, "") === familia && f.status === "loaded") ok = true;
+            });
+            return ok;
+          }
+          function registrada(familia) {
+            var ok = false;
+            document.fonts.forEach(function (f) {
+              if (f.family.replace(/["']/g, "") === familia) ok = true;
+            });
+            return ok;
+          }
+          (function conferir() {
+            if (liberado) return;
+            var prontas = familias.every(function (f) {
+              if (registrada(f) && !carregada(f)) document.fonts.load("1em \"" + f + "\"");
+              return carregada(f);
+            });
+            if (prontas) liberar();
+            else setTimeout(conferir, 50);
+          })();
         })();
       </script>
       <!-- data-arte-protege: nenhum arco passa por cima do logo.
@@ -67,11 +112,8 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
             fetchpriority="high"
           />
         </div>
-        <!-- versão 2: linha pequena em caixa alta acima do título (texto do próprio logo oficial) -->
-        <p class="topo-sobretitulo font-informativo font-bold">
-          <span data-arte-atenua="forte">Igreja Adventista do Sétimo Dia · Movimento de Reforma</span>
-        </p>
-        <!-- {" "}: espaço explícito entre as palavras (a compactação do HTML removeria o espaço) -->
+        <!-- título: as três palavras com o mesmo peso e tamanho; o filete dourado à esquerda
+             acompanha o título inteiro. {" "}: espaço explícito (a compactação do HTML o removeria) -->
         <h1 class="topo-titulo font-titulo tracking-tight">
           <span class="topo-titulo-a"
             ><span class="topo-palavra"><span data-arte-atenua>Sociedade</span></span>{" "}<span class="topo-palavra"
@@ -79,8 +121,7 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
             ></span
           >{" "}<span class="topo-titulo-b"><span class="topo-palavra"><span data-arte-atenua>Internacional</span></span></span>
         </h1>
-        <span class="topo-linha block bg-dourado" aria-hidden="true"></span>
-        <!-- subtítulo do próprio logo oficial (na versão 2 ele vira a linha de cima) -->
+        <!-- subtítulo do próprio logo oficial -->
         <p class="topo-subtitulo font-informativo font-semibold">
           <span data-arte-atenua>Igreja Adventista do Sétimo Dia · Movimento de Reforma</span>
         </p>

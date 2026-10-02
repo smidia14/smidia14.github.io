@@ -30,7 +30,7 @@ interface Trio {
 // Opacidade que sobra aos arcos atrás do texto. Pior caso medido (arco branco sobre o centro
 // do halo verde): até 33% da opacidade normal o título ainda tem 4,6 : 1. Usamos 30%.
 const FATOR_ATRAS_DO_TEXTO = 0.3;
-// Atrás de texto pequeno em dourado claro (versão 2 do título), apaga mais: fica 12%.
+// Atrás de texto pequeno ou dourado (data-arte-atenua="forte"), apaga mais: fica 12%.
 const FATOR_ATRAS_DO_TEXTO_FORTE = 0.12;
 
 const suave = (x: number) => (x <= 0 ? 0 : x >= 1 ? 1 : x * x * (3 - 2 * x));

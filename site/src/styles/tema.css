@@ -30,9 +30,22 @@
 @import "@fontsource-variable/roboto/wght.css";
 @import "@fontsource-variable/roboto/wght-italic.css";
 
+/* Fonte RESERVA do título, usada só enquanto a Outfit ainda não chegou (ou se falhar).
+   É a Arial/Helvetica do aparelho, ajustada para ter as mesmas medidas da Outfit
+   (largura: 98,9%; subida 1,00 e descida 0,26 da Outfit), para o texto não "pular"
+   quando a fonte final chegar. Se trocar a fonte do título, refaça estas contas. */
+@font-face {
+  font-family: "Outfit Reserva";
+  src: local("Arial"), local("Helvetica Neue"), local("Helvetica");
+  size-adjust: 98.9%;
+  ascent-override: 101.1%;
+  descent-override: 26.3%;
+  line-gap-override: 0%;
+}
+
 @theme static {
   /* Fontes */
-  --font-titulo: "Outfit Variable", system-ui, sans-serif; /* Gilroy (PENDENTE): títulos e palavras curtas */
+  --font-titulo: "Outfit Variable", "Outfit Reserva", system-ui, sans-serif; /* Gilroy (PENDENTE): títulos e palavras curtas */
   --font-informativo: "Nunito Sans Variable", system-ui, sans-serif; /* Agenor Neue (PENDENTE): títulos informativos, menu */
   --font-texto: "Roboto Variable", system-ui, sans-serif; /* Roboto: textos longos */
 

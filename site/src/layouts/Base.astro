@@ -4,6 +4,8 @@ import "../styles/global.css";
 import Cabecalho from "../components/Cabecalho.astro";
 import Rodape from "../components/Rodape.astro";
 import { NOME_DO_SITE } from "../lib/site";
+// arquivo da fonte dos títulos (Outfit), para pré-carregar: chega antes e o título não "pula"
+import fonteTitulo from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url";
 
 interface Props {
   titulo: string; // título desta página
@@ -25,6 +27,7 @@ const enderecoCompleto = new URL(Astro.url.pathname, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <link rel="preload" href={fonteTitulo} as="font" type="font/woff2" crossorigin />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descricao} />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
