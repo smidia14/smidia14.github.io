@@ -1,4 +1,24 @@
+# Pastas geradas ou baixadas (nunca vão para o GitHub)
+node_modules/
+dist/
+.astro/
 cache_html/
 __pycache__/
+
+# Configurações locais do Claude Code
 .claude/
 site/.claude/
+
+# Arquivos temporários e de sistema
+*.tmp
+*.temp
+*.log
+*.bak
+~$*
+Thumbs.db
+desktop.ini
+.DS_Store
+
+# Variáveis de ambiente (podem conter senhas)
+.env
+.env.*

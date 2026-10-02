@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://smidia14.github.io/sitemap-index.xml

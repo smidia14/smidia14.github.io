@@ -1,0 +1,68 @@
+# Publica o site no GitHub Pages automaticamente.
+#
+# Toda vez que algo é enviado (push) para o ramo "main", o GitHub:
+#   1. baixa o projeto;
+#   2. instala o que o site precisa (pasta site/);
+#   3. gera o site final (npm run build → pasta site/dist);
+#   4. publica o resultado no GitHub Pages.
+# Leva uns 2 a 3 minutos. O andamento aparece na aba "Actions" do repositório.
+# Também dá para publicar de novo à mão: aba Actions → "Publicar o site" → "Run workflow".
+
+name: Publicar o site
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+# Permissões mínimas que a publicação no GitHub Pages precisa
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Se dois envios chegarem juntos, publica só o mais recente
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  gerar:
+    name: Gerar o site
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - name: Baixar o projeto
+        uses: actions/checkout@v4
+
+      - name: Preparar o Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: npm
+          cache-dependency-path: site/package-lock.json
+
+      - name: Instalar as dependências
+        run: npm ci
+
+      - name: Gerar o site
+        run: npm run build
+
+      - name: Guardar o site gerado
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: site/dist
+
+  publicar:
+    name: Publicar no GitHub Pages
+    needs: gerar
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.publicacao.outputs.page_url }}
+    steps:
+      - name: Publicar
+        id: publicacao
+        uses: actions/deploy-pages@v4
