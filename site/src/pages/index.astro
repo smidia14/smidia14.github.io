@@ -41,7 +41,7 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
        O logo NÃO tem animação (manual, seção 5). O título entra suavemente ao abrir a página. -->
   <section data-intro class="degrade-corporativo relative flex h-svh min-h-[36rem] items-center overflow-hidden text-branco">
     <ArteTopo modo="forte" class="absolute inset-0 h-full w-full" />
-    <div class="relative mx-auto w-full max-w-7xl px-5 pt-16 sm:px-8">
+    <div class="relative mx-auto w-full max-w-site px-5 pt-16 sm:px-8">
       <!-- A entrada do título só começa quando a fonte do título (Outfit) já chegou: até lá o
            título fica escondido, sem mostrar a fonte reserva. Se a fonte demorar mais de 3 s
            (internet lenta ou falha), o título aparece mesmo assim, na fonte reserva ajustada.
@@ -132,7 +132,7 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   <!-- ============ 2. ACESSO RÁPIDO — fundo cinza com a Trama 2 ============ -->
   <section aria-label="Acesso rápido" class="trama bg-cinza">
     <Curva de="azul" para="cinza" />
-    <div class="mx-auto max-w-7xl px-5 pt-10 pb-20 sm:px-8 sm:pt-12 sm:pb-24">
+    <div class="mx-auto max-w-site px-5 pt-10 pb-20 sm:px-8 sm:pt-12 sm:pb-24">
       <ul class="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-5">
         {
           acesso.map((item, i) => (
@@ -168,20 +168,21 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   <!-- ============ 3. LITERATURAS e LIVROS DIVERSOS — fundo branco ============ -->
   <section class="bg-branco">
     <Curva de="cinza" para="branco" espelhar />
-    <div class="mx-auto max-w-7xl px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-28">
+    <!-- telas largas: os dois grupos lado a lado (3 e 4 capas), dividindo a largura toda -->
+    <div class="mx-auto max-w-site px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-28 xl:grid xl:grid-cols-[3fr_4fr] xl:gap-16">
       {
         [inicioDados.literaturas, inicioDados.livrosDiversos].map((grupo, g) => (
-          <div class:list={[g > 0 && "mt-16 sm:mt-20"]}>
+          <div class:list={[g > 0 && "mt-16 sm:mt-20 xl:mt-0"]}>
             <h2
               class:list={[
                 "surgir titulo-com-arco font-titulo font-medium text-azul",
-                g === 0 ? "text-3xl sm:text-5xl" : "text-2xl sm:text-3xl",
+                g === 0 ? "text-3xl sm:text-5xl" : "text-2xl sm:text-3xl xl:text-5xl",
               ]}
             >
               {grupo.titulo}
             </h2>
             <!-- no celular: faixa horizontal que desliza; no computador: fileira de capas -->
-            <ul class="faixa-capas mt-8">
+            <ul class="faixa-capas mt-8" style={`--colunas:${grupo.capas.length}`}>
               {grupo.capas.map((capa, i) => (
                 <li class="surgir" style={`transition-delay:${i * 90}ms`}>
                   <a
@@ -209,7 +210,7 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   <!-- ============ 4. TRANSMISSÕES e RÁDIO — seção de destaque em azul ============ -->
   <section class="relative bg-azul text-branco">
     <Curva de="branco" para="azul" />
-    <div class="relative mx-auto grid max-w-7xl items-center gap-12 px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-24 lg:grid-cols-2 lg:gap-16">
+    <div class="relative mx-auto grid max-w-site items-center gap-12 px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-24 lg:grid-cols-2 lg:gap-16">
       <div class="surgir">
         <h2 class="titulo-com-arco font-titulo text-3xl leading-tight font-medium text-balance sm:text-5xl">
           {inicioDados.transmissoes.titulo}
@@ -254,11 +255,11 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   <!-- ============ 5. DEPARTAMENTOS — fundo cinza ============ -->
   <section class="bg-cinza">
     <Curva de="azul" para="cinza" espelhar />
-    <div class="mx-auto max-w-7xl px-5 pt-10 pb-16 sm:px-8 sm:pt-14 sm:pb-24">
+    <div class="mx-auto max-w-site px-5 pt-10 pb-16 sm:px-8 sm:pt-14 sm:pb-24">
       <h2 class="surgir titulo-com-arco font-titulo text-3xl font-medium text-azul sm:text-5xl">
         {inicioDados.departamentos.titulo}
       </h2>
-      <ul class="mt-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4">
+      <ul class="mt-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
         {
           inicioDados.departamentos.itens.map((dep, i) => (
             <li class="surgir" style={`transition-delay:${(i % 4) * 70}ms`}>

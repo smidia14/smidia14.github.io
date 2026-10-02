@@ -32,7 +32,7 @@ const filhasNaFolha = noMenu.length >= 2 ? (noMenu.at(-1)?.filhos ?? []) : [];
   <!-- 1. TOPO: faixa azul com arte sutil (o menu fica transparente por cima) -->
   <section id="topo" class="relative overflow-hidden bg-azul text-branco">
     <ArteTopo modo="sutil" class="absolute inset-0 h-full w-full" />
-    <div class="relative mx-auto max-w-6xl px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-20">
+    <div class="relative mx-auto max-w-site px-5 pt-32 pb-14 sm:px-8 sm:pt-40 sm:pb-20">
       <div class="relative isolate max-w-4xl">
         <div class="halo-verde halo-verde-suave" aria-hidden="true"></div>
         <!-- data-arte-protege: a arte não passa por cima das migalhas, do título e da descrição -->
@@ -80,8 +80,9 @@ const filhasNaFolha = noMenu.length >= 2 ? (noMenu.at(-1)?.filhos ?? []) : [];
   <div class="bg-cinza">
     <div
       class:list={[
-        "mx-auto grid max-w-6xl gap-8 px-3 py-8 sm:px-6 sm:py-14 lg:gap-12",
-        secao && "lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start",
+        "mx-auto grid max-w-site gap-8 px-3 py-8 sm:px-6 sm:py-14 lg:gap-12 lg:px-8",
+        // a lateral cresce junto com a tela (ocupando o espaço que sobra); o texto mantém a largura de leitura
+        secao && "lg:grid-cols-[minmax(0,1fr)_17rem] lg:items-start xl:grid-cols-[minmax(0,1fr)_clamp(17rem,22%,26rem)]",
       ]}
     >
       <div class="min-w-0">

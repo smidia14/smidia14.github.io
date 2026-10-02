@@ -459,21 +459,25 @@ html {
   width: min(62vw, 13.5rem);
   scroll-snap-align: start;
 }
+/* tablet e computador: as capas viram uma grade que ocupa a largura toda
+   (no computador largo, cada grupo divide a sua metade em tantas colunas quantas capas tem) */
 @media (min-width: 768px) {
   .faixa-capas {
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     overflow: visible;
-    gap: 2rem;
+    gap: 1.5rem;
     padding: 0.5rem 0 0;
     margin: 0;
   }
   .faixa-capas > li {
-    width: 12.5rem;
+    width: auto;
   }
 }
 @media (min-width: 1280px) {
-  .faixa-capas > li {
-    width: 13.5rem;
+  .faixa-capas {
+    grid-template-columns: repeat(var(--colunas, 4), minmax(0, 1fr));
+    gap: clamp(1.25rem, 1.4vw, 2.25rem);
   }
 }
 .capa {
@@ -558,7 +562,7 @@ html {
 /* ==========================================================================
    INTRO DA PÁGINA INICIAL — ALINHAMENTO NO COMPUTADOR (a partir de 1024 px)
    Menu, logo do menu, símbolo, título e subtítulo seguem as MESMAS margens do
-   mesmo contêiner (max-w-7xl com 2rem de margem, igual no cabeçalho e na intro):
+   mesmo contêiner (max-w-site com 2rem de margem, igual no cabeçalho e na intro):
    - à esquerda: logo do menu (que aparece ao rolar), símbolo, título e subtítulo;
    - à direita: o fim do texto do último item do menu;
    - o filete dourado fica logo à esquerda do título, dentro da margem.

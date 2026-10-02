@@ -49,6 +49,11 @@
   --font-informativo: "Nunito Sans Variable", system-ui, sans-serif; /* Agenor Neue (PENDENTE): títulos informativos, menu */
   --font-texto: "Roboto Variable", system-ui, sans-serif; /* Roboto: textos longos */
 
+  /* Largura máxima do conteúdo em TODO o site (menu, topos, conteúdo e rodapé):
+     88% da tela, nunca menos que 1280 px. No celular e no tablet vale a tela toda.
+     Para mudar a largura do site inteiro, mude só esta linha. (Classe: max-w-site) */
+  --container-site: max(80rem, 88vw);
+
   /* Cores oficiais (manual, seção 2) */
   --color-azul: #154d7d; /* principal: fundos, títulos, logo (~50%) */
   --color-cinza: #e6e7e8; /* "branco cinza 8%": fundos claros (~30%) */
