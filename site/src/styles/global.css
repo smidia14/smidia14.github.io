@@ -459,8 +459,9 @@ html {
   width: min(62vw, 13.5rem);
   scroll-snap-align: start;
 }
-/* tablet e computador: as capas viram uma grade que ocupa a largura toda
-   (no computador largo, cada grupo divide a sua metade em tantas colunas quantas capas tem) */
+/* tablet e computador: as capas viram uma grade de 4 colunas (grupos empilhados);
+   a partir de 1441 px, com os grupos lado a lado, cada grupo divide o seu espaço em
+   tantas colunas quantas capas tem */
 @media (min-width: 768px) {
   .faixa-capas {
     display: grid;
@@ -474,7 +475,7 @@ html {
     width: auto;
   }
 }
-@media (min-width: 1280px) {
+@media (min-width: 1441px) {
   .faixa-capas {
     grid-template-columns: repeat(var(--colunas, 4), minmax(0, 1fr));
     gap: clamp(1.25rem, 1.4vw, 2.25rem);

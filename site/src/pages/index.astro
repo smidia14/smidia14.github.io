@@ -168,15 +168,16 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   <!-- ============ 3. LITERATURAS e LIVROS DIVERSOS — fundo branco ============ -->
   <section class="bg-branco">
     <Curva de="cinza" para="branco" espelhar />
-    <!-- telas largas: os dois grupos lado a lado (3 e 4 capas), dividindo a largura toda -->
-    <div class="mx-auto max-w-site px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-28 xl:grid xl:grid-cols-[3fr_4fr] xl:gap-16">
+    <!-- até 1440 px: os dois grupos um embaixo do outro (capas maiores);
+         a partir de 1441 px: lado a lado (3 e 4 capas), dividindo a largura toda -->
+    <div class="mx-auto max-w-site px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-28 min-[1441px]:grid min-[1441px]:grid-cols-[3fr_4fr] min-[1441px]:gap-16">
       {
         [inicioDados.literaturas, inicioDados.livrosDiversos].map((grupo, g) => (
-          <div class:list={[g > 0 && "mt-16 sm:mt-20 xl:mt-0"]}>
+          <div class:list={[g > 0 && "mt-16 sm:mt-20 min-[1441px]:mt-0!"]}>
             <h2
               class:list={[
                 "surgir titulo-com-arco font-titulo font-medium text-azul",
-                g === 0 ? "text-3xl sm:text-5xl" : "text-2xl sm:text-3xl xl:text-5xl",
+                g === 0 ? "text-3xl sm:text-5xl" : "text-2xl sm:text-3xl min-[1441px]:text-5xl",
               ]}
             >
               {grupo.titulo}
