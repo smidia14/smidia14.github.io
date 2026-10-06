@@ -33,7 +33,6 @@ const icones: Record<string, string> = {
   "/contatos/": "M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
 };
 const externo = (link: string) => /^https?:/.test(link);
-const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1] ?? "";
 ---
 
 <Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo rodapeColado>
@@ -208,48 +207,23 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
     </div>
   </section>
 
-  <!-- ============ 4. TRANSMISSÕES e RÁDIO — seção de destaque em azul ============ -->
+  <!-- ============ 4. TRANSMISSÕES — seção de destaque em azul ============
+       título (com o horário) à esquerda e a imagem do canal à direita; no celular, um embaixo do outro -->
   <section class="relative bg-azul text-branco">
     <Curva de="branco" para="azul" />
-    <div class="relative mx-auto grid max-w-site items-center gap-12 px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-24 lg:grid-cols-2 lg:gap-16">
-      <div class="surgir">
-        <h2 class="titulo-com-arco font-titulo text-3xl leading-tight font-medium text-balance sm:text-5xl">
-          {inicioDados.transmissoes.titulo}
-        </h2>
-        <a
-          href={inicioDados.transmissoes.link}
-          target="_blank"
-          rel="noopener"
-          class="mt-8 block overflow-hidden rounded-2xl ring-1 ring-branco/15 transition-transform duration-300 hover:-translate-y-1"
-        >
-          <img src={inicioDados.transmissoes.imagem} alt="Canal do YouTube" loading="lazy" decoding="async" class="block h-auto w-full" />
-        </a>
-      </div>
-      <div class="surgir" style="transition-delay:120ms">
-        <h3 class="font-titulo text-2xl font-medium text-azul-claro">{inicioDados.transmissoes.radio.titulo}</h3>
-        <!-- prévia leve: mostra a miniatura do vídeo; o player do YouTube só carrega ao clicar -->
-        <div class="video-previa mt-5 aspect-video overflow-hidden rounded-2xl bg-azul-escuro ring-1 ring-branco/15">
-          <button
-            type="button"
-            class="group relative block h-full w-full"
-            data-video={inicioDados.transmissoes.radio.video}
-            aria-label={`Reproduzir vídeo: ${inicioDados.transmissoes.radio.titulo}`}
-          >
-            <img
-              src={`https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`}
-              alt=""
-              loading="lazy"
-              decoding="async"
-              class="h-full w-full object-cover transition-transform duration-500 group-hover:scale-[1.03]"
-            />
-            <span class="absolute inset-0 grid place-items-center bg-azul-escuro/25">
-              <span class="grid size-16 place-items-center rounded-full bg-branco text-azul shadow-lg ring-4 ring-dourado/60 transition-transform group-hover:scale-110 sm:size-20">
-                <svg viewBox="0 0 24 24" class="ml-1 size-7 sm:size-8" fill="currentColor" aria-hidden="true"><path d="M8 5.5v13l10.5-6.5L8 5.5Z" /></svg>
-              </span>
-            </span>
-          </button>
-        </div>
-      </div>
+    <div class="relative mx-auto grid max-w-site items-center gap-10 px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-24 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
+      <h2 class="surgir titulo-com-arco font-titulo text-3xl leading-tight font-medium text-balance sm:text-5xl xl:text-6xl">
+        {inicioDados.transmissoes.titulo}
+      </h2>
+      <a
+        href={inicioDados.transmissoes.link}
+        target="_blank"
+        rel="noopener"
+        class="surgir block w-full overflow-hidden rounded-2xl ring-1 ring-branco/15 transition-transform duration-300 hover:-translate-y-1 lg:max-w-3xl lg:justify-self-end"
+        style="transition-delay:120ms"
+      >
+        <img src={inicioDados.transmissoes.imagem} alt="Canal do YouTube" loading="lazy" decoding="async" class="block h-auto w-full" />
+      </a>
     </div>
   </section>
 
@@ -288,17 +262,3 @@ const videoId = inicioDados.transmissoes.radio.video.match(/embed\/([^?]+)/)?.[1
   </section>
 </Base>
 
-<script>
-  // Prévia do vídeo: ao clicar, troca a miniatura pelo player do YouTube (já tocando)
-  document.querySelectorAll<HTMLButtonElement>(".video-previa [data-video]").forEach((botao) => {
-    botao.addEventListener("click", () => {
-      const quadro = document.createElement("iframe");
-      quadro.src = botao.dataset.video + (botao.dataset.video!.includes("?") ? "&" : "?") + "autoplay=1";
-      quadro.title = botao.getAttribute("aria-label") ?? "Vídeo";
-      quadro.allow = "autoplay; encrypted-media; picture-in-picture; fullscreen";
-      quadro.allowFullscreen = true;
-      quadro.className = "h-full w-full border-0";
-      botao.replaceWith(quadro);
-    });
-  });
-</script>

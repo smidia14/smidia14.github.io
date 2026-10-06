@@ -8,8 +8,6 @@ titulo: "Barra lateral"
 
 [![](https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000846-583ff58401/2fe96349e00700ad3f747073f24cabf8_icon.png)](/diversos/diversos/testemunhos-ellen-g-white/)
 
-## Radio SmidiaWeb
-
 ## Contato
 
 **Escritório central**
@@ -19,4 +17,6 @@ Vila Ré - São Paulo - SP
 
 (11) 2957-4087
 
-[smiassociacao.brasileira1914@hotmail.com ou smidia14@hotmail.com -](<mailto:smiassociacao.brasileira1914@hotmail.com ou smidia14@hotmail.com - >)
+[smiassociacao.brasileira1914@hotmail.com](mailto:smiassociacao.brasileira1914@hotmail.com)
+
+[smidia1914@gmail.com](mailto:smidia1914@gmail.com)
