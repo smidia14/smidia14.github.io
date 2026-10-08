@@ -3,6 +3,7 @@
 // O visual vem do molde src/layouts/MoldeInterno.astro.
 import { getCollection, render } from "astro:content";
 import MoldeInterno from "../layouts/MoldeInterno.astro";
+import Biblioteca from "../components/Biblioteca.astro";
 import { menu, trilhaNoMenu, type ItemMenu } from "../lib/menu";
 
 export async function getStaticPaths() {
@@ -31,14 +32,21 @@ function trilha(): ItemMenu[] {
 ---
 
 <MoldeInterno titulo={pagina.data.titulo} descricao={pagina.data.descricao} atual={href} trilha={trilha()}>
+  <!-- materiais da biblioteca de PDFs (só nas páginas que têm; veja src/lib/biblioteca.ts) -->
+  <Biblioteca href={href} />
+
   <div class="texto prose prose-lg mx-auto max-w-[68ch]">
     <Content />
   </div>
 
-  <p class="mx-auto mt-14 max-w-[68ch] border-t border-linha pt-5 text-xs break-all text-suave">
-    Endereço no site antigo:{" "}
-    <a href={pagina.data.url_original} class="underline decoration-1 underline-offset-2" target="_blank" rel="noopener">
-      {decodeURI(pagina.data.url_original)}
-    </a>
-  </p>
+  {
+    pagina.data.url_original && (
+      <p class="mx-auto mt-14 max-w-[68ch] border-t border-linha pt-5 text-xs break-all text-suave">
+        Endereço no site antigo:{" "}
+        <a href={pagina.data.url_original} class="underline decoration-1 underline-offset-2" target="_blank" rel="noopener">
+          {decodeURI(pagina.data.url_original)}
+        </a>
+      </p>
+    )
+  }
 </MoldeInterno>

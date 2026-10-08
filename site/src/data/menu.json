@@ -9,40 +9,9 @@
     "href": "/download/",
     "filhos": [
       {
-        "titulo": "Mártires do Século XX",
-        "href": "/download/martires-do-seculo-xx/",
+        "titulo": "Livros",
+        "href": "/download/livros/",
         "filhos": []
-      },
-      {
-        "titulo": "Folhetos",
-        "href": "/download/folhetos/",
-        "filhos": [
-          {
-            "titulo": "O Retorno Mais Esperado",
-            "href": "/download/folhetos/o-retorno-mais-esperado/",
-            "filhos": []
-          },
-          {
-            "titulo": "Importa a Diferença",
-            "href": "/download/folhetos/importa-a-diferenca/",
-            "filhos": []
-          },
-          {
-            "titulo": "24 Razões para Guardar o Sábado",
-            "href": "/download/folhetos/24-razoes-para-guardar-o-sabado/",
-            "filhos": []
-          },
-          {
-            "titulo": "Vida Depois da Morte?",
-            "href": "/download/folhetos/vida-depois-da-morte/",
-            "filhos": []
-          },
-          {
-            "titulo": "Estenda Sua Mão",
-            "href": "/download/folhetos/estenda-sua-mao/",
-            "filhos": []
-          }
-        ]
       },
       {
         "titulo": "Semana da Mordomia Cristã",
@@ -55,6 +24,11 @@
         "filhos": []
       },
       {
+        "titulo": "Semana de Reavivamento",
+        "href": "/download/semana-de-reavivamento/",
+        "filhos": []
+      },
+      {
         "titulo": "Semana do Calvário",
         "href": "/download/semana-do-calvario/",
         "filhos": []
@@ -62,6 +36,11 @@
       {
         "titulo": "Semana Juvenil",
         "href": "/download/semana-juvenil/",
+        "filhos": []
+      },
+      {
+        "titulo": "Cursos e Estudos",
+        "href": "/download/cursos-e-estudos/",
         "filhos": []
       }
     ]
@@ -105,6 +84,11 @@
       {
         "titulo": "Escola Sabatina",
         "href": "/departamentos/escola-sabatina/",
+        "filhos": []
+      },
+      {
+        "titulo": "Crianças",
+        "href": "/departamentos/criancas/",
         "filhos": []
       },
       {

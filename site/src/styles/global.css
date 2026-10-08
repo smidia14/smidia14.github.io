@@ -497,7 +497,7 @@ html {
     transform 0.35s ease,
     box-shadow 0.35s ease;
 }
-.capa-imagem img {
+.capa-imagem > img {
   width: 100%;
   height: 100%;
   object-fit: cover;
@@ -590,5 +590,155 @@ html {
      esquerda e o fim do menu na margem direita */
   [data-esconder-logo="true"] .logo-cabecalho {
     margin-left: -0.375rem; /* desconta a margem de segurança em volta do logo */
+  }
+}
+
+/* ==========================================================================
+   BIBLIOTECA DE PDFs (cartões, capa padrão, página do material)
+   ========================================================================== */
+
+.biblioteca,
+.biblioteca-vazia {
+  margin-bottom: 3.5rem;
+}
+
+/* Aviso discreto quando a seção ainda não tem nenhum material */
+.biblioteca-vazia {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 0.9rem;
+  background: color-mix(in srgb, var(--color-azul) 5%, var(--color-branco));
+  font-family: var(--font-informativo);
+  font-weight: 600;
+  color: var(--color-suave);
+}
+.biblioteca-vazia::before {
+  content: "";
+  width: 1.1em;
+  height: 1.1em;
+  flex: none;
+  background-color: var(--color-verde);
+  mask: url("/marca/arco.svg") no-repeat center / contain;
+}
+
+/* Capa padrão: um livro azul com lombada, o símbolo branco, o título e o ano em branco.
+   Os tamanhos acompanham a largura da capa (unidade cqw), em qualquer tamanho de cartão.
+   O símbolo fica como está: branco sobre azul, sem transparência nem efeitos (manual, seção 5). */
+.capa-padrao {
+  container-type: size; /* as medidas em cqw abaixo são da própria capa */
+  display: block;
+  width: 100%;
+  height: 100%;
+  background: #154d7d;
+  color: var(--color-branco);
+  text-align: left;
+}
+.capa-padrao-miolo {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  /* lombada mais escura à esquerda, separada por um filete dourado fino */
+  background: linear-gradient(90deg, var(--color-azul-escuro) 0 7cqw, var(--color-dourado) 7cqw 7.6cqw, transparent 7.6cqw);
+  padding: 14cqw 11cqw 11cqw 17cqw;
+}
+.capa-padrao-simbolo {
+  flex: none;
+  width: 28cqw;
+  height: auto;
+  margin-bottom: 9cqw;
+}
+.capa-padrao-titulo {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 7;
+  overflow: hidden;
+  font-family: var(--font-titulo);
+  font-size: 8.4cqw;
+  font-weight: 500;
+  line-height: 1.18;
+  overflow-wrap: anywhere;
+  hyphens: auto;
+}
+.capa-padrao-ano {
+  margin-top: auto;
+  padding-top: 5cqw;
+  font-family: var(--font-informativo);
+  font-size: 7.5cqw;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+/* Botão principal (Baixar / Como comprar) e links secundários */
+.botao-material {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 999px;
+  background: var(--color-azul);
+  padding: 0.75rem 1.5rem;
+  font-family: var(--font-informativo);
+  font-weight: 700;
+  color: var(--color-branco);
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.botao-material:hover {
+  background: var(--color-azul-escuro);
+}
+.como-comprar > summary {
+  list-style: none;
+}
+.como-comprar > summary::-webkit-details-marker {
+  display: none;
+}
+.link-material {
+  font-family: var(--font-informativo);
+  font-weight: 700;
+  color: var(--color-link);
+  text-decoration: underline;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 4px;
+}
+.link-material:hover {
+  color: var(--color-link-hover);
+}
+
+/* Visualizador do Google Drive: alto, para ler a página inteira */
+.visualizador-pdf {
+  overflow: hidden;
+  border-radius: 0.9rem;
+  background: var(--color-cinza);
+  box-shadow: inset 0 0 0 1px var(--color-linha);
+}
+.visualizador-pdf iframe {
+  display: block;
+  width: 100%;
+  height: min(85vh, 60rem);
+  border: 0;
+}
+
+/* Prévias (páginas 1 e 2) dos PDFs pesados */
+.previa-pagina {
+  width: 100%;
+  height: auto;
+  border-radius: 0.6rem;
+  background: var(--color-branco);
+  box-shadow:
+    0 0 0 1px var(--color-linha),
+    0 14px 30px -22px rgb(14 58 96 / 0.45);
+}
+
+/* Grade de cartões: quantas colunas couberem (capas de ~9,5 a 13 rem); 2 no celular */
+.grade-materiais {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(9.5rem, calc(50% - 0.75rem)), 1fr));
+  gap: 2.25rem 1.5rem;
+}
+@media (min-width: 640px) {
+  .grade-materiais {
+    grid-template-columns: repeat(auto-fill, minmax(10.5rem, 1fr));
+    gap: 2.5rem 1.75rem;
   }
 }

@@ -1,0 +1,19 @@
+---
+// CAPA PADRÃO para materiais sem capa colorida: um "livro" azul (#154D7D) com o
+// símbolo branco, o título e o ano em branco. Feita pelo próprio site, sem imagem.
+// O símbolo entra como está (manual, seção 5): branco sobre azul, sem transparência,
+// sem girar nem deformar, com margem livre em volta.
+interface Props {
+  titulo: string;
+  ano?: string | null;
+}
+const { titulo, ano } = Astro.props;
+---
+
+<span class="capa-padrao" role="img" aria-label={`Capa: ${titulo}`}>
+  <span class="capa-padrao-miolo">
+    <img src="/marca/simbolo-branco.svg" alt="" class="capa-padrao-simbolo" width="250" height="268" />
+    <span class="capa-padrao-titulo">{titulo}</span>
+    {ano && <span class="capa-padrao-ano">{ano}</span>}
+  </span>
+</span>

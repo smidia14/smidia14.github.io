@@ -1,0 +1,73 @@
+---
+// PÁGINA DE UM MATERIAL (lição, semana, revista...), uma para cada item de biblioteca.json.
+//  - PDF comum: pré-visualização do Google Drive embutida e o botão "Baixar".
+//  - PDF pesado (acima de 50 MB): as imagens das páginas 1 e 2 e o botão "Baixar (XX MB)".
+//  - Material da Conferência Geral: também o link para o site dela.
+import MoldeInterno from "../../layouts/MoldeInterno.astro";
+import CapaPadrao from "../../components/CapaPadrao.astro";
+import { materiais, slugDe, hrefDe, rotuloData, trilhaDoMaterial, previaDoDrive, type Material } from "../../lib/biblioteca";
+
+export function getStaticPaths() {
+  return materiais.map((m) => ({ params: { slug: slugDe(m) }, props: { m } }));
+}
+
+const { m } = Astro.props as { m: Material };
+const data = rotuloData(m);
+const mb = m.tamanhoMB.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+const detalhes = [data, m.publico === "infantil" ? "Infantil" : "", m.paginas ? `${m.paginas} páginas` : "", `PDF, ${mb} MB`].filter(Boolean);
+---
+
+<MoldeInterno titulo={m.titulo} descricao="PENDENTE" atual={hrefDe(m)} trilha={trilhaDoMaterial(m)}>
+  <div class="grid gap-8 sm:grid-cols-[11rem_minmax(0,1fr)] sm:items-end lg:grid-cols-[13rem_minmax(0,1fr)]">
+    <span class="capa-imagem mx-auto block w-40 sm:w-full">
+      {m.capa === "padrao" ? <CapaPadrao titulo={m.titulo} ano={m.ano} /> : <img src={m.capa} alt="" decoding="async" />}
+    </span>
+    <div>
+      <p class="font-informativo text-[0.95rem] text-suave">{detalhes.join(" · ")}</p>
+      <div class="mt-5 flex flex-wrap items-center gap-x-6 gap-y-3">
+        <a href={m.baixar} class="botao-material" rel="noopener">
+          <span aria-hidden="true">↓</span>
+          {m.pesado ? `Baixar (${mb} MB)` : "Baixar"}
+        </a>
+        {
+          !m.pesado && (
+            <a href={m.visualizar} target="_blank" rel="noopener" class="link-material">
+              Abrir em tela cheia
+            </a>
+          )
+        }
+        {
+          m.origem === "Conferência Geral" && m.linkOficial && (
+            <a href={m.linkOficial} target="_blank" rel="noopener" class="link-material">
+              Ver no site da Conferência Geral
+            </a>
+          )
+        }
+      </div>
+    </div>
+  </div>
+
+  {
+    m.pesado && m.previas?.length ? (
+      <section class="mt-12" aria-label="Primeiras páginas">
+        <p class="font-informativo text-sm text-suave">
+          Este arquivo é grande ({mb} MB). Veja as primeiras páginas abaixo e use o botão para baixar o PDF completo.
+        </p>
+        <div class="mt-5 grid gap-5 sm:grid-cols-2">
+          {m.previas.map((src, i) => (
+            <img src={src} alt={`Página ${i + 1}`} loading="lazy" decoding="async" class="previa-pagina" />
+          ))}
+        </div>
+        <p class="mt-8 text-center">
+          <a href={m.baixar} class="botao-material" rel="noopener">
+            <span aria-hidden="true">↓</span> Baixar ({mb} MB)
+          </a>
+        </p>
+      </section>
+    ) : (
+      <div class="visualizador-pdf mt-12">
+        <iframe src={previaDoDrive(m)} title={`PDF: ${m.titulo}`} loading="lazy" allow="autoplay" />
+      </div>
+    )
+  }
+</MoldeInterno>

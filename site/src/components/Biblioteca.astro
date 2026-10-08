@@ -1,0 +1,80 @@
+---
+// MATERIAIS DE UMA PÁGINA (entra no alto da folha, antes do texto que veio do site antigo)
+//  - Livros: vitrine só com capas e títulos, sem download, e o botão "Como comprar".
+//  - Escola Sabatina: grupos por ano e semestre, cada um com Adultos e Infantil.
+//  - Seções, departamentos e doutrinas: grade de cartões, do mais novo ao mais antigo.
+//  - Sem nenhum material: aviso discreto "Em breve novos materiais".
+import CartaoMaterial from "./CartaoMaterial.astro";
+import livraria from "../data/livraria.json";
+import { livros, materiaisDaPagina, paginasComBiblioteca, porSemestre, PAGINA_LIVROS } from "../lib/biblioteca";
+
+interface Props {
+  href: string;
+}
+const { href } = Astro.props;
+const ESCOLA_SABATINA = "/departamentos/escola-sabatina/";
+const lista = materiaisDaPagina(href);
+const vitrine = [...livros, ...livraria.livros.map((l) => ({ ...l, ano: null, semestre: null, pastaDrive: "" }))];
+// quantas colunas couberem, com capas de pelo menos ~9,5 rem (2 colunas no celular)
+const grade = "grade-materiais";
+---
+
+{
+  href === PAGINA_LIVROS ? (
+    <section class="biblioteca" aria-label="Vitrine de livros">
+      <ul class={grade}>
+        {vitrine.map((l) => (
+          <li>
+            <CartaoMaterial material={l} semLink semData />
+          </li>
+        ))}
+      </ul>
+      <details class="como-comprar mt-12">
+        <summary class="botao-material">Como comprar</summary>
+        <p class="mt-4 font-informativo text-suave">PENDENTE</p>
+      </details>
+    </section>
+  ) : href === ESCOLA_SABATINA ? (
+    <section class="biblioteca" aria-label="Lições">
+      {porSemestre(lista).map((g) => (
+        <div class="mb-12 last:mb-0">
+          <h2 class="titulo-com-arco font-titulo text-2xl font-medium text-azul">{g.titulo}</h2>
+          <!-- Adultos e Infantil lado a lado (um embaixo do outro quando não cabem) -->
+          <div class="mt-5 flex flex-wrap gap-x-12 gap-y-8">
+            {[
+              ["Adultos", g.adultos],
+              ["Infantil", g.infantil],
+            ].map(([nome, itens]) =>
+              (itens as typeof lista).length ? (
+                <div>
+                  <h3 class="mb-4 font-informativo text-sm font-bold tracking-wide text-suave uppercase">{nome}</h3>
+                  <ul class="flex flex-wrap gap-x-6 gap-y-8">
+                    {(itens as typeof lista).map((m) => (
+                      <li class="w-[min(10.5rem,calc(50vw-2.5rem))]">
+                        <CartaoMaterial material={m} semData />
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ) : null,
+            )}
+          </div>
+        </div>
+      ))}
+    </section>
+  ) : paginasComBiblioteca.has(href) || href === "/departamentos/criancas/" ? (
+    lista.length ? (
+      <section class="biblioteca" aria-label="Materiais">
+        <ul class={grade}>
+          {lista.map((m) => (
+            <li>
+              <CartaoMaterial material={m} />
+            </li>
+          ))}
+        </ul>
+      </section>
+    ) : (
+      <p class="biblioteca-vazia">Em breve novos materiais</p>
+    )
+  ) : null
+}

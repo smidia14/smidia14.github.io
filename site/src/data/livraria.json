@@ -1,0 +1,13 @@
+{
+  "_leia": "Livros da vitrine (página Download › Livros) que NÃO estão na biblioteca de PDFs. Só capa e título, sem download. As capas ainda vêm do site antigo (mesmas imagens que as páginas já usavam). Os livros da biblioteca (tipo \"livro\" em biblioteca.json) entram na vitrine automaticamente.",
+  "livros": [
+    {
+      "titulo": "Mártires do Século XX",
+      "capa": "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000137-d433cd627c/fe%20do%20dos.PNG"
+    },
+    {
+      "titulo": "Divórcio e Novo Casamento",
+      "capa": "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200001153-0325003253/Captura%20de%20tela%202022-07-05%20101103.png"
+    }
+  ]
+}

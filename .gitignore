@@ -22,3 +22,7 @@ desktop.ini
 # Variáveis de ambiente (podem conter senhas)
 .env
 .env.*
+
+# PDFs da editora (ficam só no computador; não vão para o GitHub)
+pdfs-editora/
+pdfs-organizados/

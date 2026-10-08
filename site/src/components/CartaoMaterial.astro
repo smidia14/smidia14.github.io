@@ -1,0 +1,30 @@
+---
+// CARTÃO DE MATERIAL: capa (original ou padrão), título e ano/semestre.
+// Leva à página do material; na vitrine de livros (semLink) é só a capa e o título.
+import CapaPadrao from "./CapaPadrao.astro";
+import { hrefDe, rotuloData, type Material } from "../lib/biblioteca";
+
+interface Props {
+  material: Pick<Material, "titulo" | "ano" | "semestre" | "capa" | "pastaDrive">;
+  semLink?: boolean;
+  semData?: boolean;
+}
+const { material: m, semLink = false, semData = false } = Astro.props;
+const data = semData ? "" : rotuloData(m as Material);
+const Tag = semLink ? "div" : "a";
+---
+
+<Tag href={semLink ? undefined : hrefDe(m as Material)} class="capa group block">
+  <span class="capa-imagem">
+    {m.capa === "padrao" ? <CapaPadrao titulo={m.titulo} ano={m.ano} /> : <img src={m.capa} alt="" loading="lazy" decoding="async" />}
+  </span>
+  <span
+    class:list={[
+      "mt-3 block font-informativo text-[0.95rem] leading-snug font-semibold text-texto",
+      !semLink && "group-hover:text-azul",
+    ]}
+  >
+    {m.titulo}
+  </span>
+  {data && <span class="mt-1 block font-informativo text-sm text-suave">{data}</span>}
+</Tag>
