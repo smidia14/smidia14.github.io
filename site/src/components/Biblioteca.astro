@@ -6,7 +6,7 @@
 //  - Sem nenhum material: aviso discreto "Em breve novos materiais".
 import CartaoMaterial from "./CartaoMaterial.astro";
 import livraria from "../data/livraria.json";
-import { livros, materiaisDaPagina, paginasComBiblioteca, porSemestre, PAGINA_LIVROS } from "../lib/biblioteca";
+import { materiaisDaPagina, paginasComBiblioteca, porSemestre, PAGINA_LIVROS } from "../lib/biblioteca";
 
 interface Props {
   href: string;
@@ -14,7 +14,7 @@ interface Props {
 const { href } = Astro.props;
 const ESCOLA_SABATINA = "/departamentos/escola-sabatina/";
 const lista = materiaisDaPagina(href);
-const vitrine = [...livros, ...livraria.livros.map((l) => ({ ...l, ano: null, semestre: null, pastaDrive: "" }))];
+const vitrine = livraria.livros.map((l) => ({ titulo: l.titulo, capa: l.capa || "padrao", ano: null, semestre: null, slug: "" }));
 // quantas colunas couberem, com capas de pelo menos ~9,5 rem (2 colunas no celular)
 const grade = "grade-materiais";
 ---
@@ -31,7 +31,7 @@ const grade = "grade-materiais";
       </ul>
       <details class="como-comprar mt-12">
         <summary class="botao-material">Como comprar</summary>
-        <p class="mt-4 font-informativo text-suave">PENDENTE</p>
+        <p class="mt-4 font-informativo whitespace-pre-line text-suave">{livraria.comoComprar || "PENDENTE"}</p>
       </details>
     </section>
   ) : href === ESCOLA_SABATINA ? (

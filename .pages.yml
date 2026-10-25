@@ -1,0 +1,284 @@
+# PAINEL DE ADMINISTRAÇÃO DO SITE (Pages CMS — https://app.pagescms.org)
+#
+# Este arquivo define o que a equipe pode editar pelo painel e como são os formulários.
+# Cada "Salvar" no painel grava no GitHub, e o site é publicado de novo sozinho (2–3 minutos).
+# Só quem tem acesso ao GitHub do site pode mudar ESTE arquivo; os convidados por e-mail não.
+
+media:
+  input: site/public/imagens # onde as imagens enviadas pelo painel ficam guardadas
+  output: /imagens # como o site enxerga essas imagens
+  categories: [image]
+  rename: safe
+
+settings:
+  commit:
+    identity: user # o histórico mostra quem fez cada alteração
+
+content:
+  # ---------------------------------------------------------------------------
+  # BIBLIOTECA: uma revista, lição ou semana por arquivo
+  # ---------------------------------------------------------------------------
+  - name: biblioteca
+    label: Biblioteca (revistas, lições, semanas)
+    type: collection
+    path: site/src/data/biblioteca
+    format: json
+    filename:
+      template: "{titulo}.json"
+      field: false
+    view:
+      primary: titulo
+      fields: [titulo, ano, secao]
+      sort: [ano, titulo]
+      search: [titulo]
+      default:
+        sort: ano
+        order: desc
+    fields:
+      - name: titulo
+        label: Título
+        type: string
+        required: true
+        description: "Ex.: Lições de Escola Sabatina – 1º semestre 2027 – Nome do tema"
+      - name: linkDrive
+        label: Link do PDF no Google Drive
+        type: string
+        required: true
+        description: "No Drive: botão direito no PDF → Compartilhar → Copiar link. O arquivo precisa estar como 'Qualquer pessoa com o link'."
+      - name: secao
+        label: Onde aparece no site
+        type: select
+        required: true
+        options:
+          values:
+            - { name: /departamentos/escola-sabatina/, label: "Escola Sabatina" }
+            - { name: /download/semana-de-oracao/, label: "Semana de Oração" }
+            - { name: /download/semana-de-reavivamento/, label: "Semana de Reavivamento" }
+            - { name: /download/semana-da-mordomia-crista/, label: "Semana da Mordomia Cristã" }
+            - { name: /departamentos/jovens/semana-da-juventude/, label: "Jovens › Semana / Mês da Juventude" }
+            - { name: /download/semana-do-calvario/, label: "Semana do Calvário" }
+            - { name: /download/semana-juvenil/, label: "Semana Juvenil" }
+            - { name: /download/cursos-e-estudos/, label: "Cursos e Estudos" }
+            - { name: /departamentos/familia/, label: "Departamento: Família" }
+            - { name: /departamentos/bom-samaritano/, label: "Departamento: Bom Samaritano" }
+            - { name: /departamentos/jovens/, label: "Departamento: Jovens" }
+            - { name: /departamentos/saude/, label: "Departamento: Saúde" }
+            - { name: /departamentos/secretaria/, label: "Departamento: Secretaria" }
+            - { name: /departamentos/educacao/, label: "Departamento: Educação" }
+            - { name: /departamentos/evangelismo/, label: "Departamento: Evangelismo" }
+            - { name: /departamentos/literario/, label: "Departamento: Literário" }
+            - { name: /doutrinas/principios-de-fe/, label: "Doutrinas: Princípios de Fé" }
+            - { name: /doutrinas/manual-de-igreja/, label: "Doutrinas: Manual de Igreja" }
+            - { name: /doutrinas/manual-de-normas-e-funcoes/, label: "Doutrinas: Manual de Normas e Funções" }
+            - { name: /doutrinas/evangelismo-e-liturgia/, label: "Doutrinas: Evangelismo e liturgia" }
+            - { name: /doutrinas/renovacao-de-nossa-fidelidade/, label: "Doutrinas: Renovação de Nossa Fidelidade" }
+            - { name: /doutrinas/laodiceia/, label: "Doutrinas: Laodicéia" }
+      - name: ano
+        label: Ano
+        type: string
+        description: "Ex.: 2027 (deixe em branco se não tiver ano)"
+        options:
+          maxlength: 4
+      - name: semestre
+        label: Semestre
+        type: select
+        description: "Só para lições da Escola Sabatina"
+        options:
+          values:
+            - { name: "", label: "Não se aplica" }
+            - { name: "1", label: "1º semestre" }
+            - { name: "2", label: "2º semestre" }
+      - name: publico
+        label: Público
+        type: select
+        required: true
+        description: "Materiais infantis também aparecem em Departamentos › Crianças"
+        options:
+          values:
+            - { name: adulto, label: "Adultos" }
+            - { name: infantil, label: "Infantil" }
+      - name: capaModo
+        label: Capa
+        type: select
+        required: true
+        options:
+          values:
+            - { name: primeira-pagina, label: "Usar a 1ª página do PDF (automático)" }
+            - { name: imagem, label: "Enviar uma imagem de capa (campo abaixo)" }
+            - { name: padrao, label: "Capa azul padrão do site" }
+      - name: capaImagem
+        label: Imagem da capa (só se escolheu "Enviar uma imagem")
+        type: image
+        options:
+          path: capas
+          extensions: [jpg, jpeg, png, webp]
+      - name: origem
+        label: Origem
+        type: select
+        options:
+          values:
+            - { name: editora, label: "Editora" }
+            - { name: Conferência Geral, label: "Conferência Geral" }
+            - { name: site antigo, label: "Site antigo" }
+      - name: linkOficial
+        label: Link no site da Conferência Geral (opcional)
+        type: string
+        description: "Se preenchido, a página mostra 'Ver no site da Conferência Geral'"
+      - name: observacao
+        label: Observação interna (não aparece no site)
+        type: text
+      - name: esconder
+        label: Esconder do site
+        type: boolean
+        description: "Marque para tirar o material do site sem apagar"
+
+  # ---------------------------------------------------------------------------
+  # CONTATOS E REDES SOCIAIS (rodapé de todas as páginas)
+  # ---------------------------------------------------------------------------
+  - name: contatos
+    label: Contatos e redes sociais
+    type: file
+    path: site/src/data/contatos.json
+    format: json
+    fields:
+      - { name: _leia, type: string, hidden: true }
+      - name: escritorio
+        label: Escritório central
+        type: object
+        fields:
+          - { name: titulo, label: Nome, type: string }
+          - { name: endereco, label: Endereço (uma linha por linha), type: text }
+          - { name: telefone, label: Telefone, type: string }
+      - name: emails
+        label: E-mails
+        type: string
+        list: true
+      - name: redes
+        label: Redes sociais (deixe em branco a que não usar)
+        type: object
+        fields:
+          - { name: youtube, label: YouTube (link do canal), type: string }
+          - { name: instagram, label: "Instagram (link, ex.: https://www.instagram.com/perfil)", type: string }
+          - { name: facebook, label: Facebook (link da página), type: string }
+          - { name: whatsapp, label: "WhatsApp (número com DDD, ex.: 11 99999-9999)", type: string }
+
+  # ---------------------------------------------------------------------------
+  # PÁGINA INICIAL (capas e cartões abaixo da abertura)
+  # ---------------------------------------------------------------------------
+  - name: inicio
+    label: Página inicial
+    type: file
+    path: site/src/data/inicio.json
+    format: json
+    fields:
+      - { name: _leia, type: string, hidden: true }
+      - { name: acessoRapido, type: string, list: true, hidden: true }
+      - name: literaturas
+        label: Literaturas
+        type: object
+        fields:
+          - { name: titulo, label: Título da seção, type: string }
+          - name: capas
+            label: Capas
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{fields.legenda}"
+            fields:
+              - { name: legenda, label: Legenda, type: string }
+              - { name: imagem, label: Imagem, type: image }
+              - { name: link, label: "Link (página do site, ex.: /departamentos/escola-sabatina/, ou endereço completo)", type: string }
+      - name: livrosDiversos
+        label: Livros diversos
+        type: object
+        fields:
+          - { name: titulo, label: Título da seção, type: string }
+          - name: capas
+            label: Capas
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{fields.legenda}"
+            fields:
+              - { name: legenda, label: Legenda, type: string }
+              - { name: imagem, label: Imagem, type: image }
+              - { name: link, label: Link, type: string }
+      - name: transmissoes
+        label: Transmissões ao vivo
+        type: object
+        fields:
+          - { name: titulo, label: Título, type: string }
+          - { name: imagem, label: Imagem, type: image }
+          - { name: link, label: Link do canal, type: string }
+      - name: departamentos
+        label: Departamentos
+        type: object
+        fields:
+          - { name: titulo, label: Título da seção, type: string }
+          - name: itens
+            label: Cartões
+            type: object
+            list:
+              collapsible:
+                collapsed: true
+                summary: "{fields.nome}"
+            fields:
+              - { name: nome, label: Nome, type: string }
+              - { name: imagem, label: Imagem, type: image }
+              - { name: link, label: Link, type: string }
+
+  # ---------------------------------------------------------------------------
+  # LIVROS (vitrine, sem download)
+  # ---------------------------------------------------------------------------
+  - name: livraria
+    label: Livros (vitrine)
+    type: file
+    path: site/src/data/livraria.json
+    format: json
+    fields:
+      - { name: _leia, type: string, hidden: true }
+      - name: livros
+        label: Livros
+        type: object
+        list:
+          collapsible:
+            collapsed: true
+            summary: "{fields.titulo}"
+        fields:
+          - { name: titulo, label: Título, type: string, required: true }
+          - name: capa
+            label: Capa (sem imagem = capa azul padrão)
+            type: image
+            options:
+              path: capas
+      - name: comoComprar
+        label: Texto do botão "Como comprar"
+        type: text
+
+  # ---------------------------------------------------------------------------
+  # TEXTOS DAS PÁGINAS (só editar; criar/apagar páginas mexe no menu e é feito à parte)
+  # ---------------------------------------------------------------------------
+  - name: paginas
+    label: Textos das páginas
+    type: collection
+    path: site/src/content/paginas
+    format: yaml-frontmatter
+    subfolders: true
+    view:
+      primary: titulo
+      fields: [titulo]
+      search: [titulo]
+    operations:
+      create: false
+      delete: false
+      rename: false
+    fields:
+      - { name: titulo, label: Título, type: string, required: true }
+      - { name: descricao, label: "Descrição (aparece abaixo do título; PENDENTE = não aparece)", type: text }
+      - { name: body, label: Texto da página, type: rich-text, options: { format: markdown } }
+      - { name: rota, type: string, hidden: true }
+      - { name: esta_no_menu, type: boolean, hidden: true }
+      - { name: url_original, type: string, hidden: true }
+      - { name: caminho_de_navegacao, type: string, hidden: true }

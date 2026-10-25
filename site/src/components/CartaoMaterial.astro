@@ -5,7 +5,7 @@ import CapaPadrao from "./CapaPadrao.astro";
 import { hrefDe, rotuloData, type Material } from "../lib/biblioteca";
 
 interface Props {
-  material: Pick<Material, "titulo" | "ano" | "semestre" | "capa" | "pastaDrive">;
+  material: Pick<Material, "titulo" | "ano" | "semestre" | "capa" | "slug">;
   semLink?: boolean;
   semData?: boolean;
 }

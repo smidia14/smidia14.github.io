@@ -1,0 +1,15 @@
+{
+  "_leia": "Contato do escritório central e redes sociais (editável pelo painel). Aparecem no rodapé de todas as páginas. Rede social em branco não aparece no site.",
+  "escritorio": {
+    "titulo": "Escritório central",
+    "endereco": "Rua Santo Henrique - 73\nVila Ré - São Paulo - SP",
+    "telefone": "(11) 2957-4087"
+  },
+  "emails": ["smiassociacao.brasileira1914@hotmail.com", "smidia1914@gmail.com"],
+  "redes": {
+    "youtube": "https://www.youtube.com/c/SMIdia",
+    "instagram": "",
+    "facebook": "",
+    "whatsapp": ""
+  }
+}

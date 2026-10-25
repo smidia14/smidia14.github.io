@@ -2,9 +2,12 @@
 #
 # Toda vez que algo é enviado (push) para o ramo "main", o GitHub:
 #   1. baixa o projeto;
-#   2. instala o que o site precisa (pasta site/);
-#   3. gera o site final (npm run build → pasta site/dist);
-#   4. publica o resultado no GitHub Pages.
+#   2. processa os PDFs NOVOS da biblioteca (capa da 1ª página, tamanho, prévias dos
+#      pesados) e guarda o resultado no próprio projeto (site/scripts/processar_pdfs.py);
+#   3. instala o que o site precisa (pasta site/);
+#   4. gera o site final (npm run build → pasta site/dist);
+#   5. publica o resultado no GitHub Pages.
+# Os "Salvar" do painel de administração (Pages CMS, arquivo .pages.yml) também disparam isto.
 # Leva uns 2 a 3 minutos. O andamento aparece na aba "Actions" do repositório.
 # Também dá para publicar de novo à mão: aba Actions → "Publicar o site" → "Run workflow".
 
@@ -17,7 +20,7 @@ on:
 
 # Permissões mínimas que a publicação no GitHub Pages precisa
 permissions:
-  contents: read
+  contents: write # para guardar as capas/prévias geradas dos PDFs novos
   pages: write
   id-token: write
 
@@ -36,6 +39,25 @@ jobs:
     steps:
       - name: Baixar o projeto
         uses: actions/checkout@v7
+
+      - name: Preparar o Python (para os PDFs)
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Processar os PDFs novos da biblioteca
+        run: |
+          pip install --quiet pymupdf pillow requests
+          python scripts/processar_pdfs.py
+
+      - name: Guardar as capas e prévias geradas
+        run: |
+          git add src/data/pdfs-processados.json public/capas public/previas
+          if git diff --cached --quiet; then echo "Nada novo para guardar."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Biblioteca: capas e prévias dos PDFs novos (automático)"
+          git pull --rebase origin main && git push origin HEAD:main
 
       - name: Preparar o Node.js
         uses: actions/setup-node@v7

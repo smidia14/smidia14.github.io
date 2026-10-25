@@ -13,8 +13,8 @@ export function getStaticPaths() {
 
 const { m } = Astro.props as { m: Material };
 const data = rotuloData(m);
-const mb = m.tamanhoMB.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
-const detalhes = [data, m.publico === "infantil" ? "Infantil" : "", m.paginas ? `${m.paginas} páginas` : "", `PDF, ${mb} MB`].filter(Boolean);
+const mb = m.tamanhoMB?.toLocaleString("pt-BR", { maximumFractionDigits: 1 });
+const detalhes = [data, m.publico === "infantil" ? "Infantil" : "", m.paginas ? `${m.paginas} páginas` : "", mb ? `PDF, ${mb} MB` : "PDF"].filter(Boolean);
 ---
 
 <MoldeInterno titulo={m.titulo} descricao="PENDENTE" atual={hrefDe(m)} trilha={trilhaDoMaterial(m)}>

@@ -1,0 +1,303 @@
+{
+  "_leia": "Gerado AUTOMATICAMENTE pela publicação (scripts/processar_pdfs.py). Não editar: para cada PDF do Drive (pelo ID do link) guarda tamanho, nº de páginas, capa da 1ª página e prévias.",
+  "pdfs": {
+    "1MkYC7uHq7l4qVenuKffTMQakaKAdXW1n": {
+      "tamanhoMB": 4.6,
+      "paginas": 26,
+      "capa": "/capas/2025-a-chave-para-os-coracoes.webp"
+    },
+    "1uTvSAQD0M-pRtYh0roA71y2gvwP8pPci": {
+      "tamanhoMB": 3.9,
+      "paginas": 163,
+      "capa": "/capas/2026-1-licao-escola-sabatina.webp"
+    },
+    "1ZbrSvIdxAj6ChHBxujSGLNs8_8P7mN4a": {
+      "tamanhoMB": 468.5,
+      "paginas": 110,
+      "capa": "/capas/2026-1-licao-escola-sabatina-criancas.webp",
+      "previas": [
+        "/previas/2026-1-licao-escola-sabatina-criancas-1.webp",
+        "/previas/2026-1-licao-escola-sabatina-criancas-2.webp"
+      ]
+    },
+    "17prpL7mYuAtJoaACO2YeK5wR_evmx6YK": {
+      "tamanhoMB": 808.6,
+      "paginas": 110,
+      "capa": "/capas/2026-1-licao-escola-sabatina-infantes.webp",
+      "previas": [
+        "/previas/2026-1-licao-escola-sabatina-infantes-1.webp",
+        "/previas/2026-1-licao-escola-sabatina-infantes-2.webp"
+      ]
+    },
+    "1a6wYf4tftfm3TsWP9Hc-o0Gc6GSeMQUG": {
+      "tamanhoMB": 3.5,
+      "paginas": 150,
+      "capa": "/capas/2026-2-licao-escola-sabatina.webp"
+    },
+    "1v1voouyRt1WhGMNYJFtSfh0PhytBzdw5": {
+      "tamanhoMB": 150.9,
+      "paginas": 112,
+      "capa": "/capas/2026-2-licao-escola-sabatina-criancas.webp",
+      "previas": [
+        "/previas/2026-2-licao-escola-sabatina-criancas-1.webp",
+        "/previas/2026-2-licao-escola-sabatina-criancas-2.webp"
+      ]
+    },
+    "1Npha7mvjV-x17kxaKmwaAlww7uBsqyXU": {
+      "tamanhoMB": 271.1,
+      "paginas": 112,
+      "capa": "/capas/2026-2-licao-escola-sabatina-infantes.webp",
+      "previas": [
+        "/previas/2026-2-licao-escola-sabatina-infantes-1.webp",
+        "/previas/2026-2-licao-escola-sabatina-infantes-2.webp"
+      ]
+    },
+    "1ho7ZOyPtSFBhInJ6EEQkmQfHMxlh0vDW": {
+      "tamanhoMB": 26.9,
+      "paginas": 202,
+      "capa": "/capas/2025-1-licao-escola-sabatina-a-obra-de-deus-atraves-dos-juizes.webp"
+    },
+    "1iw8iHl5KrVvw2BB0HVjxFqV5ex5Ot7AJ": {
+      "tamanhoMB": 32.4,
+      "paginas": 162,
+      "capa": "/capas/2025-2-licao-escola-sabatina.webp"
+    },
+    "1KlRiFGjUWXC3V7BtYksgcNu9eIvlbV2M": {
+      "tamanhoMB": 523.2,
+      "paginas": 110,
+      "capa": "/capas/2025-2-licao-escola-sabatina-infantes-3-6-anos.webp",
+      "previas": [
+        "/previas/2025-2-licao-escola-sabatina-infantes-3-6-anos-1.webp",
+        "/previas/2025-2-licao-escola-sabatina-infantes-3-6-anos-2.webp"
+      ]
+    },
+    "1kT7ZFWyhXfX_Z6QxSQY8FPO6hEgqJjAS": {
+      "tamanhoMB": 247.5,
+      "paginas": 110,
+      "capa": "/capas/2025-2-licao-escola-sabatina-criancas-7-12-anos.webp",
+      "previas": [
+        "/previas/2025-2-licao-escola-sabatina-criancas-7-12-anos-1.webp",
+        "/previas/2025-2-licao-escola-sabatina-criancas-7-12-anos-2.webp"
+      ]
+    },
+    "18Jtv7fAilj-pNpkOUMs2T_RTHdYSNMMY": {
+      "tamanhoMB": 10.4,
+      "paginas": 160,
+      "capa": "/capas/2024-2-licao-escola-sabatina-sabedoria-divina.webp"
+    },
+    "1Ag114YfFe9PbRpd6SlMSjQRxP2_3IA88": {
+      "tamanhoMB": 10.7,
+      "paginas": 212,
+      "capa": "/capas/2023-1-licao-escola-sabatina-o-espirito-contra-a-carne.webp"
+    },
+    "1a5g5noNfhHzVdcCOGziEzW5f60JR7bbU": {
+      "tamanhoMB": 13.3,
+      "paginas": 198,
+      "capa": "/capas/2022-1-licao-escola-sabatina.webp"
+    },
+    "11maDUiPrCZljlP5rqbtdpzot4thjZ0wQ": {
+      "tamanhoMB": 9.7,
+      "paginas": 208,
+      "capa": "/capas/11maDUiPrCZljlP5rqbtdpzot4thjZ0wQ.webp"
+    },
+    "1soiK99tp2Xo0SaKJUwp7wzColIXoykFz": {
+      "tamanhoMB": 12.0,
+      "paginas": 184,
+      "capa": "/capas/1soiK99tp2Xo0SaKJUwp7wzColIXoykFz.webp"
+    },
+    "1-Kql-_2Djigq1WZ7w5tfOGXqo-IM0l2K": {
+      "tamanhoMB": 0.6,
+      "paginas": 8,
+      "capa": "/capas/1-Kql-_2Djigq1WZ7w5tfOGXqo-IM0l2K.webp"
+    },
+    "1t43fBzNSRxrYGPDAgln3G0PklU044upn": {
+      "tamanhoMB": 8.5,
+      "paginas": 202,
+      "capa": "/capas/1t43fBzNSRxrYGPDAgln3G0PklU044upn.webp"
+    },
+    "1vfeIIzyECVexBgcmDm22M7nVxPlDYPzY": {
+      "tamanhoMB": 20.2,
+      "paginas": 176,
+      "capa": "/capas/1vfeIIzyECVexBgcmDm22M7nVxPlDYPzY.webp"
+    },
+    "1VW4L1yQEDvmg7cdSAKcCuZY_QuGFTa-z": {
+      "tamanhoMB": 27.0,
+      "paginas": 56,
+      "capa": "/capas/2026-mes-da-familia-o-homem-segundo-o-coracao-de-jesus.webp"
+    },
+    "1OHBYWm_CUa9v-COvpbiljWHX5woXIAuv": {
+      "tamanhoMB": 12.9,
+      "paginas": 52,
+      "capa": "/capas/2025-mes-da-familia-coroa-de-honra.webp"
+    },
+    "1J6PSyZZeR8Q5mDq-Trsnx3kC1i-TC2F0": {
+      "tamanhoMB": 8.1,
+      "paginas": 52,
+      "capa": "/capas/2023-mes-da-familia-criancas.webp"
+    },
+    "1UEQYX1FKGcARkNLaMfb594tQwSylvbzI": {
+      "tamanhoMB": 5.7,
+      "paginas": 50,
+      "capa": "/capas/2021-resiliencia-familiar.webp"
+    },
+    "1psmv0CXALBGAH__KPf2y0c2e-Ik_9CBL": {
+      "tamanhoMB": 19.0,
+      "paginas": 24,
+      "capa": "/capas/1psmv0CXALBGAH__KPf2y0c2e-Ik_9CBL.webp"
+    },
+    "1hYsythfKKjWpvlXzey-lviZSmQAL5tVC": {
+      "tamanhoMB": 0.7,
+      "paginas": 24,
+      "capa": "/capas/1hYsythfKKjWpvlXzey-lviZSmQAL5tVC.webp"
+    },
+    "1DXLPo9r2U21Op-_SKS4BTbmwp2j2G7Gw": {
+      "tamanhoMB": 19.6,
+      "paginas": 32,
+      "capa": "/capas/2026-mes-da-juventude-fisicamente.webp"
+    },
+    "18EW1TIjd79gePkNF63Gm5GVUVmkKi2lM": {
+      "tamanhoMB": 7.1,
+      "paginas": 29,
+      "capa": "/capas/2023-mes-da-juventude.webp"
+    },
+    "1tvr_2EKWEVZhm0RjxXhplujgexGKr6GG": {
+      "tamanhoMB": 7.3,
+      "paginas": 40,
+      "capa": "/capas/2022-mes-da-juventude.webp"
+    },
+    "1qs29PCcVp0sWe_8llG1YuItmb73ue59o": {
+      "tamanhoMB": 0.3,
+      "paginas": 139,
+      "capa": "/capas/1qs29PCcVp0sWe_8llG1YuItmb73ue59o.webp"
+    },
+    "1i4bMZ4Fxb0JDEg_fh_LqiY87Dsg1Y-Qo": {
+      "tamanhoMB": 0.4,
+      "paginas": 64,
+      "capa": "/capas/1i4bMZ4Fxb0JDEg_fh_LqiY87Dsg1Y-Qo.webp"
+    },
+    "1_aVkVFD8-Mr6YqukiuSJxmPT441Oj4Ni": {
+      "tamanhoMB": 0.4,
+      "paginas": 40,
+      "capa": "/capas/1_aVkVFD8-Mr6YqukiuSJxmPT441Oj4Ni.webp"
+    },
+    "19k09FFuRNhd0R3O-lj5ME1xQvY2pbpq4": {
+      "tamanhoMB": 26.3,
+      "paginas": 33,
+      "capa": "/capas/19k09FFuRNhd0R3O-lj5ME1xQvY2pbpq4.webp"
+    },
+    "1rItMjNKkhJJBbsdlldliZ3cG9jXlfuhq": {
+      "tamanhoMB": 22.9,
+      "paginas": 58,
+      "capa": "/capas/estudos-biblicos-aos-pes-de-jesus-nivel-1.webp"
+    },
+    "1y_PYZuIuuekUikfhMoqvW6OcsY7sKuIN": {
+      "tamanhoMB": 1.6,
+      "paginas": 1,
+      "capa": "/capas/1y_PYZuIuuekUikfhMoqvW6OcsY7sKuIN.webp"
+    },
+    "1UwfpvFwJtxuArEE_fm8f_y7m4BHAZBmo": {
+      "tamanhoMB": 1.8,
+      "paginas": 124,
+      "capa": "/capas/1UwfpvFwJtxuArEE_fm8f_y7m4BHAZBmo.webp"
+    },
+    "1Dbe3A93ABxfVOidmm2AEnN46cvRrSgGc": {
+      "tamanhoMB": 27.6,
+      "paginas": 30,
+      "capa": "/capas/2026-mes-da-mordomia-administrando-o-tesouro-do-senhor.webp"
+    },
+    "1FtHg-sQ3HcGA_-LXycWwdy3lksrPDmH2": {
+      "tamanhoMB": 9.5,
+      "paginas": 24,
+      "capa": "/capas/2025-mes-da-mordomia.webp"
+    },
+    "1SzUq_N-icKqZm2uKLRerVys4xPUuz5tr": {
+      "tamanhoMB": 6.5,
+      "paginas": 30,
+      "capa": "/capas/2026-semana-de-oracao-os-profetas-falam.webp"
+    },
+    "1ZnszLz54JRLlHosPNh8cQU2OW9OrYSfD": {
+      "tamanhoMB": 5.0,
+      "paginas": 32,
+      "capa": "/capas/2025-semana-de-oracao-a-peregrinacao-do-povo-de-israel.webp"
+    },
+    "19BRajIUelsP35-I1-7x_UjKy_YqoDyXQ": {
+      "tamanhoMB": 2.4,
+      "paginas": 28,
+      "capa": "/capas/2024-semana-de-oracao-orai-sempre.webp"
+    },
+    "1aCp8ZsJ_UGSkr52vJbx_RUf7pP6EE-Vd": {
+      "tamanhoMB": 0.8,
+      "paginas": 17,
+      "capa": "/capas/2023-semana-de-oracao-quando-serao-essas-coisas.webp"
+    },
+    "1g2kNShPuVNrvJhrW_kboGdVcgWBA38PK": {
+      "tamanhoMB": 16.3,
+      "paginas": 56,
+      "capa": "/capas/2023-semana-de-oracao-criancas-sinais-no-caminho.webp"
+    },
+    "1WEqKg5stNuOFevKO9ST83lEo_yw8QIea": {
+      "tamanhoMB": 1.9,
+      "paginas": 30,
+      "capa": "/capas/2022-semana-de-oracao.webp"
+    },
+    "1EK3EdgLt_-8tb221czudPgf0TM3V-yT2": {
+      "tamanhoMB": 1.7,
+      "paginas": 24,
+      "capa": "/capas/2020-semana-de-oracao-crescimento-espiritual.webp"
+    },
+    "1lP-GyDo3Fq1gA9Pu-aI-4vFZq5Y_ygpC": {
+      "tamanhoMB": 9.3,
+      "paginas": 69,
+      "capa": "/capas/2019-semana-de-oracao-amor-divino.webp"
+    },
+    "1qa7r4HpVUpp0sBdlhZ-c_1qQam6SWxcs": {
+      "tamanhoMB": 0.8,
+      "paginas": 42,
+      "capa": "/capas/2018-semana-de-oracao-homens-de-fe-e-valor.webp"
+    },
+    "1j_j2kEZ6spUjL42hE-YPEr5EGxHQSJXQ": {
+      "tamanhoMB": 1.5,
+      "paginas": 64,
+      "capa": "/capas/2017-semana-de-oracao-justificacao-pela-fe.webp"
+    },
+    "147PgbbHJatwYjmkDSh6N9SZB1XL4yKVa": {
+      "tamanhoMB": 76.0,
+      "paginas": 39,
+      "capa": "/capas/2026-semana-de-reavivamento-quanto-ainda-falta.webp",
+      "previas": [
+        "/previas/2026-semana-de-reavivamento-quanto-ainda-falta-1.webp",
+        "/previas/2026-semana-de-reavivamento-quanto-ainda-falta-2.webp"
+      ]
+    },
+    "1Boepnifzal7iw8hd9yTV-QThavBT_C--": {
+      "tamanhoMB": 11.2,
+      "paginas": 39,
+      "capa": "/capas/2025-semana-de-reavivamento.webp"
+    },
+    "1hxKYKZXN2k3Lby468k06QUM96vVnmkPs": {
+      "tamanhoMB": 5.3,
+      "paginas": 30,
+      "capa": "/capas/2024-semana-de-reavivamento-resgatando-o-tempo.webp"
+    },
+    "1XSYZPf7gLsAxtSw6cjBFM6ohslmWLJTz": {
+      "tamanhoMB": 17.1,
+      "paginas": 35,
+      "capa": "/capas/2022-semana-de-reavivamento.webp"
+    },
+    "12_qqLhmcZtlIJe8scRCTUO2-dXhwiG3U": {
+      "tamanhoMB": 3.9,
+      "paginas": 20,
+      "capa": "/capas/2021-semana-de-reavivamento-nosso-companheiro-divino.webp"
+    },
+    "17MllmC9IyHHjDMDglVSKSH-Wiv_9FASt": {
+      "tamanhoMB": 6.8,
+      "paginas": 20,
+      "capa": "/capas/2020-semana-de-reavivamento-educando-para-a-eternidade.webp"
+    },
+    "1QWT2v5Vbgzn8mK1QlJvkEPoi6BWwiKHF": {
+      "tamanhoMB": 7.5,
+      "paginas": 49,
+      "capa": "/capas/2019-semana-de-reavivamento-mulheres-de-fe.webp"
+    }
+  }
+}
