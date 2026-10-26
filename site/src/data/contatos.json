@@ -5,7 +5,10 @@
     "endereco": "Rua Santo Henrique - 73\nVila Ré - São Paulo - SP",
     "telefone": "(11) 2957-4087"
   },
-  "emails": ["smiassociacao.brasileira1914@hotmail.com", "smidia1914@gmail.com"],
+  "emails": [
+    "smiassociacao.brasileira1914@hotmail.com",
+    "smidia1914@gmail.com"
+  ],
   "redes": {
     "youtube": "https://www.youtube.com/c/SMIdia",
     "instagram": "",

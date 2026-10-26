@@ -1,8 +1,12 @@
 {
   "_leia": "Conteúdo da página inicial abaixo da intro, organizado por seção. Textos, imagens e links copiados de src/content/paginas/pagina-inicial.md (página inicial do site antigo) e do bloco coluna-esquerda.md. Nada foi inventado: as legendas das capas são as palavras que ficavam embaixo de cada capa no site antigo.",
-
-  "acessoRapido": ["/doutrinas/", "/download/", "/departamentos/", "/transmissoes-ao-vivo/", "/contatos/"],
-
+  "acessoRapido": [
+    "/doutrinas/",
+    "/download/",
+    "/departamentos/",
+    "/transmissoes-ao-vivo/",
+    "/contatos/"
+  ],
   "literaturas": {
     "titulo": "Literaturas",
     "capas": [
@@ -23,7 +27,6 @@
       }
     ]
   },
-
   "livrosDiversos": {
     "titulo": "Livros diversos",
     "capas": [
@@ -49,13 +52,11 @@
       }
     ]
   },
-
   "transmissoes": {
     "titulo": "Transmissões ao vivo todos os Sábados às 9:30",
     "imagem": "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000659-392593925b/multiu.png",
     "link": "https://www.youtube.com/c/SMIdia"
   },
-
   "departamentos": {
     "titulo": "Departamentos",
     "itens": [

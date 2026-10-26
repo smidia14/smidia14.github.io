@@ -1,8 +1,14 @@
 {
   "_leia": "Vitrine da página Download › Livros (editável pelo painel). Só capa e título, sem download. Livro sem capa usa a capa azul padrão.",
   "livros": [
-    { "titulo": "A Vereda Fendida (Branko Cholich)", "capa": "" },
-    { "titulo": "Caminho a Cristo (Ellen G. White) – edição com fotos do Brasil", "capa": "" },
+    {
+      "titulo": "A Vereda Fendida (Branko Cholich)",
+      "capa": ""
+    },
+    {
+      "titulo": "Caminho a Cristo (Ellen G. White) – edição com fotos do Brasil",
+      "capa": ""
+    },
     {
       "titulo": "Mártires do Século XX",
       "capa": "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000137-d433cd627c/fe%20do%20dos.PNG"
