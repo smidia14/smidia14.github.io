@@ -1,0 +1,56 @@
+---
+// ÁREA DA EQUIPE (painel de administração em /admin/).
+// Página única: as telas (login, início, nova revista, materiais, contatos, página inicial,
+// livros) são montadas no navegador por src/admin/app.ts.
+// Por enquanto em MODO DEMONSTRAÇÃO: usa os dados atuais do site e guarda as alterações só
+// neste navegador. Depois o login e o "Publicar" passam a usar o Firebase.
+import "../../styles/global.css";
+import "../../admin/admin.css";
+import fonteTitulo from "@fontsource-variable/outfit/files/outfit-latin-wght-normal.woff2?url";
+import contatos from "../../data/contatos.json";
+import inicio from "../../data/inicio.json";
+import livraria from "../../data/livraria.json";
+import processados from "../../data/pdfs-processados.json";
+import { menu } from "../../lib/menu";
+
+// materiais da biblioteca, como estão nos arquivos (um por material)
+const arquivos = import.meta.glob<Record<string, unknown>>("../../data/biblioteca/*.json", { eager: true, import: "default" });
+const materiais = Object.entries(arquivos).map(([caminho, dados]) => ({
+  slug: caminho.split("/").at(-1)!.replace(/\.json$/, ""),
+  ...dados,
+}));
+
+// páginas do site (para escolher o destino dos links das capas da página inicial)
+const paginas: { titulo: string; href: string }[] = [];
+const juntar = (itens: typeof menu, prefixo = "") =>
+  itens.forEach((i) => {
+    paginas.push({ titulo: prefixo + i.titulo, href: i.href });
+    juntar(i.filhos, `${prefixo}${i.titulo} › `);
+  });
+juntar(menu);
+
+const dadosIniciais = { materiais, contatos, inicio, livraria, processados: processados.pdfs, paginas };
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="robots" content="noindex, nofollow" />
+    <link rel="preload" href={fonteTitulo} as="font" type="font/woff2" crossorigin />
+    <title>Área da equipe · SMI</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="theme-color" content="#154d7d" />
+  </head>
+  <body class="painel">
+    <div id="painel" aria-live="polite">
+      <p class="painel-carregando">Carregando…</p>
+    </div>
+    <div id="aviso" class="painel-aviso" role="status" aria-live="polite"></div>
+    <script type="application/json" id="dados-iniciais" set:html={JSON.stringify(dadosIniciais)} />
+    <script>
+      import "../../admin/app";
+    </script>
+  </body>
+</html>

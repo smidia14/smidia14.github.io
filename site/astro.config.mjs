@@ -21,5 +21,6 @@ export default defineConfig({
     plugins: [tailwindcss()],
   },
 
-  integrations: [sitemap()],
+  // a Área da equipe (/admin/) não entra no sitemap (não deve aparecer no Google)
+  integrations: [sitemap({ filter: (pagina) => !pagina.includes("/admin/") })],
 });
