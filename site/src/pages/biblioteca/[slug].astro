@@ -5,6 +5,7 @@
 //  - Material da Conferência Geral: também o link para o site dela.
 import MoldeInterno from "../../layouts/MoldeInterno.astro";
 import CapaPadrao from "../../components/CapaPadrao.astro";
+import { linkSeguro } from "../../lib/links";
 import { materiais, slugDe, hrefDe, rotuloData, trilhaDoMaterial, previaDoDrive, type Material } from "../../lib/biblioteca";
 
 export function getStaticPaths() {
@@ -38,7 +39,7 @@ const detalhes = [data, m.publico === "infantil" ? "Infantil" : "", m.paginas ? 
         }
         {
           m.origem === "Conferência Geral" && m.linkOficial && (
-            <a href={m.linkOficial} target="_blank" rel="noopener" class="link-material">
+            <a href={linkSeguro(m.linkOficial)} target="_blank" rel="noopener" class="link-material">
               Ver no site da Conferência Geral
             </a>
           )

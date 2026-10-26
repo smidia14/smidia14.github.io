@@ -18,11 +18,8 @@ on:
     branches: [main]
   workflow_dispatch:
 
-# Permissões mínimas que a publicação no GitHub Pages precisa
-permissions:
-  contents: write # para guardar as capas/prévias geradas dos PDFs novos
-  pages: write
-  id-token: write
+# Permissões: nenhuma por padrão; cada etapa recebe só o que precisa (segurança).
+permissions: {}
 
 # Se dois envios chegarem juntos, publica só o mais recente
 concurrency:
@@ -30,9 +27,13 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  gerar:
-    name: Gerar o site
+  # Só esta etapa pode gravar no projeto (guardar capas/prévias dos PDFs novos).
+  # Ela não instala os pacotes do site, só as 3 bibliotecas de PDF.
+  processar:
+    name: Processar os PDFs novos
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     defaults:
       run:
         working-directory: site
@@ -47,7 +48,7 @@ jobs:
 
       - name: Processar os PDFs novos da biblioteca
         run: |
-          pip install --quiet pymupdf pillow requests
+          pip install --quiet "pymupdf==1.28.*" "pillow==12.*" "requests==2.*"
           python scripts/processar_pdfs.py
 
       - name: Guardar as capas e prévias geradas
@@ -58,6 +59,23 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Biblioteca: capas e prévias dos PDFs novos (automático)"
           git pull --rebase origin main && git push origin HEAD:main
+
+  # Gera o site só com permissão de LEITURA (os pacotes instalados não conseguem gravar no projeto)
+  gerar:
+    name: Gerar o site
+    needs: processar
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - name: Baixar o projeto (já com as capas novas)
+        uses: actions/checkout@v7
+        with:
+          ref: main
+          persist-credentials: false
 
       - name: Preparar o Node.js
         uses: actions/setup-node@v7
@@ -81,6 +99,9 @@ jobs:
     name: Publicar no GitHub Pages
     needs: gerar
     runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
     environment:
       name: github-pages
       url: ${{ steps.publicacao.outputs.page_url }}

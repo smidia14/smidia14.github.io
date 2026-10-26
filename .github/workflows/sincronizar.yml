@@ -40,7 +40,7 @@ jobs:
 
       - name: Ler as alterações do painel
         run: |
-          pip install --quiet requests
+          pip install --quiet "requests==2.*"
           python scripts/baixar_painel.py
 
       - name: Guardar e publicar (só se algo mudou)

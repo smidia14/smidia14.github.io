@@ -48,7 +48,7 @@ const dadosIniciais = { materiais, contatos, inicio, livraria, processados: proc
       <p class="painel-carregando">Carregando…</p>
     </div>
     <div id="aviso" class="painel-aviso" role="status" aria-live="polite"></div>
-    <script type="application/json" id="dados-iniciais" set:html={JSON.stringify(dadosIniciais)} />
+    <script type="application/json" id="dados-iniciais" set:html={JSON.stringify(dadosIniciais).replace(/</g, "\\u003c")} />
     <script>
       import "../../admin/app";
     </script>

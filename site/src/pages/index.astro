@@ -33,6 +33,7 @@ const icones: Record<string, string> = {
   "/contatos/": "M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
 };
 const externo = (link: string) => /^https?:/.test(link);
+import { linkSeguro } from "../lib/links";
 ---
 
 <Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo rodapeColado>
@@ -186,7 +187,7 @@ const externo = (link: string) => /^https?:/.test(link);
               {grupo.capas.map((capa, i) => (
                 <li class="surgir" style={`transition-delay:${i * 90}ms`}>
                   <a
-                    href={capa.link}
+                    href={linkSeguro(capa.link)}
                     class="capa group"
                     target={externo(capa.link) ? "_blank" : undefined}
                     rel={externo(capa.link) ? "noopener" : undefined}
@@ -216,7 +217,7 @@ const externo = (link: string) => /^https?:/.test(link);
         {inicioDados.transmissoes.titulo}
       </h2>
       <a
-        href={inicioDados.transmissoes.link}
+        href={linkSeguro(inicioDados.transmissoes.link)}
         target="_blank"
         rel="noopener"
         class="surgir block w-full overflow-hidden rounded-2xl ring-1 ring-branco/15 transition-transform duration-300 hover:-translate-y-1 lg:max-w-3xl lg:justify-self-end"
@@ -238,7 +239,7 @@ const externo = (link: string) => /^https?:/.test(link);
         {
           inicioDados.departamentos.itens.map((dep, i) => (
             <li class="surgir" style={`transition-delay:${(i % 4) * 70}ms`}>
-              <a href={dep.link} class="cartao-departamento group">
+              <a href={linkSeguro(dep.link)} class="cartao-departamento group">
                 <span class="block aspect-[4/3] overflow-hidden bg-branco">
                   <img
                     src={dep.imagem}

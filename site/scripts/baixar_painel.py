@@ -100,6 +100,9 @@ def trocar_imagens(dado):
         return [trocar_imagens(v) for v in dado]
     if isinstance(dado, str) and dado.startswith("painel:"):
         id_ = dado[7:]
+        if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", id_):  # nome estranho: ignora (segurança)
+            print(f"::warning::imagem com nome inválido ignorada: {id_!r}")
+            return ""
         existentes = list(PASTA_IMAGENS.glob(f"{id_}.*"))
         if existentes:
             return f"/imagens/painel/{existentes[0].name}"
@@ -109,6 +112,9 @@ def trocar_imagens(dado):
             print(f"::warning::imagem {id_} não encontrada no painel")
             return ""
         ext = {"jpeg": "jpg"}.get(m.group(1), m.group(1))
+        if ext not in ("webp", "jpg", "png", "gif"):  # só fotos (SVG pode conter código)
+            print(f"::warning::imagem {id_} em formato não permitido ({ext})")
+            return ""
         PASTA_IMAGENS.mkdir(parents=True, exist_ok=True)
         (PASTA_IMAGENS / f"{id_}.{ext}").write_bytes(base64.b64decode(m.group(2)))
         return f"/imagens/painel/{id_}.{ext}"
@@ -133,6 +139,9 @@ def main():
         nomes = set()
         for d in docs:
             nome = d["name"].rsplit("/", 1)[1]
+            if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,120}", nome):
+                print(f"::warning::material com nome inválido ignorado: {nome!r}")
+                continue
             nomes.add(nome)
             m = trocar_imagens(documento(d))
             m = {k: m.get(k, "" if k != "esconder" else False) for k in CAMPOS_MATERIAL} | {k: v for k, v in m.items() if k not in CAMPOS_MATERIAL}

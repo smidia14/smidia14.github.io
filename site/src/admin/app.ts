@@ -665,7 +665,7 @@ function telaMaterial(slug: string) {
           <option value="imagem"${m.capaModo === "imagem" ? " selected" : ""}>Minha imagem</option>
         </select></label>
         <div class="so-com-imagem"><button type="button" class="botao botao-claro" data-acao="trocar-capa-material">Escolher imagem da capa</button><input type="file" accept="image/*" hidden data-arquivo="capa-material" /></div>
-        <label class="campo"><span>Observação interna (não aparece no site)</span><textarea name="observacao" rows="2">${e(m.observacao)}</textarea></label>
+        <label class="campo"><span>Anotação para a equipe (não aparece nas páginas, mas não é secreta)</span><textarea name="observacao" rows="2">${e(m.observacao)}</textarea></label>
         <div class="rodape-form">
           <span class="acoes-secundarias">
             <button type="button" class="botao botao-claro" data-acao="esconder">${icone("olho")} ${m.esconder ? "Mostrar no site" : "Esconder do site"}</button>

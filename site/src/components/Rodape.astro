@@ -6,6 +6,7 @@ import { getEntry, render } from "astro:content";
 import { NOME_DO_SITE } from "../lib/site";
 import { menu } from "../lib/menu";
 import contatos from "../data/contatos.json"; // editável pelo painel
+import { linkSeguro } from "../lib/links";
 
 interface Props {
   colado?: boolean; // páginas internas: sem espaço em branco acima (encosta na área cinza)
@@ -22,7 +23,7 @@ const principais = menu.filter((item) => item.href !== "/");
 const NOMES_REDES: Record<string, string> = { youtube: "YouTube", instagram: "Instagram", facebook: "Facebook", whatsapp: "WhatsApp" };
 const redes = Object.entries(contatos.redes)
   .filter(([, link]) => link.trim())
-  .map(([rede, link]) => ({ chave: rede, nome: NOMES_REDES[rede] ?? rede, link: rede === "whatsapp" && !link.startsWith("http") ? `https://wa.me/${link.replace(/\D/g, "")}` : link }));
+  .map(([rede, link]) => ({ chave: rede, nome: NOMES_REDES[rede] ?? rede, link: linkSeguro(rede === "whatsapp" && !link.startsWith("http") ? `https://wa.me/${link.replace(/\D/g, "")}` : link) }));
 const { escritorio } = contatos;
 // ícones (formas simples das marcas, em uma cor só)
 const ICONES_REDES: Record<string, string> = {
