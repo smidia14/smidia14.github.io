@@ -1,0 +1,56 @@
+# Busca as alterações feitas pela equipe no painel (/admin/) e publica o site.
+#
+# A cada 10 minutos o GitHub:
+#   1. lê no Firebase os materiais, contatos, página inicial e livros (site/scripts/baixar_painel.py);
+#   2. se algo mudou, guarda a alteração no histórico do projeto (dá para desfazer depois);
+#   3. e manda publicar o site de novo (workflow "Publicar o site").
+# Se nada mudou, termina em poucos segundos. Também dá para rodar à mão:
+# aba Actions → "Buscar alterações do painel" → "Run workflow".
+
+name: Buscar alterações do painel
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+permissions:
+  contents: write # guardar as alterações no histórico
+  actions: write # pedir a publicação do site
+
+concurrency:
+  group: sincronizar
+  cancel-in-progress: false
+
+jobs:
+  buscar:
+    name: Buscar e publicar
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: site
+    steps:
+      - name: Baixar o projeto
+        uses: actions/checkout@v7
+
+      - name: Preparar o Python
+        uses: actions/setup-python@v6
+        with:
+          python-version: "3.12"
+
+      - name: Ler as alterações do painel
+        run: |
+          pip install --quiet requests
+          python scripts/baixar_painel.py
+
+      - name: Guardar e publicar (só se algo mudou)
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          git add -A src/data public/imagens
+          if git diff --cached --quiet; then echo "Nenhuma alteração no painel."; exit 0; fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git commit -m "Alterações feitas pelo painel da equipe (automático)"
+          git pull --rebase origin main && git push origin HEAD:main
+          gh workflow run publicar.yml --ref main

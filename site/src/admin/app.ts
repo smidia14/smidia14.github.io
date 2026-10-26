@@ -1,9 +1,12 @@
 // ÁREA DA EQUIPE — telas e funcionamento do painel (/admin/).
 //
-// MODO DEMONSTRAÇÃO: os dados vêm do próprio site e as alterações ficam guardadas só neste
-// navegador (nada é publicado). Quando o Firebase for ligado, só as funções da seção
-// "DADOS" mudam (entrar/sair/salvar); as telas continuam as mesmas.
+// Login e dados pelo Firebase (src/admin/nuvem.ts). O que a equipe salva vai para o banco do
+// Firebase, e o GitHub atualiza o site em até ~15 minutos.
+// Sem a configuração do Firebase (firebase-config.ts vazio), funciona em MODO DEMONSTRAÇÃO:
+// qualquer e-mail entra e as alterações ficam só neste navegador.
 import { GRUPOS, ESCOLA_SABATINA, nomeDaSecao, grupoDaSecao } from "./secoes";
+import * as nuvem from "./nuvem";
+import { EMAIL_DONO } from "./firebase-config";
 
 // ---------------------------------------------------------------------------
 // Tipos
@@ -49,54 +52,120 @@ interface Dados {
 type Iniciais = Dados & { processados: Record<string, { capa?: string }>; paginas: { titulo: string; href: string }[] };
 
 // ---------------------------------------------------------------------------
-// DADOS (demonstração: navegador). Trocar por Firebase depois.
+// DADOS
 // ---------------------------------------------------------------------------
 const iniciais: Iniciais = JSON.parse(document.getElementById("dados-iniciais")!.textContent!);
+const DEMO = !nuvem.configurado;
 const CHAVE_DADOS = "smi-painel-demo-dados";
 const CHAVE_USUARIO = "smi-painel-demo-usuario";
 
-function carregar(): Dados {
+const copiaDoSite = (): Dados => {
+  const { materiais, contatos, inicio, livraria } = structuredClone(iniciais);
+  return { materiais, contatos, inicio, livraria };
+};
+function carregarDemo(): Dados {
   try {
     const salvo = localStorage.getItem(CHAVE_DADOS);
     if (salvo) return JSON.parse(salvo);
   } catch {
     /* sem armazenamento: usa os dados do site */
   }
-  const { materiais, contatos, inicio, livraria } = structuredClone(iniciais);
-  return { materiais, contatos, inicio, livraria };
+  return copiaDoSite();
 }
-let dados = carregar();
+let dados: Dados = DEMO ? carregarDemo() : copiaDoSite();
 
-function salvar(mensagem: string) {
+// quem está usando o painel
+type Situacao = nuvem.Situacao | { tipo: "carregando" };
+let situacao: Situacao = { tipo: "carregando" };
+let dadosProntos = DEMO;
+let modoEntrar: "entrar" | "primeiro-acesso" = "entrar";
+
+if (DEMO) {
+  let email: string | null = null;
   try {
-    localStorage.setItem(CHAVE_DADOS, JSON.stringify(dados));
+    email = sessionStorage.getItem(CHAVE_USUARIO);
   } catch {
     /* ignora */
   }
-  avisar(`${mensagem} <span class="painel-aviso-nota">(demonstração: ainda não vai para o site)</span>`);
+  situacao = email ? { tipo: "dentro", email, dono: true } : { tipo: "fora" };
+} else {
+  nuvem.acompanharLogin(async (s) => {
+    situacao = s;
+    dadosProntos = false;
+    desenhar();
+    if (s.tipo === "dentro") await carregarDaNuvem(s.dono);
+  });
+}
+
+const tirarControle = <T extends object>(o: T) => {
+  const { alteradoEm: _a, ...resto } = o as T & { alteradoEm?: unknown };
+  return resto as T;
+};
+
+async function carregarDaNuvem(dono: boolean) {
+  try {
+    const lido = await nuvem.lerTudo();
+    if (lido) {
+      dados = {
+        materiais: lido.materiais.map((m) => tirarControle(m) as unknown as Material),
+        contatos: tirarControle(lido.contatos as object) as Dados["contatos"],
+        inicio: tirarControle(lido.inicio as object) as Dados["inicio"],
+        livraria: tirarControle(lido.livraria as object) as Dados["livraria"],
+      };
+    } else if (dono) {
+      // primeira vez: o banco está vazio; copia para ele o que já está no site
+      raiz.innerHTML = `<p class="painel-carregando">Preparando o painel pela primeira vez…</p>`;
+      dados = copiaDoSite();
+      await nuvem.preencherPrimeiraVez(dados as unknown as nuvem.DadosNuvem);
+      avisar("Painel preparado! Os dados do site foram copiados para o painel.");
+    } else {
+      avisar("O painel ainda não foi preparado. Peça para a responsável entrar primeiro.", "erro");
+    }
+    dadosProntos = true;
+  } catch (erro) {
+    avisar(nuvem.mensagemDeErro(erro), "erro");
+  }
+  desenhar();
 }
 
 function usuarioAtual(): string | null {
+  return situacao.tipo === "dentro" ? situacao.email : null;
+}
+const ehDono = () => situacao.tipo === "dentro" && situacao.dono && !DEMO;
+
+/** O que foi alterado (para gravar só aquilo no banco). */
+type Alvo = { material: string } | { apagar: string } | { site: "contatos" | "inicio" | "livraria" };
+
+async function salvar(mensagem: string, alvo: Alvo): Promise<boolean> {
+  if (DEMO) {
+    try {
+      localStorage.setItem(CHAVE_DADOS, JSON.stringify(dados));
+    } catch {
+      /* ignora */
+    }
+    avisar(`${mensagem} <span class="painel-aviso-nota">(demonstração: ainda não vai para o site)</span>`);
+    return true;
+  }
   try {
-    return sessionStorage.getItem(CHAVE_USUARIO);
-  } catch {
-    return null;
+    if ("material" in alvo) {
+      const m = dados.materiais.find((x) => x.slug === alvo.material)!;
+      await nuvem.gravarMaterial(m as unknown as { slug: string } & Record<string, unknown>);
+    } else if ("apagar" in alvo) await nuvem.apagarMaterial(alvo.apagar);
+    else await nuvem.gravarSite(alvo.site, dados[alvo.site]);
+    avisar(`${mensagem} <span class="painel-aviso-nota">Aparece no site em até 15 minutos.</span>`);
+    return true;
+  } catch (erro) {
+    avisar(nuvem.mensagemDeErro(erro), "erro");
+    return false;
   }
 }
-function entrar(email: string) {
-  try {
-    sessionStorage.setItem(CHAVE_USUARIO, email);
-  } catch {
-    /* ignora */
-  }
+
+/** Guarda uma imagem escolhida no computador e devolve o valor para o campo. */
+async function guardarImagem(dataUrl: string) {
+  return DEMO ? dataUrl : nuvem.guardarImagem(dataUrl);
 }
-function sair() {
-  try {
-    sessionStorage.removeItem(CHAVE_USUARIO);
-  } catch {
-    /* ignora */
-  }
-}
+/** Endereço para mostrar uma imagem na tela (as enviadas pelo painel vêm do banco). */
+const img = (valor: string | undefined) => (DEMO || !valor ? valor ?? "" : nuvem.enderecoDaImagem(valor, () => desenhar()));
 
 // ---------------------------------------------------------------------------
 // Utilidades
@@ -144,7 +213,7 @@ function capaPadrao(titulo: string, ano?: string) {
 /** Imagem da capa de um material, do jeito que vai aparecer no site. */
 function capaDoMaterial(m: Pick<Material, "titulo" | "ano" | "linkDrive" | "capaModo" | "capaImagem">) {
   const id = idDoDrive(m.linkDrive);
-  if (m.capaModo === "imagem" && m.capaImagem) return `<img src="${e(m.capaImagem)}" alt="" />`;
+  if (m.capaModo === "imagem" && m.capaImagem) return `<img src="${e(img(m.capaImagem))}" alt="" />`;
   if (m.capaModo === "primeira-pagina" && id) {
     const pronta = iniciais.processados[id]?.capa;
     return `<img src="${e(pronta ?? miniaturaDrive(id))}" alt="" loading="lazy" referrerpolicy="no-referrer" />`;
@@ -184,6 +253,7 @@ const ICONES: Record<string, string> = {
   esquerda: '<path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>',
   direita: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
   ok: '<path d="m5 12 5 5 9-10"/>',
+  equipe: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
   olho: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
 };
 const icone = (nome: string) =>
@@ -204,7 +274,7 @@ function moldura(conteudo: string, voltar?: { href: string; texto: string }) {
       <button type="button" data-acao="sair" class="painel-topo-link">${icone("sair")}<span>Sair</span></button>
     </nav>
   </header>
-  <div class="painel-faixa-demo">Demonstração: as alterações ficam só neste navegador e <strong>não</strong> vão para o site.</div>
+  ${DEMO ? `<div class="painel-faixa-demo">Demonstração: as alterações ficam só neste navegador e <strong>não</strong> vão para o site.</div>` : ""}
   <main class="painel-conteudo">
     ${voltar ? `<a href="${voltar.href}" class="painel-voltar">${icone("voltar")} ${e(voltar.texto)}</a>` : ""}
     ${conteudo}
@@ -216,8 +286,21 @@ function rota() {
 }
 
 function desenhar() {
-  if (!usuarioAtual()) {
+  if (situacao.tipo === "carregando") {
+    raiz.innerHTML = `<p class="painel-carregando">Carregando…</p>`;
+    return;
+  }
+  if (situacao.tipo === "fora") {
     raiz.innerHTML = telaEntrar();
+    raiz.querySelector<HTMLElement>("[data-foco]")?.focus();
+    return;
+  }
+  if (situacao.tipo === "sem-verificar" || situacao.tipo === "sem-permissao") {
+    raiz.innerHTML = telaAviso(situacao);
+    return;
+  }
+  if (!dadosProntos) {
+    raiz.innerHTML = `<p class="painel-carregando">Carregando os dados do site…</p>`;
     return;
   }
   const r = rota();
@@ -228,6 +311,7 @@ function desenhar() {
   else if (r === "contatos") raiz.innerHTML = telaContatos();
   else if (r === "pagina-inicial") raiz.innerHTML = telaPaginaInicial();
   else if (r === "livros") raiz.innerHTML = telaLivros();
+  else if (r === "equipe" && ehDono()) raiz.innerHTML = telaEquipe();
   else location.hash = "#/";
   raiz.querySelector<HTMLElement>("[data-foco]")?.focus();
 }
@@ -236,24 +320,61 @@ function desenhar() {
 // Tela: Entrar
 // ---------------------------------------------------------------------------
 function telaEntrar() {
+  const primeiro = modoEntrar === "primeiro-acesso";
   return `
   <div class="entrar">
     <form class="entrar-cartao" data-form="entrar">
       <img src="/marca/smi-vertical-azul.svg" alt="SMI" class="entrar-logo" width="120" height="120" />
       <h1>Área da equipe</h1>
-      <p class="entrar-sub">Entre para atualizar o site.</p>
+      <p class="entrar-sub">${primeiro ? "Primeiro acesso: crie a sua senha." : "Entre para atualizar o site."}</p>
+      ${
+        !primeiro && !DEMO
+          ? `<button type="button" class="botao botao-claro botao-google" data-acao="google">
+              <svg viewBox="0 0 24 24" class="icone" aria-hidden="true"><path fill="#4285F4" d="M23.5 12.3c0-.8-.1-1.6-.2-2.3H12v4.4h6.5a5.6 5.6 0 0 1-2.4 3.6v3h3.9c2.3-2.1 3.5-5.2 3.5-8.7Z"/><path fill="#34A853" d="M12 24c3.2 0 6-1.1 8-2.9l-3.9-3c-1.1.7-2.5 1.2-4.1 1.2-3.1 0-5.8-2.1-6.7-5H1.3v3.1A12 12 0 0 0 12 24Z"/><path fill="#FBBC05" d="M5.3 14.3a7.2 7.2 0 0 1 0-4.6V6.6H1.3a12 12 0 0 0 0 10.8l4-3.1Z"/><path fill="#EA4335" d="M12 4.8c1.8 0 3.3.6 4.6 1.8l3.4-3.4A12 12 0 0 0 1.3 6.6l4 3.1c.9-2.9 3.6-4.9 6.7-4.9Z"/></svg>
+              Entrar com Google
+            </button>
+            <p class="entrar-ou"><span>ou com e-mail e senha</span></p>`
+          : ""
+      }
       <label class="campo">
         <span>E-mail</span>
         <input type="email" name="email" required autocomplete="username" data-foco />
       </label>
       <label class="campo">
-        <span>Senha</span>
-        <input type="password" name="senha" required autocomplete="current-password" />
+        <span>${primeiro ? "Crie uma senha (pelo menos 6 letras ou números)" : "Senha"}</span>
+        <input type="password" name="senha" required minlength="6" autocomplete="${primeiro ? "new-password" : "current-password"}" />
       </label>
-      <button type="submit" class="botao botao-grande">Entrar</button>
-      <button type="button" class="link-simples" data-acao="esqueci">Esqueci minha senha</button>
-      <p class="entrar-demo">Demonstração: qualquer e-mail e senha entram.</p>
+      <button type="submit" class="botao botao-grande">${primeiro ? "Criar senha" : "Entrar"}</button>
+      ${
+        primeiro
+          ? `<button type="button" class="link-simples" data-acao="modo-entrar">Já tenho senha</button>`
+          : `<div class="entrar-links">
+              <button type="button" class="link-simples" data-acao="esqueci">Esqueci minha senha</button>
+              ${DEMO ? "" : `<button type="button" class="link-simples" data-acao="modo-primeiro">Primeiro acesso</button>`}
+            </div>`
+      }
+      ${DEMO ? `<p class="entrar-demo">Demonstração: qualquer e-mail e senha entram.</p>` : ""}
     </form>
+  </div>`;
+}
+
+/** E-mail ainda não confirmado, ou pessoa que não está na equipe. */
+function telaAviso(s: { tipo: "sem-verificar" | "sem-permissao"; email: string }) {
+  const verificar = s.tipo === "sem-verificar";
+  return `
+  <div class="entrar">
+    <div class="entrar-cartao">
+      <img src="/marca/smi-vertical-azul.svg" alt="SMI" class="entrar-logo" width="120" height="120" />
+      <h1>${verificar ? "Confirme o seu e-mail" : "Acesso ainda não liberado"}</h1>
+      ${
+        verificar
+          ? `<p class="entrar-sub">Mandamos um link para <strong>${e(s.email)}</strong>. Abra o e-mail (veja também o lixo eletrônico), clique no link e depois volte aqui.</p>
+             <button type="button" class="botao botao-grande" data-acao="ja-confirmei">Já confirmei</button>
+             <button type="button" class="link-simples" data-acao="reenviar">Mandar o e-mail de novo</button>`
+          : `<p class="entrar-sub">O e-mail <strong>${e(s.email)}</strong> ainda não foi incluído na equipe. Peça para a responsável pelo painel incluir você.</p>`
+      }
+      <p class="entrar-demo"><button type="button" class="link-simples" data-acao="sair">Entrar com outra conta</button></p>
+    </div>
   </div>`;
 }
 
@@ -278,6 +399,7 @@ function telaInicio() {
       ${cartao("#/contatos", "contato", "Contatos e redes sociais", "Endereço, telefone, e-mails, Instagram, Facebook…")}
       ${cartao("#/pagina-inicial", "casa", "Página inicial", "Trocar as capas e os cartões da página inicial.")}
       ${cartao("#/livros", "vitrine", "Livros da vitrine", "Livros à venda e o texto de “Como comprar”.")}
+      ${ehDono() ? cartao("#/equipe", "equipe", "Equipe", "Quem pode entrar no painel.") : ""}
     </div>`);
 }
 
@@ -408,7 +530,7 @@ function telaNova() {
         ${opcao(
           "imagem",
           r.capaImagem ? "Minha imagem (trocar)" : "Enviar uma imagem",
-          r.capaImagem ? `<img src="${e(r.capaImagem)}" alt="" />` : `<span class="capa-vazia">${icone("nova")}<br />Escolher imagem</span>`,
+          r.capaImagem ? `<img src="${e(img(r.capaImagem))}" alt="" />` : `<span class="capa-vazia">${icone("nova")}<br />Escolher imagem</span>`,
         )}
       </div>
       <input type="file" accept="image/*" hidden data-arquivo="capa-rascunho" />`;
@@ -611,7 +733,7 @@ function blocoCapas(chave: "literaturas" | "livrosDiversos" | "departamentos") {
           .map(
             (c, i) => `
           <li class="item-capa" data-indice="${i}">
-            <button type="button" class="capa-imagem trocar-imagem" data-acao="trocar-imagem" title="Trocar a imagem">${c.imagem ? `<img src="${e(c.imagem)}" alt="" loading="lazy" />` : `<span class="capa-vazia">Sem imagem</span>`}<span class="trocar-texto">Trocar imagem</span></button>
+            <button type="button" class="capa-imagem trocar-imagem" data-acao="trocar-imagem" title="Trocar a imagem">${c.imagem ? `<img src="${e(img(c.imagem))}" alt="" loading="lazy" />` : `<span class="capa-vazia">Sem imagem</span>`}<span class="trocar-texto">Trocar imagem</span></button>
             <input type="file" accept="image/*" hidden />
             <label class="campo"><span>${chave === "departamentos" ? "Nome" : "Legenda"}</span><input type="text" name="legenda" value="${e(c.legenda)}" /></label>
             <label class="campo"><span>Ao clicar, abre</span>${seletorLink("link", c.link)}</label>
@@ -649,7 +771,7 @@ function telaPaginaInicial() {
               <label class="campo"><span>Título</span><input type="text" name="titulo" value="${e(t.titulo)}" /></label>
               <label class="campo"><span>Link do canal</span><input type="url" name="linkCanal" value="${e(t.link)}" /></label>
               <div class="item-capa item-capa-largo" data-indice="0">
-                <button type="button" class="capa-imagem capa-larga trocar-imagem" data-acao="trocar-imagem">${t.imagem ? `<img src="${e(t.imagem)}" alt="" />` : ""}<span class="trocar-texto">Trocar imagem</span></button>
+                <button type="button" class="capa-imagem capa-larga trocar-imagem" data-acao="trocar-imagem">${t.imagem ? `<img src="${e(img(t.imagem))}" alt="" />` : ""}<span class="trocar-texto">Trocar imagem</span></button>
                 <input type="file" accept="image/*" hidden />
               </div>
             </section>`
@@ -677,7 +799,7 @@ function telaLivros() {
             .map(
               (b, i) => `
             <li class="item-capa" data-indice="${i}">
-              <button type="button" class="capa-imagem trocar-imagem" data-acao="trocar-imagem" title="Trocar a capa">${b.capa ? `<img src="${e(b.capa)}" alt="" loading="lazy" />` : capaPadrao(b.titulo)}<span class="trocar-texto">Trocar capa</span></button>
+              <button type="button" class="capa-imagem trocar-imagem" data-acao="trocar-imagem" title="Trocar a capa">${b.capa ? `<img src="${e(img(b.capa))}" alt="" loading="lazy" />` : capaPadrao(b.titulo)}<span class="trocar-texto">Trocar capa</span></button>
               <input type="file" accept="image/*" hidden />
               <label class="campo"><span>Título</span><input type="text" name="legenda" value="${e(b.titulo)}" /></label>
               <div class="item-capa-acoes">
@@ -696,6 +818,52 @@ function telaLivros() {
         <label class="campo"><span>Texto do botão “Como comprar”</span><textarea name="comoComprar" rows="5">${e(l.comoComprar)}</textarea></label>
       </section>
       <div class="rodape-form"><span></span><button type="submit" class="botao botao-grande">Salvar</button></div>
+    </form>`,
+    { href: "#/", texto: "Início" },
+  );
+}
+
+// ---------------------------------------------------------------------------
+// Tela: Equipe (só a dona do painel)
+// ---------------------------------------------------------------------------
+let equipe: { email: string; nome: string }[] | null = null;
+function telaEquipe() {
+  if (!equipe) {
+    nuvem
+      .listarEquipe()
+      .then((l) => {
+        equipe = l.sort((a, b) => a.email.localeCompare(b.email));
+        desenhar();
+      })
+      .catch((erro) => avisar(nuvem.mensagemDeErro(erro), "erro"));
+  }
+  return moldura(
+    `
+    <h1 class="painel-titulo">Equipe</h1>
+    <p class="painel-sub">Só as pessoas desta lista conseguem entrar no painel.</p>
+    <section class="painel-folha">
+      <ul class="lista-equipe">
+        <li><span><strong>${e(EMAIL_DONO)}</strong><small>Responsável (você)</small></span></li>
+        ${
+          equipe === null
+            ? `<li class="vazio">Carregando…</li>`
+            : equipe
+                .map(
+                  (p) => `<li><span><strong>${e(p.nome || p.email)}</strong><small>${e(p.email)}</small></span>
+                  <button type="button" class="botao botao-perigo" data-acao="tirar-pessoa" data-valor="${e(p.email)}">${icone("lixo")} Tirar</button></li>`,
+                )
+                .join("")
+        }
+      </ul>
+    </section>
+    <form class="painel-folha" data-form="equipe">
+      <h2>Incluir uma pessoa</h2>
+      <div class="linha-campos">
+        <label class="campo"><span>Nome</span><input type="text" name="nome" required /></label>
+        <label class="campo"><span>E-mail (de preferência Gmail)</span><input type="email" name="email" required /></label>
+      </div>
+      <p class="ajuda">Depois de incluir, avise a pessoa: ela abre <strong>${e(location.origin)}/admin/</strong> e clica em <strong>Entrar com Google</strong> (se o e-mail for Gmail) ou em <strong>Primeiro acesso</strong> para criar uma senha.</p>
+      <div class="rodape-form"><span></span><button type="submit" class="botao botao-grande">Incluir</button></div>
     </form>`,
     { href: "#/", texto: "Início" },
   );
@@ -760,12 +928,64 @@ raiz.addEventListener("click", async (ev) => {
 
   switch (acao) {
     case "sair":
-      sair();
+      if (DEMO) {
+        try {
+          sessionStorage.removeItem(CHAVE_USUARIO);
+        } catch {
+          /* ignora */
+        }
+        situacao = { tipo: "fora" };
+      } else await nuvem.sair();
+      equipe = null;
       location.hash = "#/";
       desenhar();
       break;
-    case "esqueci":
-      avisar("Na versão final, você recebe por e-mail um link para criar uma senha nova.");
+    case "esqueci": {
+      if (DEMO) return avisar("Na versão final, você recebe por e-mail um link para criar uma senha nova.");
+      const email = raiz.querySelector<HTMLInputElement>('input[name="email"]')!.value;
+      if (!email) return avisar("Escreva o seu e-mail no campo acima e clique de novo em “Esqueci minha senha”.", "erro");
+      try {
+        await nuvem.esqueciSenha(email);
+        avisar(`Mandamos para <strong>${e(email)}</strong> um link para criar uma senha nova.`);
+      } catch (erro) {
+        avisar(nuvem.mensagemDeErro(erro), "erro");
+      }
+      break;
+    }
+    case "google":
+      try {
+        await nuvem.entrarComGoogle();
+      } catch (erro) {
+        avisar(nuvem.mensagemDeErro(erro), "erro");
+      }
+      break;
+    case "modo-primeiro":
+    case "modo-entrar":
+      modoEntrar = acao === "modo-primeiro" ? "primeiro-acesso" : "entrar";
+      desenhar();
+      break;
+    case "reenviar":
+      try {
+        await nuvem.reenviarConfirmacao();
+        avisar("E-mail de confirmação enviado de novo.");
+      } catch (erro) {
+        avisar(nuvem.mensagemDeErro(erro), "erro");
+      }
+      break;
+    case "ja-confirmei":
+      if (await nuvem.conferirVerificacao()) location.reload();
+      else avisar("Ainda não aparece como confirmado. Clique no link do e-mail e tente de novo.", "erro");
+      break;
+    case "tirar-pessoa":
+      if (!confirm(`Tirar ${valor} da equipe? A pessoa não vai mais conseguir entrar no painel.`)) return;
+      try {
+        await nuvem.tirarDaEquipe(valor);
+        equipe = equipe?.filter((p) => p.email !== valor) ?? null;
+        avisar("Pessoa tirada da equipe.");
+        desenhar();
+      } catch (erro) {
+        avisar(nuvem.mensagemDeErro(erro), "erro");
+      }
       break;
 
     // nova revista
@@ -794,7 +1014,7 @@ raiz.addEventListener("click", async (ev) => {
     case "esconder": {
       const m = dados.materiais.find((x) => x.slug === alvo.closest<HTMLElement>("form")!.dataset.slug)!;
       m.esconder = !m.esconder;
-      salvar(m.esconder ? "Material escondido do site." : "Material voltou a aparecer no site.");
+      if (!(await salvar(m.esconder ? "Material escondido do site." : "Material voltou a aparecer no site.", { material: m.slug }))) m.esconder = !m.esconder;
       desenhar();
       break;
     }
@@ -802,8 +1022,8 @@ raiz.addEventListener("click", async (ev) => {
       const slug = alvo.closest<HTMLElement>("form")!.dataset.slug;
       const m = dados.materiais.find((x) => x.slug === slug)!;
       if (!confirm(`Apagar “${m.titulo}” do site?\n\nO PDF continua guardado no Google Drive. Se só quiser tirar do site por um tempo, use “Esconder do site”.`)) return;
+      if (!(await salvar("Material apagado.", { apagar: slug! }))) return;
       dados.materiais = dados.materiais.filter((x) => x.slug !== slug);
-      salvar("Material apagado.");
       location.hash = "#/materiais";
       break;
     }
@@ -908,7 +1128,7 @@ raiz.addEventListener("change", async (ev) => {
   }
   if (!(el instanceof HTMLInputElement) || el.type !== "file" || !el.files?.[0]) return;
   try {
-    const imagem = await imagemLeve(el.files[0]);
+    const imagem = await guardarImagem(await imagemLeve(el.files[0]));
     if (el.dataset.arquivo === "capa-rascunho") {
       rascunho.capaImagem = imagem;
       rascunho.capaModo = "imagem";
@@ -931,16 +1151,40 @@ raiz.addEventListener("change", async (ev) => {
   }
 });
 
-raiz.addEventListener("submit", (ev) => {
+raiz.addEventListener("submit", async (ev) => {
   ev.preventDefault();
   const form = ev.target as HTMLFormElement;
   const f = new FormData(form);
   const tipo = form.dataset.form;
+  const botao = form.querySelector<HTMLButtonElement>('button[type="submit"]');
+  const esperando = (sim: boolean) => {
+    if (!botao) return;
+    botao.disabled = sim;
+    botao.classList.toggle("esperando", sim);
+  };
 
   if (tipo === "entrar") {
-    entrar(String(f.get("email")));
-    location.hash = "#/";
-    desenhar();
+    const email = String(f.get("email"));
+    const senha = String(f.get("senha"));
+    if (DEMO) {
+      try {
+        sessionStorage.setItem(CHAVE_USUARIO, email);
+      } catch {
+        /* ignora */
+      }
+      situacao = { tipo: "dentro", email, dono: true };
+      location.hash = "#/";
+      return desenhar();
+    }
+    esperando(true);
+    try {
+      if (modoEntrar === "primeiro-acesso") await nuvem.criarSenha(email, senha);
+      else await nuvem.entrarComSenha(email, senha);
+      modoEntrar = "entrar";
+    } catch (erro) {
+      avisar(nuvem.mensagemDeErro(erro), "erro");
+      esperando(false);
+    }
   } else if (tipo === "nova") {
     if (rascunho.passo < 5) {
       rascunho.passo++;
@@ -951,13 +1195,18 @@ raiz.addEventListener("submit", (ev) => {
     let slug = slugificar(novo.titulo) || `material-${Date.now()}`;
     while (dados.materiais.some((m) => m.slug === slug)) slug += "-2";
     dados.materiais.push({ ...novo, slug });
-    salvar("Material publicado!");
+    esperando(true);
+    if (!(await salvar("Material publicado!", { material: slug }))) {
+      dados.materiais = dados.materiais.filter((m) => m.slug !== slug);
+      esperando(false);
+      return;
+    }
     rascunho = rascunhoVazio();
     raiz.innerHTML = moldura(
       `<div class="painel-folha sucesso">
         <span class="sucesso-icone">${icone("ok")}</span>
         <h1 class="painel-titulo">Pronto!</h1>
-        <p>O material vai aparecer no site em alguns minutos.</p>
+        <p>O material vai aparecer no site em até 15 minutos.</p>
         <div class="rodape-form centro">
           <a href="#/materiais" class="botao botao-claro">Ver materiais</a>
           <button type="button" class="botao" data-acao="outra">Adicionar outro</button>
@@ -970,6 +1219,7 @@ raiz.addEventListener("submit", (ev) => {
     });
   } else if (tipo === "material") {
     const m = dados.materiais.find((x) => x.slug === form.dataset.slug)!;
+    const antes = { ...m };
     Object.assign(m, {
       titulo: String(f.get("titulo")),
       linkDrive: String(f.get("linkDrive")).trim(),
@@ -980,7 +1230,8 @@ raiz.addEventListener("submit", (ev) => {
       capaModo: String(f.get("capaModo")),
       observacao: String(f.get("observacao")),
     });
-    salvar("Alterações salvas.");
+    esperando(true);
+    if (!(await salvar("Alterações salvas.", { material: m.slug }))) Object.assign(m, antes);
     desenhar();
   } else if (tipo === "contatos") {
     const c = dados.contatos;
@@ -988,12 +1239,27 @@ raiz.addEventListener("submit", (ev) => {
     c.escritorio.telefone = String(f.get("telefone"));
     c.emails = f.getAll("email").map(String).map((x) => x.trim()).filter(Boolean);
     for (const r of ["instagram", "facebook", "youtube", "whatsapp"] as const) c.redes[r] = String(f.get(r)).trim();
-    salvar("Contatos salvos.");
+    esperando(true);
+    await salvar("Contatos salvos.", { site: "contatos" });
     desenhar();
   } else if (tipo === "pagina-inicial" || tipo === "livros") {
     lerFormularioCapas();
-    salvar("Alterações salvas.");
+    esperando(true);
+    await salvar("Alterações salvas.", { site: tipo === "livros" ? "livraria" : "inicio" });
     desenhar();
+  } else if (tipo === "equipe") {
+    const email = String(f.get("email")).trim().toLowerCase();
+    const nome = String(f.get("nome")).trim();
+    esperando(true);
+    try {
+      await nuvem.incluirNaEquipe(email, nome);
+      equipe = [...(equipe ?? []).filter((p) => p.email !== email), { email, nome }].sort((a, b) => a.email.localeCompare(b.email));
+      avisar(`<strong>${e(nome)}</strong> foi incluído(a) na equipe.`);
+      desenhar();
+    } catch (erro) {
+      avisar(nuvem.mensagemDeErro(erro), "erro");
+      esperando(false);
+    }
   }
 });
 

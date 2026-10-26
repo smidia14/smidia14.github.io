@@ -1,0 +1,45 @@
+rules_version = '2';
+
+// REGRAS DE SEGURANÇA DO BANCO DO PAINEL (Firestore, projeto da conta smidia1914@gmail.com)
+// Copiar este texto em: Firebase → Firestore Database → Regras → Publicar.
+//
+// - Qualquer pessoa pode LER os materiais, contatos, página inicial, livros e imagens
+//   (é o mesmo conteúdo que já aparece no site; o GitHub lê daqui para atualizar o site).
+// - Só GRAVA quem entrou com e-mail confirmado E está na equipe (ou é a dona do painel).
+// - Só a dona do painel vê e muda a lista da equipe.
+service cloud.firestore {
+  match /databases/{banco}/documents {
+    function logado() {
+      return request.auth != null && request.auth.token.email_verified == true;
+    }
+    function email() {
+      return request.auth.token.email.lower();
+    }
+    function dono() {
+      return logado() && email() == 'smidia1914@gmail.com';
+    }
+    function daEquipe() {
+      return logado() && (dono() || exists(/databases/$(banco)/documents/equipe/$(email())));
+    }
+
+    match /materiais/{nome} {
+      allow read: if true;
+      allow write: if daEquipe();
+    }
+    match /site/{parte} {
+      allow read: if true;
+      allow write: if daEquipe() && parte in ['contatos', 'inicio', 'livraria'];
+    }
+    match /imagens/{id} {
+      allow read: if true;
+      allow create, update: if daEquipe()
+        && request.resource.data.dados is string
+        && request.resource.data.dados.size() < 1000000;
+      allow delete: if daEquipe();
+    }
+    match /equipe/{pessoa} {
+      allow read: if dono() || (logado() && pessoa == email());
+      allow write: if dono();
+    }
+  }
+}
