@@ -5,6 +5,8 @@
 //   site/contatos         contatos e redes sociais
 //   site/inicio           capas e cartões da página inicial
 //   site/livraria         livros da vitrine e "Como comprar"
+//   site/menu             as abas do menu (ativas ou não, onde cada uma fica)
+//   paginas/<nome>        textos de páginas criados ou editados no painel
 //   imagens/<id>          imagens enviadas pelo painel (WebP leve, em texto "data:")
 //   equipe/<e-mail>       quem pode usar o painel (só a dona cadastra)
 // O GitHub busca esses dados a cada 10 minutos e atualiza o site
@@ -109,15 +111,19 @@ export interface DadosNuvem {
   contatos: unknown;
   inicio: unknown;
   livraria: unknown;
+  menu?: unknown[] | null; // null = ainda não existe no banco
+  paginas?: Record<string, Record<string, unknown>>;
 }
 
 /** Lê tudo o que o painel edita. Devolve null se o banco ainda estiver vazio (primeira vez). */
 export async function lerTudo(): Promise<DadosNuvem | null> {
-  const [mats, contatos, inicio, livraria] = await Promise.all([
+  const [mats, contatos, inicio, livraria, menu, paginas] = await Promise.all([
     getDocs(collection(db!, "materiais")),
     getDoc(doc(db!, "site", "contatos")),
     getDoc(doc(db!, "site", "inicio")),
     getDoc(doc(db!, "site", "livraria")),
+    getDoc(doc(db!, "site", "menu")),
+    getDocs(collection(db!, "paginas")),
   ]);
   if (mats.empty && !contatos.exists()) return null;
   return {
@@ -125,6 +131,8 @@ export async function lerTudo(): Promise<DadosNuvem | null> {
     contatos: contatos.data(),
     inicio: inicio.data(),
     livraria: livraria.data(),
+    menu: menu.exists() ? ((menu.data().itens as unknown[]) ?? []) : null,
+    paginas: Object.fromEntries(paginas.docs.map((d) => [d.id, d.data()])),
   };
 }
 
@@ -160,6 +168,16 @@ export async function apagarMaterial(slug: string) {
 export async function gravarSite(nome: "contatos" | "inicio" | "livraria", valor: object) {
   await setDoc(doc(db!, "site", nome), comData(valor));
 }
+/** O menu fica num documento só (o Firestore não guarda uma lista solta). */
+export async function gravarMenu(itens: unknown[]) {
+  await setDoc(doc(db!, "site", "menu"), comData({ itens }));
+}
+export async function gravarPagina(id: string, pagina: object) {
+  await setDoc(doc(db!, "paginas", id), comData(pagina));
+}
+export async function apagarPagina(id: string) {
+  await deleteDoc(doc(db!, "paginas", id));
+}
 
 // ---- Imagens enviadas pelo painel ("painel:<id>" no lugar do endereço) ----
 const cacheImagens = new Map<string, string>();
@@ -181,6 +199,17 @@ export function enderecoDaImagem(valor: string, aoCarregar: () => void) {
       }
     });
   return "";
+}
+
+/** Carrega uma imagem do painel e devolve o endereço para mostrar (para o editor de texto). */
+export async function carregarImagem(valor: string) {
+  if (!valor.startsWith("painel:")) return valor;
+  const id = valor.slice(7);
+  if (!cacheImagens.has(id) && db) {
+    const d = await getDoc(doc(db, "imagens", id));
+    if (d.exists()) cacheImagens.set(id, d.data().dados);
+  }
+  return cacheImagens.get(id) ?? "";
 }
 
 // ---- Equipe (só a dona) ----

@@ -1,52 +1,64 @@
 ---
 // Todas as páginas de conteúdo (tudo menos a página inicial e o Arquivo).
 // O visual vem do molde src/layouts/MoldeInterno.astro.
+//  - Páginas que vieram do site antigo: src/content/paginas/*.md
+//  - Páginas criadas ou editadas pelo painel: src/data/paginas/*.json (o texto do painel
+//    substitui o antigo quando a página é a mesma).
+//  - Abas desativadas no painel não são publicadas.
 import { getCollection, render } from "astro:content";
 import MoldeInterno from "../layouts/MoldeInterno.astro";
 import Biblioteca from "../components/Biblioteca.astro";
-import { menu, trilhaNoMenu, type ItemMenu } from "../lib/menu";
+import { menu, trilhaNoMenu, desativadas, type ItemMenu } from "../lib/menu";
+import { paginasPainel, paginaPainel, htmlLimpo, type PaginaPainel } from "../lib/paginas-painel";
 
-export async function getStaticPaths() {
-  const paginas = await getCollection("paginas", (p) => p.data.rota !== "");
-  return paginas.map((pagina) => ({ params: { rota: pagina.data.rota }, props: { pagina } }));
+interface DadosPagina {
+  titulo: string;
+  descricao: string;
+  rota: string;
+  esta_no_menu: boolean;
 }
 
-const { pagina } = Astro.props;
-const { Content } = await render(pagina);
-const href = `/${pagina.data.rota}/`;
+export async function getStaticPaths() {
+  const antigas = await getCollection("paginas", (p) => p.data.rota !== "");
+  const rotasAntigas = new Set(antigas.map((p) => p.data.rota));
+  const caminhos = [
+    ...antigas.map((pagina) => ({ params: { rota: pagina.data.rota }, props: { pagina, painel: paginaPainel(pagina.data.rota) } })),
+    // páginas novas, criadas no painel
+    ...paginasPainel.filter((p) => !rotasAntigas.has(p.rota)).map((painel) => ({ params: { rota: painel.rota }, props: { pagina: null, painel } })),
+  ];
+  return caminhos.filter((c) => !desativadas.has(`/${c.params.rota}/`));
+}
+
+const { pagina, painel } = Astro.props as { pagina: Awaited<ReturnType<typeof getCollection<"paginas">>>[number] | null; painel?: PaginaPainel };
+const Content = pagina && !painel ? (await render(pagina)).Content : null;
+const dados: DadosPagina = painel
+  ? { titulo: painel.titulo, descricao: painel.descricao || "PENDENTE", rota: painel.rota, esta_no_menu: true }
+  : { ...pagina!.data };
+const href = `/${dados.rota}/`;
+const temTexto = painel ? !!painel.html?.replace(/<[^>]*>|&nbsp;|\s/g, "") : !!pagina?.body?.trim();
 
 // Migalhas ("Página inicial › Doutrinas › ...")
 function trilha(): ItemMenu[] {
   const inicio = menu[0];
-  if (pagina.data.esta_no_menu) return [inicio, ...trilhaNoMenu(href)].filter((x, i, a) => a.indexOf(x) === i);
-  if (pagina.data.rota.startsWith("arquivo/"))
-    return [inicio, { titulo: "Arquivo", href: "/arquivo/", filhos: [] }, { titulo: pagina.data.titulo, href, filhos: [] }];
+  if (dados.esta_no_menu) return [inicio, ...trilhaNoMenu(href)].filter((x, i, a) => a.indexOf(x) === i);
+  if (dados.rota.startsWith("arquivo/"))
+    return [inicio, { titulo: "Arquivo", href: "/arquivo/", filhos: [] }, { titulo: dados.titulo, href, filhos: [] }];
   // páginas 2, 3... de galerias: ficam abaixo da página "mãe"
-  const partes = pagina.data.rota.split("/");
+  const partes = dados.rota.split("/");
   for (let i = partes.length - 1; i > 0; i--) {
     const mae = trilhaNoMenu(`/${partes.slice(0, i).join("/")}/`);
-    if (mae.length) return [inicio, ...mae, { titulo: pagina.data.titulo, href, filhos: [] }];
+    if (mae.length) return [inicio, ...mae, { titulo: dados.titulo, href, filhos: [] }];
   }
-  return [inicio, { titulo: pagina.data.titulo, href, filhos: [] }];
+  return [inicio, { titulo: dados.titulo, href, filhos: [] }];
 }
 ---
 
-<MoldeInterno titulo={pagina.data.titulo} descricao={pagina.data.descricao} atual={href} trilha={trilha()}>
+<MoldeInterno titulo={dados.titulo} descricao={dados.descricao} atual={href} trilha={trilha()}>
   <!-- materiais da biblioteca de PDFs (só nas páginas que têm; veja src/lib/biblioteca.ts) -->
-  <Biblioteca href={href} />
+  <Biblioteca href={href} temTexto={temTexto} />
 
   <div class="texto prose prose-lg mx-auto max-w-[68ch]">
-    <Content />
+    {painel ? <Fragment set:html={htmlLimpo(painel.html)} /> : Content && <Content />}
   </div>
 
-  {
-    pagina.data.url_original && (
-      <p class="mx-auto mt-14 max-w-[68ch] border-t border-linha pt-5 text-xs break-all text-suave">
-        Endereço no site antigo:{" "}
-        <a href={pagina.data.url_original} class="underline decoration-1 underline-offset-2" target="_blank" rel="noopener">
-          {decodeURI(pagina.data.url_original)}
-        </a>
-      </p>
-    )
-  }
 </MoldeInterno>

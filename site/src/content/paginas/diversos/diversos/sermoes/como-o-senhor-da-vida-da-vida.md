@@ -6,7 +6,6 @@ esta_no_menu: true
 url_original: "https://www.smir14.com.br/diversos/serm%C3%B5es/como-o-senhor-da-vida-da-vida-/"
 caminho_de_navegacao: "Página inicial > Diversos > Diversos > Sermões > Como o Senhor da Vida dá Vida?"
 ---
-
 # Como o Senhor da Vida dá Vida?
 
 **Como o Senhor da Vida dá Vida?**

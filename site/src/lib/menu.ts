@@ -1,14 +1,33 @@
-// Lê o menu do arquivo de dados src/data/menu.json.
-// Para mudar o menu (ordem, nomes, itens), edite só esse arquivo.
+// Lê o menu do arquivo de dados src/data/menu.json (editado pelo painel da equipe, tela
+// "Menu e páginas"). Cada aba pode estar desativada ("ativo": false): ela some do menu,
+// junto com as abas que estão dentro dela, e a página dela não é publicada.
 import dadosMenu from "../data/menu.json";
 
 export interface ItemMenu {
   titulo: string;
   href: string;
   filhos: ItemMenu[];
+  ativo?: boolean; // false = aba desativada
 }
 
-export const menu: ItemMenu[] = dadosMenu;
+/** O menu inteiro, inclusive as abas desativadas (só para o painel e para saber o que não publicar). */
+export const menuCompleto: ItemMenu[] = dadosMenu as ItemMenu[];
+
+const soAtivas = (itens: ItemMenu[]): ItemMenu[] =>
+  itens.filter((i) => i.ativo !== false).map((i) => ({ ...i, filhos: soAtivas(i.filhos ?? []) }));
+
+/** O menu do site: só as abas ativas. */
+export const menu: ItemMenu[] = soAtivas(menuCompleto);
+
+/** Endereços das abas desativadas (e de tudo o que está dentro delas): essas páginas não são publicadas. */
+export const desativadas = new Set<string>();
+const marcar = (itens: ItemMenu[], dentroDeDesativada: boolean) =>
+  itens.forEach((i) => {
+    const fora = dentroDeDesativada || i.ativo === false;
+    if (fora) desativadas.add(i.href);
+    marcar(i.filhos ?? [], fora);
+  });
+marcar(menuCompleto, false);
 
 /** Caminho no menu até o endereço (do item principal até o próprio item). */
 export function trilhaNoMenu(href: string, itens: ItemMenu[] = menu): ItemMenu[] {

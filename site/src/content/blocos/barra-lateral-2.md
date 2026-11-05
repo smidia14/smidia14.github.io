@@ -1,12 +1,11 @@
 ---
 titulo: "Barra lateral 2"
 ---
-
-# ![](https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/system_preview_detail_200000660-7ee687ee6a/nossa-historia.jpg)
+# ![](/imagens/antigo/nossa-historia-a3e3f593.webp)
 
 ## Testemunhos Ellen G. White
 
-[![](https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000846-583ff58401/2fe96349e00700ad3f747073f24cabf8_icon.png)](/diversos/diversos/testemunhos-ellen-g-white/)
+[![](/imagens/antigo/2fe96349e00700ad3f747073f24cabf8-icon-84253e33.webp)](/diversos/diversos/testemunhos-ellen-g-white/)
 
 ## Contato
 

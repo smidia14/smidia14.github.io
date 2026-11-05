@@ -851,3 +851,180 @@
 .lista-equipe small {
   color: var(--color-suave);
 }
+
+/* ---- Menu e páginas ---- */
+.arvore-menu,
+.arvore-menu ul {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+.arvore-menu ul {
+  margin: 0.35rem 0 0.35rem 1.4rem;
+  padding-left: 1rem;
+  border-left: 2px solid var(--color-linha);
+}
+.aba-linha {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 0.55rem 0.75rem;
+  border-radius: 0.8rem;
+  background: color-mix(in srgb, var(--color-azul) 4%, var(--color-branco));
+}
+.aba-linha.desativada {
+  background: var(--color-cinza);
+}
+.aba-linha.desativada .aba-nome strong {
+  color: var(--color-suave);
+  text-decoration: line-through;
+}
+.aba-nome {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  min-width: 0;
+}
+.aba-nome small {
+  overflow: hidden;
+  font-size: 0.82rem;
+  color: var(--color-suave);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.aba-acoes {
+  display: flex;
+  align-items: center;
+  gap: 0.15rem;
+}
+.botao-pequeno {
+  padding: 0.45rem 0.9rem;
+  font-size: 0.9rem;
+}
+@media (max-width: 560px) {
+  .aba-linha {
+    flex-wrap: wrap;
+  }
+  .aba-acoes {
+    width: 100%;
+    justify-content: flex-end;
+  }
+}
+/* chave liga/desliga */
+.chave {
+  position: relative;
+  width: 2.9rem;
+  height: 1.6rem;
+  flex: none;
+  border-radius: 999px;
+  background: #b9c0c7;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+.chave span {
+  position: absolute;
+  top: 0.2rem;
+  left: 0.2rem;
+  width: 1.2rem;
+  height: 1.2rem;
+  border-radius: 999px;
+  background: var(--color-branco);
+  box-shadow: 0 1px 3px rgb(0 0 0 / 0.3);
+  transition: transform 0.2s ease;
+}
+.chave.ligada {
+  background: var(--color-verde);
+}
+.chave.ligada span {
+  transform: translateX(1.3rem);
+}
+.campo-check {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  margin-bottom: 1.1rem;
+  font-weight: 700;
+}
+.campo-check input {
+  width: 1.25rem;
+  height: 1.25rem;
+  accent-color: var(--color-azul);
+}
+.opcao-radio {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+.opcao-radio:has(input:checked) {
+  background: var(--color-azul);
+  color: var(--color-branco);
+  box-shadow: none;
+}
+.opcao-radio input {
+  accent-color: var(--color-branco);
+}
+/* o campo do endereço só aparece quando a aba nova é um link */
+.so-link {
+  display: none;
+}
+form:has(input[name="tipo"][value="link"]:checked) .so-link {
+  display: flex;
+}
+
+/* ---- Editor de texto das páginas ---- */
+.barra-editor {
+  position: sticky;
+  top: 0;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.3rem;
+  padding: 0.5rem;
+  border: 1.5px solid var(--color-linha);
+  border-bottom: 0;
+  border-radius: 0.7rem 0.7rem 0 0;
+  background: var(--color-cinza);
+}
+.ferramenta {
+  padding: 0.4rem 0.75rem;
+  border-radius: 0.5rem;
+  background: var(--color-branco);
+  box-shadow: inset 0 0 0 1px var(--color-linha);
+  font-size: 0.92rem;
+  font-weight: 600;
+  cursor: pointer;
+}
+.ferramenta:hover {
+  box-shadow: inset 0 0 0 1.5px var(--color-azul);
+  color: var(--color-azul);
+}
+.editor-texto {
+  min-height: 22rem;
+  max-width: none;
+  padding: 1.25rem 1.5rem;
+  border: 1.5px solid var(--color-linha);
+  border-radius: 0 0 0.7rem 0.7rem;
+  background: var(--color-branco);
+  font-family: var(--font-texto);
+  outline: none;
+}
+.editor-texto:focus {
+  border-color: var(--color-azul);
+  box-shadow: 0 0 0 3px color-mix(in srgb, var(--color-azul) 18%, transparent);
+}
+.editor-texto img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 0.6rem;
+}
+.editor-texto .incorporado {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  max-width: 36rem;
+}
+.editor-texto .incorporado iframe {
+  width: 100%;
+  height: 100%;
+  border: 0;
+  pointer-events: none;
+}

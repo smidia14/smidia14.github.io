@@ -21,6 +21,7 @@
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.3.5",
     "firebase": "^11.10.0",
+    "sanitize-html": "^2.18.1",
     "tailwindcss": "^4.3.3"
   },
   "allowScripts": {

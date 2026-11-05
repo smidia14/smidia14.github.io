@@ -6,7 +6,6 @@ esta_no_menu: true
 url_original: "https://www.smir14.com.br/doutrinas/principios-de-fe/"
 caminho_de_navegacao: "Página inicial > Doutrinas > Princípios de Fé"
 ---
-
 # Princípios de Fé
 
 **PRINCÍPIOS DE FÉ**

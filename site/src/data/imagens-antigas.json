@@ -1,0 +1,20 @@
+{
+  "_leia": "Imagens que vinham do site antigo (Webnode) e agora estão guardadas no próprio site, em public/imagens/antigo/. O site e o painel usam a cópia local no lugar do endereço antigo (veja src/lib/links.ts).",
+  "imagens": {
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200001152-5d5305d533/Captura%20de%20tela%202022-07-05%20095748%20%281%29.png": "/imagens/antigo/captura-de-tela-2022-07-05-095748-1-6929a931.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200001139-f263cf263f/Semana%20De%20ora%C3%A7%C3%A3o.jpg": "/imagens/antigo/semana-de-orao-7c8c0183.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000633-0e91a0e91c/semana%20mulher.PNG": "/imagens/antigo/semana-mulher-56c64db1.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200001153-0325003253/Captura%20de%20tela%202022-07-05%20101103.png": "/imagens/antigo/captura-de-tela-2022-07-05-101103-cefd5f61.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000630-392f5392f7/Capa%20final%20pequena%20-%20Passos%20de%20Jesus_1.jpg": "/imagens/antigo/capa-final-pequena-passos-de-jesus-1-7614c0e6.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000137-d433cd627c/fe%20do%20dos.PNG": "/imagens/antigo/fe-do-dos-e6a37faf.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000139-d7405d83a3/vereda.PNG": "/imagens/antigo/vereda-98342c88.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000659-392593925b/multiu.png": "/imagens/antigo/multiu-4d52ed66.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000657-5fd345fd35/5ccb6e5c8c804-lg.png": "/imagens/antigo/5ccb6e5c8c804-lg-3de911f4.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/system_preview_200000658-8e5bf8e5c1/seminariosesc.jpg": "/imagens/antigo/seminariosesc-0038f4be.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000661-4fba24fba3/FAMILIA.jpg": "/imagens/antigo/familia-b724d8ee.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000662-538df538e0/secretaria.jpg": "/imagens/antigo/secretaria-c409263f.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/system_preview_small_200000663-129ee129ef/saude.jpg": "/imagens/antigo/saude-2a8d5a55.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000547-0fa5d1199b/Palavra%20da%20Verdade.jpg": "/imagens/antigo/palavra-da-verdade-ec92b1f5.webp",
+    "https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200001167-7c6de7c6e0/sisi.png": "/imagens/antigo/sisi-51748041.webp"
+  }
+}

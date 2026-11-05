@@ -6,7 +6,6 @@ esta_no_menu: true
 url_original: "https://www.smir14.com.br/contatos/rio-de-janeiro/"
 caminho_de_navegacao: "Página inicial > Contatos > Rio de Janeiro"
 ---
-
 ##### **Rio de Janeiro**
 
 **IGREJA DE REALENGO**
@@ -23,4 +22,4 @@ Pastor Responsável
 
 **Pr. Samuel Maravilha**
 
-![](https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000508-0ccbf0ebfd/samuel.jpg)
+![](/imagens/antigo/samuel-486fe304.webp)

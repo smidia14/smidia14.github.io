@@ -6,7 +6,6 @@ esta_no_menu: true
 url_original: "https://www.smir14.com.br/doutrinas/laodiceia/"
 caminho_de_navegacao: "Página inicial > Doutrinas > Laodicéia"
 ---
-
 # Laodicéia
 
 CONFISSÃO DOUTRINÁRIA SOBRE LAODICÉIA DA ASSOCIAÇÃO BRASILEIRA DOS ADVENTISTAS DO SÉTIMO DIA - MOVIMENTO DE REFORMA

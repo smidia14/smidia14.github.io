@@ -6,7 +6,6 @@ esta_no_menu: true
 url_original: "https://www.smir14.com.br/diversos/serm%C3%B5es/cristo-e-o-natal/"
 caminho_de_navegacao: "Página inicial > Diversos > Diversos > Sermões > Cristo e o Natal"
 ---
-
 # Cristo e o Natal
 
 Cristo e o Natal
@@ -87,7 +86,7 @@ II – ENTÃO QUANDO NASCEU JESUS?
 
 Tomando em consideração os dados que nos fornece Lucas (o mais rico em datas) vamos considerar um paralelo entre a gravidez de Isabel e de Maria vejamos:
 
-*“Existiu no tempo de Herodes rei da Judéia um sacerdote chamado Zacarias da ordem de Abias... e aconteceu que exercendo ele o sacerdócio diante de Deus na ordem da sua turma... um anjo do Senhor lhe apareceu, posto de pé, à direita do altar do incenso... e aconteceu que terminando os dias do seu ministério voltou para a sua casa, e depois daqueles dias Isabel sua mulher concebeu... no sexto mês o anjo Gabriel foi enviado por Deus a uma cidade de Galileia, chamada Nazaré, a uma virgem desposada com um varão cujo nome era José...)*”[[1]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftn1)
+*“Existiu no tempo de Herodes rei da Judéia um sacerdote chamado Zacarias da ordem de Abias... e aconteceu que exercendo ele o sacerdócio diante de Deus na ordem da sua turma... um anjo do Senhor lhe apareceu, posto de pé, à direita do altar do incenso... e aconteceu que terminando os dias do seu ministério voltou para a sua casa, e depois daqueles dias Isabel sua mulher concebeu... no sexto mês o anjo Gabriel foi enviado por Deus a uma cidade de Galileia, chamada Nazaré, a uma virgem desposada com um varão cujo nome era José...)*”[1]
 
 Vejamos o que nos diz a Biblia:
 
@@ -126,7 +125,7 @@ No ano 354 d.C. o papa Libério, sendo imperador romano Justiniano, ordenou que 
 
 Na tentativa de "cristianizar" cultos pagãos, os líderes religiosos da Idade Média buscarão de todas as formas conciliar o paganismo com o cristianismo. (um exemplo disto foi a criação dos santos católicos, substituindo as festas e padroeiros pagãos. Vênus, deusa do amor; Ceres, deusa da colheita; Netuno deus do Mar; assim como São Cristovão é o padroeiro dos viajantes; Santa Bárbara, protetora dos trovões e o famoso Santo Antônio é o padroeiro do casamento)
 
-Já dizia este notável escritor: “a época do inverno era quando todos os deuses solares, desde Osíris até Júpiter e Mitra, celebravam seus aniversários. As celebrações consistiam em árvores de Pinhos para Adodis, Saturno e outros que representavam o calor do novo nascimento do sol em forma de fogo”.[[2]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftn2)
+Já dizia este notável escritor: “a época do inverno era quando todos os deuses solares, desde Osíris até Júpiter e Mitra, celebravam seus aniversários. As celebrações consistiam em árvores de Pinhos para Adodis, Saturno e outros que representavam o calor do novo nascimento do sol em forma de fogo”.[2]
 
 3.1 Algumas fontes que falam sobre a origem do Natal
 
@@ -144,7 +143,7 @@ A razão provável da adoção do dia 25 de dezembro é que os primeiros cristã
 
 · Enciclopédia Protestante:
 
-"Não se pode determinar com precisão até que ponto a data desta festividade teve origem na pagã Brumália (25 de dezembro), que seguia a Saturnália (17 a 24 de dezembro) e comemorava o nascimento do deus sol, no dia mais curto do ano. As festividades pagãs de Saturnália e Brumália estavam demasiadamente arraigadas nos costumes populares para serem suprimidos pela influência cristã. Essas festas agradavam tanto que os cristãos viram com simpatia uma desculpa para continuar celebrando-as sem maiores mudanças no espírito e na forma de sua observância. Pregadores cristãos do ocidente e do oriente próximo protestaram contra a frivolidade indecorosa com que se celebrava o nascimento de Cristo, enquanto os cristãos da Mesopotâmia acusavam a seus irmãos ocidentais de idolatria e de culto ao sol por aceitar como cristã essa festividade pagã.”[[3]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftn3)
+"Não se pode determinar com precisão até que ponto a data desta festividade teve origem na pagã Brumália (25 de dezembro), que seguia a Saturnália (17 a 24 de dezembro) e comemorava o nascimento do deus sol, no dia mais curto do ano. As festividades pagãs de Saturnália e Brumália estavam demasiadamente arraigadas nos costumes populares para serem suprimidos pela influência cristã. Essas festas agradavam tanto que os cristãos viram com simpatia uma desculpa para continuar celebrando-as sem maiores mudanças no espírito e na forma de sua observância. Pregadores cristãos do ocidente e do oriente próximo protestaram contra a frivolidade indecorosa com que se celebrava o nascimento de Cristo, enquanto os cristãos da Mesopotâmia acusavam a seus irmãos ocidentais de idolatria e de culto ao sol por aceitar como cristã essa festividade pagã.”[3]
 
 IV – ELEMENTOS PAGÃOS NO NATAL “CRISTÃO”.
 
@@ -160,7 +159,7 @@ Tão adorado pelos apostatas e tão odiado pelos nossos pais da fé:
 
 “Tertuliano, um teólogo católico, que no segundo século disse: Jesus não é deus sol e o sol não é o deus dos cristãos. O Deus dos cristãos foi aquele que criou o sol; a criatura e a criação não têm poder sobre o Criador;
 
-Augustinho, outro teólogo cristãos quem disse: "Claramente afirmo que esse comportamento é herético. Os cristãos não têm a ver com o deus sol e a festa dos solstícios”[[4]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftn4)
+Augustinho, outro teólogo cristãos quem disse: "Claramente afirmo que esse comportamento é herético. Os cristãos não têm a ver com o deus sol e a festa dos solstícios”[4]
 
 Devemos cuidar sempre de não cair no mesmo erro dos povos passados que tomavam arvores como objeto de culto, adorando a criatura e não ao criador como encontramos em: Deut. 12:2; 1Reis 14:23; 2Reis. 16:4; 17:10; Eze. 6:13 etc.).
 
@@ -178,7 +177,7 @@ São Nicolau foi bispo de Mira, na Ásia Menor, no século IV. Tornou-se famoso 
 
 Não obstante para chegar a ser o que é hoje em dia teve que passar pelas mãos do Escritor Washington Irving (que o colocou como guardião de Nova Iorque criou uma sociedade literária do papai Noel) do desenhista Tomas Last (desenhista de um jornal Americano) que o desenhou por três nos seguidos e principalmente a sua evolução iconológica chegou ao final nas mãos da multinacional Coca-Cola onde a partir do ano 1930 começaram a divulgar a figura do Papai Noel com as mesmas cores da marca Coca-Cola.
 
-(vede [https://www.acidigital.com/fiestas/navidad/papainoel.htm](http://www.acidigital.com/fiestas/navidad/papainoel.htm))
+(vede `https://www.acidigital.com/fiestas/navidad/papainoel.htm`)
 
 Subliminarmente o papai Noel inibe as pessoas de acreditarem em Jesus, pois se um fato central do Natal como a figura de Papai Noel provou-se ser pura lenda, porque não é lenda o resto dos fatos relacionados com o Natal? Se na verdade não existe o papai Noel como teremos a certeza de que existe o nascimento de Jesus? E esse velho mitológico está, pouco a pouco, tomando o lugar do personagem que deveria ser o dono da festa, ao ponto de o Natal, ao invés de ser chamado FESTA DE JESUS, estar recebendo o título de "FESTA DE PAPAI NOEL".
 
@@ -190,9 +189,9 @@ V – UM VERDADEIRO NATAL
 
 Vejamos alguns textos que nos ajudarão a dar uma correta visão do natal:
 
-“Rogo-vos, irmãos e irmãs, que façais do Natal uma bênção para vós e para os outros. O nascimento de Jesus... foi celebrado pelos exércitos celestiais. Anjos de Deus, na forma de uma estrela, orientaram os magos em sua missão, à procura de Jesus. Eles vieram com presentes e preciosas dádivas de incenso e mirra a fim de fazerem sua oferenda ao Rei menino predito na profecia.”[[5]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftn5)
+“Rogo-vos, irmãos e irmãs, que façais do Natal uma bênção para vós e para os outros. O nascimento de Jesus... foi celebrado pelos exércitos celestiais. Anjos de Deus, na forma de uma estrela, orientaram os magos em sua missão, à procura de Jesus. Eles vieram com presentes e preciosas dádivas de incenso e mirra a fim de fazerem sua oferenda ao Rei menino predito na profecia.”[5]
 
-“Ontem foi Dia de Natal. Fizestes como os magos, oferecendo vossos presentes a Jesus? Ou o inimigo mudou a ordem das coisas, e dirigiu o culto para ele mesmo? Os presentes são hoje ofertados a amigos e não Àquele que realizou tão grande sacrifício por nós. Todos os dons devem fluir em outro conduto, onde possam ser usados na salvação de homens.”[[6]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftn6)
+“Ontem foi Dia de Natal. Fizestes como os magos, oferecendo vossos presentes a Jesus? Ou o inimigo mudou a ordem das coisas, e dirigiu o culto para ele mesmo? Os presentes são hoje ofertados a amigos e não Àquele que realizou tão grande sacrifício por nós. Todos os dons devem fluir em outro conduto, onde possam ser usados na salvação de homens.”[6]
 
 Este é um verdadeiro natal, onde as pessoas não buscam a satisfação própria, onde o personagem principal não é uma arvore ou um velho de vermelho e branco.
 
@@ -208,18 +207,18 @@ Então:
 
 Viva a Cristo, o verdadeiro natal!!!!!!!
 
-[https://www.graciaypaz.com/porquejesusnonacioun25dediciembre.html](http://www.graciaypaz.com/porquejesusnonacioun25dediciembre.html)
+`https://www.graciaypaz.com/porquejesusnonacioun25dediciembre.html`
 
 ---
 
-[[1]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftnref1) Lucas 1. 5,8,11, 23 e 24, 26 e 27
+[1] Lucas 1. 5,8,11, 23 e 24, 26 e 27
 
-[[2]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftnref2) La Rama Dorada, p. 471, extraída da internet na página [https://www.graciaypaz.com/porquejesusnonacioun25dediciembre.html](http://www.graciaypaz.com/porquejesusnonacioun25dediciembre.html)
+[2] La Rama Dorada, p. 471, extraída da internet na página `https://www.graciaypaz.com/porquejesusnonacioun25dediciembre.html`
 
-[[3]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftnref3) The New Schaff-Herzog Encyclopedia of Religious Knowledge - A Nova Enciclopédia de Conhecimento Religioso, de Schaff-Herzog)
+[3] The New Schaff-Herzog Encyclopedia of Religious Knowledge - A Nova Enciclopédia de Conhecimento Religioso, de Schaff-Herzog)
 
-[[4]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftnref4) [https://www.prodepi.com.br/bereana/curiosidades.php?id=50](http://www.prodepi.com.br/bereana/curiosidades.php?id=50)
+[4] `https://www.prodepi.com.br/bereana/curiosidades.php?id=50`
 
-[[5]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftnref5) Refletindo a Cristo, 365
+[5] Refletindo a Cristo, 365
 
-[[6]](https://www.smir14.com.br/index.php?option=com_content&view=article&id=80:cristo-e-o-natal&catid=37:todos-os-estudos&Itemid=92#_ftnref6) Olhando para o Alto, 368
+[6] Olhando para o Alto, 368

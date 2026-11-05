@@ -6,6 +6,8 @@
 #   site/contatos     →  src/data/contatos.json
 #   site/inicio       →  src/data/inicio.json
 #   site/livraria     →  src/data/livraria.json
+#   site/menu         →  src/data/menu.json        (abas ativas/desativadas, onde cada uma fica)
+#   paginas/<nome>    →  src/data/paginas/<nome>.json  (textos criados ou editados no painel)
 #   imagens/<id>      →  public/imagens/painel/<id>.webp  (os campos "painel:<id>" viram o endereço)
 #
 # Só lê (com a chave pública do Firebase); quem pode gravar é decidido pelas regras do banco.
@@ -18,6 +20,7 @@ import requests
 SITE = Path(__file__).resolve().parent.parent
 DADOS = SITE / "src/data"
 PASTA_MATERIAIS = DADOS / "biblioteca"
+PASTA_PAGINAS = DADOS / "paginas"
 PASTA_IMAGENS = SITE / "public/imagens/painel"
 CONFIG = SITE / "src/admin/firebase-config.ts"
 
@@ -98,27 +101,32 @@ def trocar_imagens(dado):
         return {k: trocar_imagens(v) for k, v in dado.items()}
     if isinstance(dado, list):
         return [trocar_imagens(v) for v in dado]
-    if isinstance(dado, str) and dado.startswith("painel:"):
-        id_ = dado[7:]
-        if not re.fullmatch(r"[A-Za-z0-9_-]{1,64}", id_):  # nome estranho: ignora (segurança)
-            print(f"::warning::imagem com nome inválido ignorada: {id_!r}")
+    if isinstance(dado, str) and "painel:" in dado:
+        if dado.startswith("painel:") and not re.fullmatch(r"painel:[A-Za-z0-9_-]{1,64}", dado):
+            print(f"::warning::imagem com nome inválido ignorada: {dado[7:]!r}")
             return ""
-        existentes = list(PASTA_IMAGENS.glob(f"{id_}.*"))
-        if existentes:
-            return f"/imagens/painel/{existentes[0].name}"
-        img = ler(f"imagens/{id_}")
-        m = re.match(r"data:image/(\w+);base64,(.*)", (img or {}).get("dados", ""), re.S)
-        if not m:
-            print(f"::warning::imagem {id_} não encontrada no painel")
-            return ""
-        ext = {"jpeg": "jpg"}.get(m.group(1), m.group(1))
-        if ext not in ("webp", "jpg", "png", "gif"):  # só fotos (SVG pode conter código)
-            print(f"::warning::imagem {id_} em formato não permitido ({ext})")
-            return ""
-        PASTA_IMAGENS.mkdir(parents=True, exist_ok=True)
-        (PASTA_IMAGENS / f"{id_}.{ext}").write_bytes(base64.b64decode(m.group(2)))
-        return f"/imagens/painel/{id_}.{ext}"
+        # "painel:<id>" sozinho (campo de imagem) ou dentro do texto de uma página (src="painel:<id>")
+        return re.sub(r"painel:([A-Za-z0-9_-]{1,64})", lambda m: arquivo_da_imagem(m.group(1)), dado)
     return dado
+
+
+def arquivo_da_imagem(id_):
+    """Salva a imagem do painel como arquivo do site e devolve o endereço dela."""
+    existentes = list(PASTA_IMAGENS.glob(f"{id_}.*"))
+    if existentes:
+        return f"/imagens/painel/{existentes[0].name}"
+    img = ler(f"imagens/{id_}")
+    m = re.match(r"data:image/(\w+);base64,(.*)", (img or {}).get("dados", ""), re.S)
+    if not m:
+        print(f"::warning::imagem {id_} não encontrada no painel")
+        return ""
+    ext = {"jpeg": "jpg"}.get(m.group(1), m.group(1))
+    if ext not in ("webp", "jpg", "png", "gif"):  # só fotos (SVG pode conter código)
+        print(f"::warning::imagem {id_} em formato não permitido ({ext})")
+        return ""
+    PASTA_IMAGENS.mkdir(parents=True, exist_ok=True)
+    (PASTA_IMAGENS / f"{id_}.{ext}").write_bytes(base64.b64decode(m.group(2)))
+    return f"/imagens/painel/{id_}.{ext}"
 
 
 def gravar(arquivo: Path, dado):
@@ -153,6 +161,32 @@ def main():
         print(f"Materiais no painel: {len(nomes)}")
     else:
         print("Nenhum material no painel ainda; a biblioteca do site fica como está.")
+
+    # menu (abas): fica num documento só, com a lista em "itens"
+    menu = ler("site/menu")
+    if menu and isinstance(menu.get("itens"), list) and menu["itens"]:
+        caminho = DADOS / "menu.json"
+        gravar(caminho, na_ordem(menu["itens"], json.loads(caminho.read_text(encoding="utf-8"))))
+
+    # textos de páginas criados ou editados no painel
+    PASTA_PAGINAS.mkdir(exist_ok=True)
+    nomes = set()
+    for d in listar("paginas"):
+        nome = d["name"].rsplit("/", 1)[1]
+        if not re.fullmatch(r"[a-z0-9][a-z0-9-]{0,200}", nome):
+            print(f"::warning::página com nome inválido ignorada: {nome!r}")
+            continue
+        pg = trocar_imagens(documento(d))
+        rota = str(pg.get("rota", ""))
+        if not re.fullmatch(r"[a-z0-9][a-z0-9/-]{0,200}", rota) or rota.replace("/", "--") != nome:
+            print(f"::warning::página com endereço inválido ignorada: {rota!r}")
+            continue
+        nomes.add(nome)
+        gravar(PASTA_PAGINAS / f"{nome}.json", {"rota": rota, "titulo": pg.get("titulo", ""), "descricao": pg.get("descricao", ""), "html": pg.get("html", "")})
+    for arq in PASTA_PAGINAS.glob("*.json"):
+        if arq.stem not in nomes:
+            arq.unlink()
+            print(f"  apagado: {arq.relative_to(SITE)}")
 
     # contatos, página inicial e livros
     for parte, arquivo in [("contatos", "contatos.json"), ("inicio", "inicio.json"), ("livraria", "livraria.json")]:

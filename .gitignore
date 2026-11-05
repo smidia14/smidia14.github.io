@@ -26,3 +26,5 @@ desktop.ini
 # PDFs da editora (ficam só no computador; não vão para o GitHub)
 pdfs-editora/
 pdfs-organizados/
+# Cópia de histórico do site antigo (fica só neste computador)
+site-antigo-historico/

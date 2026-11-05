@@ -6,12 +6,9 @@ esta_no_menu: true
 url_original: "https://www.smir14.com.br/doutrinas/renova%C3%A7%C3%A3o-de-nossa-fidelidade/"
 caminho_de_navegacao: "Página inicial > Doutrinas > Renovação de Nossa Fidelidade"
 ---
-
 ### Renovação de nossa Fidelidade
 
-[![](https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000570-7aa797ba16/mostra.jpg)](https://drive.google.com/file/d/0B2sWogup0xGMWWF3NEFVSU1RaVk/view?usp=sharing)
-
-Baixar em [![](https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/200000064-7fc4580be1/BAIXAR.gif)](https://drive.google.com/file/d/0B2sWogup0xGMWWF3NEFVSU1RaVk/view?usp=sharing)
+![](/imagens/antigo/mostra-4e33211d.webp)
 
 # Renovação de Nossa Fidelidade 2014
 
@@ -325,7 +322,6 @@ Oremos para que o Paracletos divino transforme nossa língua e assim sejamos uma
 
 **\*\*\*\*\*\*\***
 
-[<< Anterior](https://www.smir14.com.br/index.php?option=com_content&view=article&id=143%3Arenovacao-de-nossa-fidelidade&catid=55%3Alivros&Itemid=89&limitstart=1) - [Próximo >>](https://www.smir14.com.br/index.php?option=com_content&view=article&id=143%3Arenovacao-de-nossa-fidelidade&catid=55%3Alivros&Itemid=89&limitstart=3)
 
 #### RENOVAÇÃO DE NOSSA FIDELIDADE NA
 
@@ -495,7 +491,7 @@ Devemos ter o máximo cuidado com a higiene da roupa principalmente para nos apr
 
 “Foi requerido do povo abstenção de trabalhos e cuidados seculares, e que tivessem pensamentos devocionais. Deus requereu também que lavassem suas vestes. Ele não é menos minucioso agora do que foi então. Ele é um Deus de ordem e requer que Seu povo sobre a Terra, hoje, observe hábitos de estrita limpeza. Os que adoram a Deus com vestes maculadas e eles próprios manchados não se apresentam diante dEle de modo aceitável. Ele não Se agrada da sua falta de reverência, e não aceitará o culto de adoradores impuros, pois insultam o seu Autor. O Criador dos céus e da Terra considerou a limpeza tão importante que disse: ‘Lavem eles os seus vestidos.’ Êxo. 19.10.” História da Redenção, 138. Que o Senhor nos ajude para que possamos dar o melhor de nós para glorificá-Lo.
 
-**3. Fungos.** São causa do mau cheiro nos pés. Provocam fissuras entre os dedos ou se concentram em pequenos nódulos na base dos artelhos na micose conhecida como [pé de atleta](https://www.smir14.com.br/index.php?option=com_content&view=article&id=143%3Arenovacao-de-nossa-fidelidade&catid=55%3Alivros&Itemid=89&limitstart=4#pedeatleta). Porém, é um cheiro diferente do cheiro produzido por bactérias a partir do suor.
+**3. Fungos.** São causa do mau cheiro nos pés. Provocam fissuras entre os dedos ou se concentram em pequenos nódulos na base dos artelhos na micose conhecida como pé de atleta. Porém, é um cheiro diferente do cheiro produzido por bactérias a partir do suor.
 
 **4. Cabelos.** O cabelo, independentemente do estilo, deve estar sempre limpo.
 
@@ -631,8 +627,6 @@ Sendo assim, não havia conflitos nele. As leis físicas com as psicológicas e 
 
 Vejamos o diagrama seguinte:
 
-![Descrição: https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/stories/renovao1.png](file:///C:%5CUsers%5CWilton%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_image001.png)
-
 As setas apontadas para fora indicam a inter-relação com Deus e com as outras pessoas e o ambiente.
 
 A alma é a personalidade por meio da qual nos relacionamos com os outros – na verdade, a nossa constituição psicológica. O espírito, que reúne nossas faculdades superiores, é a nossa consciência de Deus, ou a faceta de nossa constituição pela qual nos relacionamos com Ele. O corpo é o meio pelo qual nos relacionamos com o mundo e nosso ambiente.
@@ -660,8 +654,6 @@ Vejamos também declarações das Escrituras:
 7. Jó 15.15,16 “Eis que ele não confia nos seus santos, e nem os céus são puros aos seus olhos. Quanto mais abominável e corrupto é o homem que bebe a iniqüidade como a água?”
 
 Pelas declarações anteriores, concluímos que todo seu ser (corpo, alma e espírito) está em total desarmonia; as leis físicas, psicológicas e espirituais não mais obedecem aos princípios estabelecidos, atuando na maior confusão, desordem e de maneira oposta. O egoísmo tomou lugar do amor, ficando no centro do comando. Vejamos o seguinte diagrama:
-
-![Descrição: https://93cc827c59.cbaul-cdnwnd.com/416a9d9672d9dee926807c75b094dafb/stories/renovao2.png](file:///C:%5CUsers%5CWilton%5CAppData%5CLocal%5CTemp%5Cmsohtmlclip1%5C01%5Cclip_image002.png)
 
 **A INTEMPERANÇA PSICOLÓGICA E AS DOENÇAS PSICOS-SOMÁTICAS**
 

@@ -3,7 +3,7 @@ rules_version = '2';
 // REGRAS DE SEGURANÇA DO BANCO DO PAINEL (Firestore, projeto da conta smidia1914@gmail.com)
 // Copiar este texto em: Firebase → Firestore Database → Regras → Publicar.
 //
-// - Qualquer pessoa pode LER os materiais, contatos, página inicial, livros e imagens
+// - Qualquer pessoa pode LER os materiais, contatos, página inicial, livros, menu, páginas e imagens
 //   (é o mesmo conteúdo que já aparece no site; o GitHub lê daqui para atualizar o site).
 // - Só GRAVA quem entrou com e-mail confirmado E está na equipe (ou é a dona do painel).
 // - Só a dona do painel vê e muda a lista da equipe.
@@ -28,7 +28,14 @@ service cloud.firestore {
     }
     match /site/{parte} {
       allow read: if true;
-      allow write: if daEquipe() && parte in ['contatos', 'inicio', 'livraria'];
+      allow write: if daEquipe() && parte in ['contatos', 'inicio', 'livraria', 'menu'];
+    }
+    match /paginas/{nome} {
+      allow read: if true;
+      allow write: if daEquipe()
+        && request.resource.data.html is string
+        && request.resource.data.html.size() < 900000;
+      allow delete: if daEquipe();
     }
     match /imagens/{id} {
       allow read: if true;

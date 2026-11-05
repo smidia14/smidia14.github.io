@@ -2,7 +2,8 @@
   {
     "titulo": "Página inicial",
     "href": "/",
-    "filhos": []
+    "filhos": [],
+    "ativo": true
   },
   {
     "titulo": "Download",
@@ -11,44 +12,53 @@
       {
         "titulo": "Livros",
         "href": "/download/livros/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Semana da Mordomia Cristã",
         "href": "/download/semana-da-mordomia-crista/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Semana de Oração",
         "href": "/download/semana-de-oracao/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Semana de Reavivamento",
         "href": "/download/semana-de-reavivamento/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Semana do Calvário",
         "href": "/download/semana-do-calvario/",
-        "filhos": []
+        "filhos": [],
+        "ativo": false
       },
       {
         "titulo": "Semana Juvenil",
         "href": "/download/semana-juvenil/",
-        "filhos": []
+        "filhos": [],
+        "ativo": false
       },
       {
         "titulo": "Cursos e Estudos",
         "href": "/download/cursos-e-estudos/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       }
-    ]
+    ],
+    "ativo": true
   },
   {
     "titulo": "Transmissões ao Vivo",
     "href": "/transmissoes-ao-vivo/",
-    "filhos": []
+    "filhos": [],
+    "ativo": true
   },
   {
     "titulo": "Departamentos",
@@ -57,7 +67,8 @@
       {
         "titulo": "EVANGELISMO",
         "href": "/departamentos/evangelismo/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Saúde",
@@ -66,9 +77,11 @@
           {
             "titulo": "Materiais",
             "href": "/departamentos/saude/materiais/",
-            "filhos": []
+            "filhos": [],
+            "ativo": false
           }
-        ]
+        ],
+        "ativo": false
       },
       {
         "titulo": "Jovens",
@@ -77,46 +90,56 @@
           {
             "titulo": "Semana da Juventude",
             "href": "/departamentos/jovens/semana-da-juventude/",
-            "filhos": []
+            "filhos": [],
+            "ativo": true
           }
-        ]
+        ],
+        "ativo": true
       },
       {
         "titulo": "Escola Sabatina",
         "href": "/departamentos/escola-sabatina/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Crianças",
         "href": "/departamentos/criancas/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Secretária",
         "href": "/departamentos/secretaria/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Família",
         "href": "/departamentos/familia/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Bom Samaritano",
         "href": "/departamentos/bom-samaritano/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Educação",
         "href": "/departamentos/educacao/",
-        "filhos": []
+        "filhos": [],
+        "ativo": false
       },
       {
         "titulo": "Literário",
         "href": "/departamentos/literario/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       }
-    ]
+    ],
+    "ativo": true
   },
   {
     "titulo": "Doutrinas",
@@ -125,39 +148,47 @@
       {
         "titulo": "Princípios de Fé",
         "href": "/doutrinas/principios-de-fe/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Manual de Igreja",
         "href": "/doutrinas/manual-de-igreja/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Manual de Normas e Funções",
         "href": "/doutrinas/manual-de-normas-e-funcoes/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Evangelismo e liturgia",
         "href": "/doutrinas/evangelismo-e-liturgia/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Renovação de Nossa Fidelidade",
         "href": "/doutrinas/renovacao-de-nossa-fidelidade/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Laodicéia",
         "href": "/doutrinas/laodiceia/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       }
-    ]
+    ],
+    "ativo": true
   },
   {
     "titulo": "Nossa História",
     "href": "/nossa-historia/",
-    "filhos": []
+    "filhos": [],
+    "ativo": false
   },
   {
     "titulo": "Contatos",
@@ -166,29 +197,35 @@
       {
         "titulo": "São Paulo",
         "href": "/contatos/sao-paulo/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Rio de Janeiro",
         "href": "/contatos/rio-de-janeiro/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Belo Horizonte",
         "href": "/contatos/belo-horizonte/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Bahia",
         "href": "/contatos/bahia/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       },
       {
         "titulo": "Amazonas",
         "href": "/contatos/amazonas/",
-        "filhos": []
+        "filhos": [],
+        "ativo": true
       }
-    ]
+    ],
+    "ativo": true
   },
   {
     "titulo": "Diversos",
@@ -205,34 +242,41 @@
               {
                 "titulo": "Cristo e o Natal",
                 "href": "/diversos/diversos/sermoes/cristo-e-o-natal/",
-                "filhos": []
+                "filhos": [],
+                "ativo": true
               },
               {
                 "titulo": "A Oração de Jabez",
                 "href": "/diversos/diversos/sermoes/a-oracao-de-jabez/",
-                "filhos": []
+                "filhos": [],
+                "ativo": true
               },
               {
                 "titulo": "Como o Senhor da Vida dá Vida?",
                 "href": "/diversos/diversos/sermoes/como-o-senhor-da-vida-da-vida/",
-                "filhos": []
+                "filhos": [],
+                "ativo": true
               },
               {
                 "titulo": "Pr. Adalicio",
                 "href": "/diversos/diversos/sermoes/pr-adalicio/",
-                "filhos": []
+                "filhos": [],
+                "ativo": true
               }
-            ]
+            ],
+            "ativo": true
           },
           {
             "titulo": "Bíblia Online",
             "href": "/diversos/diversos/biblia-online/",
-            "filhos": []
+            "filhos": [],
+            "ativo": true
           },
           {
             "titulo": "Estatuto",
             "href": "/diversos/diversos/estatuto/",
-            "filhos": []
+            "filhos": [],
+            "ativo": true
           },
           {
             "titulo": "Nossa História",
@@ -241,27 +285,34 @@
               {
                 "titulo": "Histórico",
                 "href": "/diversos/diversos/nossa-historia/historico/",
-                "filhos": []
+                "filhos": [],
+                "ativo": true
               }
-            ]
+            ],
+            "ativo": true
           },
           {
             "titulo": "Contato",
             "href": "/diversos/diversos/contato/",
-            "filhos": []
+            "filhos": [],
+            "ativo": false
           },
           {
             "titulo": "Testemunhos ELLEN G.WHITE",
             "href": "/diversos/diversos/testemunhos-ellen-g-white/",
-            "filhos": []
+            "filhos": [],
+            "ativo": false
           },
           {
             "titulo": "Protocolo",
             "href": "/diversos/diversos/protocolo/",
-            "filhos": []
+            "filhos": [],
+            "ativo": false
           }
-        ]
+        ],
+        "ativo": true
       }
-    ]
+    ],
+    "ativo": true
   }
 ]

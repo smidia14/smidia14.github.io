@@ -11,7 +11,10 @@ import contatos from "../../data/contatos.json";
 import inicio from "../../data/inicio.json";
 import livraria from "../../data/livraria.json";
 import processados from "../../data/pdfs-processados.json";
-import { menu } from "../../lib/menu";
+import { menu, menuCompleto } from "../../lib/menu";
+import { getCollection } from "astro:content";
+import antigas from "../../data/imagens-antigas.json";
+import { paginasPainel } from "../../lib/paginas-painel";
 
 // materiais da biblioteca, como estão nos arquivos (um por material)
 const arquivos = import.meta.glob<Record<string, unknown>>("../../data/biblioteca/*.json", { eager: true, import: "default" });
@@ -29,7 +32,23 @@ const juntar = (itens: typeof menu, prefixo = "") =>
   });
 juntar(menu);
 
-const dadosIniciais = { materiais, contatos, inicio, livraria, processados: processados.pdfs, paginas };
+// endereços já usados por páginas (para uma página nova não repetir o endereço de outra)
+const rotas = [...(await getCollection("paginas")).map((p) => p.data.rota), ...paginasPainel.map((p) => p.rota)];
+// textos já editados pelo painel (quando o banco ainda não tem, ex.: primeira vez)
+const paginasTexto = Object.fromEntries(paginasPainel.map((p) => [p.rota.replace(/\//g, "--"), p]));
+
+const dadosIniciais = {
+  materiais,
+  contatos,
+  inicio,
+  livraria,
+  menu: menuCompleto,
+  paginasTexto,
+  processados: processados.pdfs,
+  paginas,
+  rotas,
+  imagensAntigas: antigas.imagens,
+};
 ---
 
 <!doctype html>

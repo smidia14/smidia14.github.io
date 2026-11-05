@@ -6,15 +6,19 @@
 //  - Sem nenhum material: aviso discreto "Em breve novos materiais".
 import CartaoMaterial from "./CartaoMaterial.astro";
 import livraria from "../data/livraria.json";
+import { imagemLocal } from "../lib/links";
 import { materiaisDaPagina, paginasComBiblioteca, porSemestre, PAGINA_LIVROS } from "../lib/biblioteca";
 
 interface Props {
   href: string;
+  temTexto?: boolean; // a página tem texto próprio: sem materiais, não mostra o aviso "Em breve"
 }
-const { href } = Astro.props;
+const { href, temTexto = false } = Astro.props;
+const comoComprar = (livraria.comoComprar ?? "").trim();
+const temComoComprar = comoComprar && comoComprar.toUpperCase() !== "PENDENTE";
 const ESCOLA_SABATINA = "/departamentos/escola-sabatina/";
 const lista = materiaisDaPagina(href);
-const vitrine = livraria.livros.map((l) => ({ titulo: l.titulo, capa: l.capa || "padrao", ano: null, semestre: null, slug: "" }));
+const vitrine = livraria.livros.map((l) => ({ titulo: l.titulo, capa: imagemLocal(l.capa) || "padrao", ano: null, semestre: null, slug: "" }));
 // quantas colunas couberem, com capas de pelo menos ~9,5 rem (2 colunas no celular)
 const grade = "grade-materiais";
 ---
@@ -29,10 +33,14 @@ const grade = "grade-materiais";
           </li>
         ))}
       </ul>
-      <details class="como-comprar mt-12">
-        <summary class="botao-material">Como comprar</summary>
-        <p class="mt-4 font-informativo whitespace-pre-line text-suave">{livraria.comoComprar || "PENDENTE"}</p>
-      </details>
+      {
+        temComoComprar && (
+          <details class="como-comprar mt-12">
+            <summary class="botao-material">Como comprar</summary>
+            <p class="mt-4 font-informativo whitespace-pre-line text-suave">{comoComprar}</p>
+          </details>
+        )
+      }
     </section>
   ) : href === ESCOLA_SABATINA ? (
     <section class="biblioteca" aria-label="Lições">
@@ -73,7 +81,7 @@ const grade = "grade-materiais";
           ))}
         </ul>
       </section>
-    ) : (
+    ) : temTexto ? null : (
       <p class="biblioteca-vazia">Em breve novos materiais</p>
     )
   ) : null

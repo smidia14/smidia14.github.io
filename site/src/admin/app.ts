@@ -48,20 +48,43 @@ interface Dados {
     departamentos: { titulo: string; itens: { nome: string; imagem: string; link: string }[] };
   };
   livraria: { _leia?: string; livros: { titulo: string; capa: string }[]; comoComprar: string };
+  menu: ItemMenu[];
+  paginas: Record<string, PaginaTexto>; // textos editados no painel, pelo id (rota com "--" no lugar de "/")
 }
-type Iniciais = Dados & { processados: Record<string, { capa?: string }>; paginas: { titulo: string; href: string }[] };
+/** Uma aba do menu. criadaNoPainel = pode ser excluída (as que vieram do site antigo só se desativam). */
+interface ItemMenu {
+  titulo: string;
+  href: string;
+  filhos: ItemMenu[];
+  ativo?: boolean;
+  criadaNoPainel?: boolean;
+}
+interface PaginaTexto {
+  rota: string;
+  titulo: string;
+  descricao?: string;
+  html: string;
+}
+type Iniciais = Omit<Dados, "paginas"> & {
+  processados: Record<string, { capa?: string }>;
+  paginas: { titulo: string; href: string }[];
+  paginasTexto: Record<string, PaginaTexto>;
+  rotas: string[];
+  imagensAntigas: Record<string, string>;
+};
 
 // ---------------------------------------------------------------------------
 // DADOS
 // ---------------------------------------------------------------------------
 const iniciais: Iniciais = JSON.parse(document.getElementById("dados-iniciais")!.textContent!);
-const DEMO = !nuvem.configurado;
+// ?demo no endereço (só no computador de quem desenvolve): testa as telas sem tocar nos dados reais
+const DEMO = !nuvem.configurado || (location.hostname === "localhost" && new URLSearchParams(location.search).has("demo"));
 const CHAVE_DADOS = "smi-painel-demo-dados";
 const CHAVE_USUARIO = "smi-painel-demo-usuario";
 
 const copiaDoSite = (): Dados => {
-  const { materiais, contatos, inicio, livraria } = structuredClone(iniciais);
-  return { materiais, contatos, inicio, livraria };
+  const { materiais, contatos, inicio, livraria, menu, paginasTexto } = structuredClone(iniciais);
+  return { materiais, contatos, inicio, livraria, menu, paginas: paginasTexto };
 };
 function carregarDemo(): Dados {
   try {
@@ -111,12 +134,22 @@ async function carregarDaNuvem(dono: boolean) {
         contatos: tirarControle(lido.contatos as object) as Dados["contatos"],
         inicio: tirarControle(lido.inicio as object) as Dados["inicio"],
         livraria: tirarControle(lido.livraria as object) as Dados["livraria"],
+        menu: (lido.menu as ItemMenu[] | null) ?? structuredClone(iniciais.menu),
+        paginas: Object.fromEntries(
+          Object.entries(lido.paginas ?? {}).map(([id, pg]) => [id, tirarControle(pg) as unknown as PaginaTexto]),
+        ),
       };
+      // o menu ainda não está no banco (painel preparado antes desta versão): copia o do site
+      if (!lido.menu)
+        await nuvem.gravarMenu(dados.menu).catch(() => {
+          /* sem permissão ainda (regras antigas no Firebase): o menu fica só nesta tela por enquanto */
+        });
     } else if (dono) {
       // primeira vez: o banco está vazio; copia para ele o que já está no site
       raiz.innerHTML = `<p class="painel-carregando">Preparando o painel pela primeira vez…</p>`;
       dados = copiaDoSite();
       await nuvem.preencherPrimeiraVez(dados as unknown as nuvem.DadosNuvem);
+      await nuvem.gravarMenu(dados.menu).catch(() => {});
       avisar("Painel preparado! Os dados do site foram copiados para o painel.");
     } else {
       avisar("O painel ainda não foi preparado. Peça para a responsável entrar primeiro.", "erro");
@@ -134,7 +167,13 @@ function usuarioAtual(): string | null {
 const ehDono = () => situacao.tipo === "dentro" && situacao.dono && !DEMO;
 
 /** O que foi alterado (para gravar só aquilo no banco). */
-type Alvo = { material: string } | { apagar: string } | { site: "contatos" | "inicio" | "livraria" };
+type Alvo =
+  | { material: string }
+  | { apagar: string }
+  | { site: "contatos" | "inicio" | "livraria" }
+  | { menu: true }
+  | { pagina: string }
+  | { apagarPagina: string };
 
 async function salvar(mensagem: string, alvo: Alvo): Promise<boolean> {
   if (DEMO) {
@@ -151,6 +190,9 @@ async function salvar(mensagem: string, alvo: Alvo): Promise<boolean> {
       const m = dados.materiais.find((x) => x.slug === alvo.material)!;
       await nuvem.gravarMaterial(m as unknown as { slug: string } & Record<string, unknown>);
     } else if ("apagar" in alvo) await nuvem.apagarMaterial(alvo.apagar);
+    else if ("menu" in alvo) await nuvem.gravarMenu(dados.menu);
+    else if ("pagina" in alvo) await nuvem.gravarPagina(alvo.pagina, dados.paginas[alvo.pagina]);
+    else if ("apagarPagina" in alvo) await nuvem.apagarPagina(alvo.apagarPagina);
     else await nuvem.gravarSite(alvo.site, dados[alvo.site]);
     avisar(`${mensagem} <span class="painel-aviso-nota">Aparece no site em até 15 minutos.</span>`);
     return true;
@@ -165,7 +207,10 @@ async function guardarImagem(dataUrl: string) {
   return DEMO ? dataUrl : nuvem.guardarImagem(dataUrl);
 }
 /** Endereço para mostrar uma imagem na tela (as enviadas pelo painel vêm do banco). */
-const img = (valor: string | undefined) => (DEMO || !valor ? valor ?? "" : nuvem.enderecoDaImagem(valor, () => desenhar()));
+const img = (valor: string | undefined) => {
+  const v = iniciais.imagensAntigas[valor ?? ""] ?? valor ?? ""; // imagens do site antigo: cópia guardada no site
+  return DEMO || !v ? v : nuvem.enderecoDaImagem(v, () => desenhar());
+};
 
 // ---------------------------------------------------------------------------
 // Utilidades
@@ -250,9 +295,13 @@ const ICONES: Record<string, string> = {
   sair: '<path d="M15 4h4v16h-4"/><path d="M10 8l-4 4 4 4"/><path d="M6 12h10"/>',
   site: '<path d="M14 4h6v6"/><path d="M20 4 10 14"/><path d="M18 14v6H4V6h6"/>',
   lixo: '<path d="M4 7h16"/><path d="M9 7V4h6v3"/><path d="M6 7l1 13h10l1-13"/>',
+  cima: '<path d="m6 15 6-6 6 6"/>',
+  baixo: '<path d="m6 9 6 6 6-6"/>',
   esquerda: '<path d="M19 12H5"/><path d="m11 6-6 6 6 6"/>',
   direita: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
   ok: '<path d="m5 12 5 5 9-10"/>',
+  menu: '<path d="M4 6h16M4 12h16M4 18h10"/>',
+  lapis: '<path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/>',
   equipe: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
   olho: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
 };
@@ -286,6 +335,7 @@ function rota() {
 }
 
 function desenhar() {
+  if (rota().startsWith("pagina/")) lerEditor();
   if (situacao.tipo === "carregando") {
     raiz.innerHTML = `<p class="painel-carregando">Carregando…</p>`;
     return;
@@ -312,6 +362,10 @@ function desenhar() {
   else if (r === "pagina-inicial") raiz.innerHTML = telaPaginaInicial();
   else if (r === "livros") raiz.innerHTML = telaLivros();
   else if (r === "equipe" && ehDono()) raiz.innerHTML = telaEquipe();
+  else if (r === "menu") raiz.innerHTML = telaMenu();
+  else if (r === "aba-nova") raiz.innerHTML = telaAba(null);
+  else if (r.startsWith("aba/")) raiz.innerHTML = telaAba(r.slice(4));
+  else if (r.startsWith("pagina/")) raiz.innerHTML = telaPagina(decodeURIComponent(r.slice(7)));
   else location.hash = "#/";
   raiz.querySelector<HTMLElement>("[data-foco]")?.focus();
 }
@@ -399,6 +453,7 @@ function telaInicio() {
       ${cartao("#/contatos", "contato", "Contatos e redes sociais", "Endereço, telefone, e-mails, Instagram, Facebook…")}
       ${cartao("#/pagina-inicial", "casa", "Página inicial", "Trocar as capas e os cartões da página inicial.")}
       ${cartao("#/livros", "vitrine", "Livros da vitrine", "Livros à venda e o texto de “Como comprar”.")}
+      ${cartao("#/menu", "menu", "Menu e páginas", "Ligar ou desligar abas, mudar de lugar e criar páginas novas.")}
       ${ehDono() ? cartao("#/equipe", "equipe", "Equipe", "Quem pode entrar no painel.") : ""}
     </div>`);
 }
@@ -824,6 +879,228 @@ function telaLivros() {
 }
 
 // ---------------------------------------------------------------------------
+// Menu e páginas
+// ---------------------------------------------------------------------------
+/** Caminho de uma aba na árvore do menu, ex.: "1.3" = 2ª aba do topo, 4ª dentro dela. */
+type Caminho = number[];
+const textoCaminho = (c: Caminho) => c.join(".");
+const lerCaminho = (s: string): Caminho => s.split(".").map(Number);
+function itemPorCaminho(c: Caminho): ItemMenu | undefined {
+  let lista = dados.menu;
+  let item: ItemMenu | undefined;
+  for (const i of c) {
+    item = lista[i];
+    if (!item) return undefined;
+    lista = item.filhos;
+  }
+  return item;
+}
+function listaDoPai(c: Caminho): ItemMenu[] {
+  return c.length === 1 ? dados.menu : itemPorCaminho(c.slice(0, -1))!.filhos;
+}
+const ehExterno = (href: string) => /^https?:\/\//.test(href);
+const idDaPagina = (rota: string) => rota.replace(/\//g, "--");
+const rotaDoHref = (href: string) => href.replace(/^\/|\/$/g, "");
+/** Todas as abas, na ordem, com o caminho e o nível (para listas de escolha). */
+function todasAsAbas(lista = dados.menu, base: Caminho = [], nivel = 0): { item: ItemMenu; caminho: Caminho; nivel: number }[] {
+  return lista.flatMap((item, i) => [{ item, caminho: [...base, i], nivel }, ...todasAsAbas(item.filhos, [...base, i], nivel + 1)]);
+}
+/** Endereços que já existem (para uma página nova não repetir). */
+function enderecoLivre(base: string) {
+  const usados = new Set([...iniciais.rotas.map((r) => `/${r}/`), ...todasAsAbas().map((a) => a.item.href)]);
+  let href = base;
+  for (let n = 2; usados.has(href); n++) href = base.replace(/\/$/, `-${n}/`);
+  return href;
+}
+
+function telaMenu() {
+  const linha = (item: ItemMenu, caminho: Caminho, irmaos: number): string => {
+    const c = textoCaminho(caminho);
+    const ativo = item.ativo !== false;
+    const temTexto = !!dados.paginas[idDaPagina(rotaDoHref(item.href))];
+    return `
+      <li>
+        <div class="aba-linha${ativo ? "" : " desativada"}">
+          <button type="button" class="chave${ativo ? " ligada" : ""}" data-acao="menu-ativo" data-valor="${c}" role="switch" aria-checked="${ativo}" title="${ativo ? "Desativar" : "Ativar"} esta aba"><span></span></button>
+          <span class="aba-nome">
+            <strong>${e(item.titulo)}</strong>
+            <small>${ativo ? "" : "Desativada · "}${ehExterno(item.href) ? "Link para outro site" : e(item.href)}${temTexto ? " · texto editado no painel" : ""}</small>
+          </span>
+          <span class="aba-acoes">
+            <button type="button" class="botao-icone" data-acao="menu-mover" data-valor="${c}" data-dir="-1" title="Subir"${caminho.at(-1) === 0 ? " disabled" : ""}>${icone("cima")}</button>
+            <button type="button" class="botao-icone" data-acao="menu-mover" data-valor="${c}" data-dir="1" title="Descer"${caminho.at(-1) === irmaos - 1 ? " disabled" : ""}>${icone("baixo")}</button>
+            <a href="#/aba/${c}" class="botao botao-claro botao-pequeno">${icone("lapis")} Editar</a>
+          </span>
+        </div>
+        ${item.filhos.length ? `<ul>${item.filhos.map((f, i) => linha(f, [...caminho, i], item.filhos.length)).join("")}</ul>` : ""}
+      </li>`;
+  };
+  return moldura(
+    `
+    <div class="titulo-com-botao">
+      <h1 class="painel-titulo">Menu e páginas</h1>
+      <a href="#/aba-nova" class="botao">${icone("nova")} Nova aba</a>
+    </div>
+    <p class="painel-sub">Desligue as abas que não têm nada, mude a ordem com as setas e use <strong>Editar</strong> para renomear, mudar de lugar ou mexer no texto. As mudanças aparecem no site em até 15 minutos.</p>
+    <section class="painel-folha">
+      <ul class="arvore-menu">${dados.menu.map((item, i) => linha(item, [i], dados.menu.length)).join("")}</ul>
+    </section>`,
+    { href: "#/", texto: "Início" },
+  );
+}
+
+function telaAba(caminhoTexto: string | null) {
+  const nova = caminhoTexto === null;
+  const caminho = nova ? null : lerCaminho(caminhoTexto!);
+  const item = caminho ? itemPorCaminho(caminho) : null;
+  if (!nova && !item) return moldura(`<p>Aba não encontrada.</p>`, { href: "#/menu", texto: "Menu e páginas" });
+  // pode ficar dentro de qualquer aba, menos dela mesma e das que estão dentro dela
+  const proibido = (c: Caminho) =>
+    !!caminho && (textoCaminho(c) === textoCaminho(caminho) || textoCaminho(c).startsWith(textoCaminho(caminho) + "."));
+  const paiAtual = caminho && caminho.length > 1 ? textoCaminho(caminho.slice(0, -1)) : "";
+  const opcoesPai = [
+    `<option value=""${paiAtual === "" ? " selected" : ""}>— No menu principal (topo) —</option>`,
+    ...todasAsAbas()
+      .filter((a) => !proibido(a.caminho) && !ehExterno(a.item.href))
+      .map((a) => `<option value="${textoCaminho(a.caminho)}"${textoCaminho(a.caminho) === paiAtual ? " selected" : ""}>${"  ".repeat(a.nivel).replace(/ /g, "&nbsp;")}${a.nivel ? "› " : ""}${e(a.item.titulo)}${a.item.ativo === false ? " (desativada)" : ""}</option>`),
+  ].join("");
+  const externo = item ? ehExterno(item.href) : false;
+  return moldura(
+    `
+    <h1 class="painel-titulo">${nova ? "Nova aba" : "Editar aba"}</h1>
+    <form class="painel-folha" data-form="aba" data-caminho="${caminhoTexto ?? ""}">
+      <label class="campo"><span>Nome no menu</span><input type="text" name="titulo" value="${e(item?.titulo ?? "")}" required data-foco /></label>
+      <label class="campo"><span>Fica dentro de</span><select name="pai">${opcoesPai}</select>
+        <small>Escolha uma aba para esta virar uma sub-aba dela, ou “menu principal” para ficar no topo.</small></label>
+      ${
+        nova
+          ? `<div class="campo"><span>O que é esta aba?</span><div class="opcoes">
+              <label class="opcao opcao-radio"><input type="radio" name="tipo" value="pagina" checked /> Uma página com texto</label>
+              <label class="opcao opcao-radio"><input type="radio" name="tipo" value="link" /> Um link para outro site</label>
+            </div></div>
+            <label class="campo so-link"><span>Endereço do outro site</span><input type="url" name="link" placeholder="https://…" /></label>`
+          : externo
+            ? `<label class="campo"><span>Endereço do outro site</span><input type="url" name="link" value="${e(item!.href)}" required /></label>`
+            : ""
+      }
+      <label class="campo-check"><input type="checkbox" name="ativo"${item?.ativo === false ? "" : " checked"} /> Aba ativa (aparece no site)</label>
+      <div class="rodape-form">
+        <span class="acoes-secundarias">
+          ${!nova && !externo ? `<a href="#/pagina/${encodeURIComponent(rotaDoHref(item!.href))}" class="botao botao-claro">${icone("lapis")} Editar o texto da página</a>` : ""}
+          ${!nova && item!.criadaNoPainel ? `<button type="button" class="botao botao-perigo" data-acao="excluir-aba">${icone("lixo")} Excluir aba</button>` : ""}
+        </span>
+        <button type="submit" class="botao botao-grande">${nova ? "Criar aba" : "Salvar"}</button>
+      </div>
+      ${!nova && !item!.criadaNoPainel ? `<p class="ajuda">Esta aba veio do site antigo: dá para desativar, mas não excluir.</p>` : ""}
+    </form>`,
+    { href: "#/menu", texto: "Menu e páginas" },
+  );
+}
+
+// ---- Editor de texto das páginas ----
+let editor: { rota: string; titulo: string; descricao: string; html: string; carregando: boolean; original: boolean } | null = null;
+
+/** Abre o texto de uma página: o do painel, se já foi editado; senão o que está publicado no site. */
+async function abrirPagina(rota: string) {
+  const id = idDaPagina(rota);
+  const salvo = dados.paginas[id];
+  const aba = todasAsAbas().find((a) => rotaDoHref(a.item.href) === rota)?.item;
+  editor = { rota, titulo: salvo?.titulo ?? aba?.titulo ?? "", descricao: salvo?.descricao ?? "", html: "", carregando: true, original: !salvo };
+  desenhar();
+  let html = salvo?.html ?? "";
+  if (!salvo) {
+    try {
+      const r = await fetch(`/${rota}/`);
+      if (r.ok) {
+        const pagina = new DOMParser().parseFromString(await r.text(), "text/html");
+        html = pagina.querySelector(".folha .texto")?.innerHTML.trim() ?? "";
+        editor.titulo = pagina.querySelector("h1")?.textContent?.trim() || editor.titulo;
+      }
+    } catch {
+      /* página nova ou sem texto: começa em branco */
+    }
+  }
+  // imagens enviadas pelo painel: mostra a imagem e guarda o código dela para salvar depois
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  for (const im of div.querySelectorAll<HTMLImageElement>('img[src^="painel:"]')) {
+    const codigo = im.getAttribute("src")!;
+    im.dataset.painel = codigo;
+    im.src = DEMO ? "" : await nuvem.carregarImagem(codigo);
+  }
+  editor.html = div.innerHTML;
+  editor.carregando = false;
+  desenhar();
+}
+
+function telaPagina(rota: string) {
+  if (!editor || editor.rota !== rota) {
+    abrirPagina(rota);
+    return moldura(`<p class="painel-carregando">Abrindo o texto…</p>`, { href: "#/menu", texto: "Menu e páginas" });
+  }
+  if (editor.carregando) return moldura(`<p class="painel-carregando">Abrindo o texto…</p>`, { href: "#/menu", texto: "Menu e páginas" });
+  const temVersaoPainel = !!dados.paginas[idDaPagina(rota)];
+  const veioDoSiteAntigo = iniciais.rotas.includes(rota);
+  const botao = (acao: string, rotulo: string, titulo: string) => `<button type="button" class="ferramenta" data-acao="editor" data-valor="${acao}" title="${titulo}">${rotulo}</button>`;
+  return moldura(
+    `
+    <h1 class="painel-titulo">Texto da página</h1>
+    <p class="painel-sub"><a href="/${e(rota)}/" target="_blank" rel="noopener" class="link-simples">${icone("site")} Ver a página no site</a></p>
+    <form class="painel-folha" data-form="pagina" data-rota="${e(rota)}">
+      <label class="campo"><span>Título da página</span><input type="text" name="titulo" value="${e(editor.titulo)}" required /></label>
+      <label class="campo"><span>Frase de apresentação (opcional, aparece embaixo do título)</span><input type="text" name="descricao" value="${e(editor.descricao)}" /></label>
+      <div class="campo"><span>Texto</span>
+        <div class="barra-editor" role="toolbar" aria-label="Formatação">
+          ${botao("h2", "Título", "Título de seção")}
+          ${botao("h3", "Subtítulo", "Subtítulo")}
+          ${botao("p", "Parágrafo", "Texto normal")}
+          ${botao("bold", "<b>N</b>", "Negrito")}
+          ${botao("italic", "<i>I</i>", "Itálico")}
+          ${botao("insertUnorderedList", "• Lista", "Lista com marcadores")}
+          ${botao("insertOrderedList", "1. Lista", "Lista numerada")}
+          ${botao("link", "Link", "Transformar o texto selecionado em link")}
+          ${botao("imagem", "Imagem", "Colocar uma imagem")}
+          ${botao("video", "Vídeo", "Colocar um vídeo do YouTube")}
+          ${botao("removeFormat", "Limpar", "Tirar a formatação do texto selecionado")}
+        </div>
+        <div class="editor-texto texto prose prose-lg" contenteditable="true" data-editor>${editor.html}</div>
+        <input type="file" accept="image/*" hidden data-arquivo="imagem-editor" />
+      </div>
+      <div class="rodape-form">
+        <span class="acoes-secundarias">
+          ${temVersaoPainel && veioDoSiteAntigo ? `<button type="button" class="botao botao-claro" data-acao="texto-original">Voltar ao texto original</button>` : ""}
+        </span>
+        <button type="submit" class="botao botao-grande">Salvar o texto</button>
+      </div>
+    </form>`,
+    { href: "#/menu", texto: "Menu e páginas" },
+  );
+}
+
+/** Guarda o que está no editor (sem salvar no banco), para não perder ao redesenhar a tela. */
+function lerEditor() {
+  const area = raiz.querySelector<HTMLElement>("[data-editor]");
+  const form = raiz.querySelector<HTMLElement>('form[data-form="pagina"]');
+  if (!area || !editor || editor.carregando || form?.dataset.rota !== editor.rota) return;
+  editor.html = area.innerHTML;
+  editor.titulo = raiz.querySelector<HTMLInputElement>('form[data-form="pagina"] input[name="titulo"]')?.value ?? editor.titulo;
+  editor.descricao = raiz.querySelector<HTMLInputElement>('form[data-form="pagina"] input[name="descricao"]')?.value ?? editor.descricao;
+}
+/** HTML do editor pronto para salvar: as imagens do painel voltam a ser "painel:<código>". */
+function htmlParaSalvar(html: string) {
+  const div = document.createElement("div");
+  div.innerHTML = html;
+  for (const im of div.querySelectorAll<HTMLImageElement>("img[data-painel]")) {
+    im.setAttribute("src", im.dataset.painel!);
+    im.removeAttribute("data-painel");
+  }
+  return div.innerHTML;
+}
+function idDoYoutube(link: string) {
+  return link.match(/(?:youtu\.be\/|v=|embed\/|shorts\/)([\w-]{11})/)?.[1] ?? null;
+}
+
+// ---------------------------------------------------------------------------
 // Tela: Equipe (só a dona do painel)
 // ---------------------------------------------------------------------------
 let equipe: { email: string; nome: string }[] | null = null;
@@ -976,6 +1253,66 @@ raiz.addEventListener("click", async (ev) => {
       if (await nuvem.conferirVerificacao()) location.reload();
       else avisar("Ainda não aparece como confirmado. Clique no link do e-mail e tente de novo.", "erro");
       break;
+    // menu e páginas
+    case "menu-ativo": {
+      const item = itemPorCaminho(lerCaminho(valor))!;
+      item.ativo = item.ativo === false;
+      if (!(await salvar(item.ativo ? `Aba “${e(item.titulo)}” ativada.` : `Aba “${e(item.titulo)}” desativada.`, { menu: true }))) item.ativo = !item.ativo;
+      desenhar();
+      break;
+    }
+    case "menu-mover": {
+      const c = lerCaminho(valor);
+      const lista = listaDoPai(c);
+      const i = c.at(-1)!;
+      const j = i + Number(alvo.dataset.dir);
+      [lista[i], lista[j]] = [lista[j], lista[i]];
+      if (!(await salvar("Ordem do menu salva.", { menu: true }))) [lista[i], lista[j]] = [lista[j], lista[i]];
+      desenhar();
+      break;
+    }
+    case "excluir-aba": {
+      const c = lerCaminho(alvo.closest<HTMLElement>("form")!.dataset.caminho!);
+      const item = itemPorCaminho(c)!;
+      if (item.filhos.length) return avisar("Antes de excluir, tire as sub-abas de dentro dela (ou desative a aba).", "erro");
+      if (!confirm(`Excluir a aba “${item.titulo}”? O texto dela também será apagado.`)) return;
+      listaDoPai(c).splice(c.at(-1)!, 1);
+      if (!(await salvar("Aba excluída.", { menu: true }))) return location.reload();
+      const id = idDaPagina(rotaDoHref(item.href));
+      if (dados.paginas[id]) {
+        delete dados.paginas[id];
+        await salvar("Aba excluída.", { apagarPagina: id });
+      }
+      location.hash = "#/menu";
+      break;
+    }
+    case "editor": {
+      const area = raiz.querySelector<HTMLElement>("[data-editor]")!;
+      area.focus();
+      if (valor === "h2" || valor === "h3" || valor === "p") document.execCommand("formatBlock", false, `<${valor}>`);
+      else if (valor === "link") {
+        const sel = window.getSelection();
+        if (!sel || sel.isCollapsed) return avisar("Primeiro selecione com o mouse o texto que vai virar link.", "erro");
+        const href = prompt("Endereço do link (ex.: https://… ou /departamentos/familia/):");
+        if (href) document.execCommand("createLink", false, href.trim());
+      } else if (valor === "imagem") raiz.querySelector<HTMLInputElement>('[data-arquivo="imagem-editor"]')!.click();
+      else if (valor === "video") {
+        const id = idDoYoutube(prompt("Cole o link do vídeo do YouTube:") ?? "");
+        if (!id) return avisar("Esse link não parece ser de um vídeo do YouTube.", "erro");
+        document.execCommand("insertHTML", false, `<div class="incorporado"><iframe src="https://www.youtube.com/embed/${id}" title="Vídeo do YouTube" allowfullscreen></iframe></div><p><br></p>`);
+      } else document.execCommand(valor, false);
+      break;
+    }
+    case "texto-original": {
+      const rota = alvo.closest<HTMLElement>("form")!.dataset.rota!;
+      if (!confirm("Voltar ao texto que veio do site antigo? O texto editado no painel será apagado.")) return;
+      const id = idDaPagina(rota);
+      if (!(await salvar("A página voltou ao texto original.", { apagarPagina: id }))) return;
+      delete dados.paginas[id];
+      editor = null;
+      location.hash = "#/menu";
+      break;
+    }
     case "tirar-pessoa":
       if (!confirm(`Tirar ${valor} da equipe? A pessoa não vai mais conseguir entrar no painel.`)) return;
       try {
@@ -1127,6 +1464,19 @@ raiz.addEventListener("change", async (ev) => {
     return;
   }
   if (!(el instanceof HTMLInputElement) || el.type !== "file" || !el.files?.[0]) return;
+  if (el.dataset.arquivo === "imagem-editor") {
+    try {
+      const leve = await imagemLeve(el.files[0], 1200);
+      const codigo = await guardarImagem(leve);
+      const area = raiz.querySelector<HTMLElement>("[data-editor]")!;
+      area.focus();
+      document.execCommand("insertHTML", false, `<img src="${leve}" alt=""${DEMO ? "" : ` data-painel="${codigo}"`} />`);
+    } catch (erro) {
+      avisar((erro as Error).message, "erro");
+    }
+    el.value = "";
+    return;
+  }
   try {
     const imagem = await guardarImagem(await imagemLeve(el.files[0]));
     if (el.dataset.arquivo === "capa-rascunho") {
@@ -1247,6 +1597,63 @@ raiz.addEventListener("submit", async (ev) => {
     esperando(true);
     await salvar("Alterações salvas.", { site: tipo === "livros" ? "livraria" : "inicio" });
     desenhar();
+  } else if (tipo === "aba") {
+    const titulo = String(f.get("titulo")).trim();
+    const paiTexto = String(f.get("pai"));
+    const ativo = f.get("ativo") === "on";
+    const caminhoTexto = form.dataset.caminho;
+    const destino = paiTexto ? itemPorCaminho(lerCaminho(paiTexto))!.filhos : dados.menu;
+    let item: ItemMenu;
+    const copia = structuredClone(dados.menu); // para desfazer se der erro ao salvar
+    if (!caminhoTexto) {
+      // aba nova: página com texto ou link para fora
+      const ehLink = f.get("tipo") === "link";
+      const link = String(f.get("link") ?? "").trim();
+      if (ehLink && !/^https?:\/\//.test(link)) return avisar("Coloque o endereço completo do outro site (começando com https://).", "erro");
+      const base = paiTexto ? itemPorCaminho(lerCaminho(paiTexto))!.href : "/";
+      const href = ehLink ? link : enderecoLivre(`${base}${slugificar(titulo) || "pagina"}/`);
+      item = { titulo, href, filhos: [], ativo, criadaNoPainel: true };
+      destino.push(item);
+    } else {
+      const c = lerCaminho(caminhoTexto);
+      item = itemPorCaminho(c)!;
+      item.titulo = titulo;
+      item.ativo = ativo;
+      const link = f.get("link");
+      if (link !== null) {
+        if (!/^https?:\/\//.test(String(link).trim())) return avisar("Coloque o endereço completo do outro site (começando com https://).", "erro");
+        item.href = String(link).trim();
+      }
+      // mudou de lugar? (a lista "destino" já foi achada antes de mexer em qualquer coisa)
+      const paiAtual = c.length > 1 ? textoCaminho(c.slice(0, -1)) : "";
+      if (paiAtual !== paiTexto) {
+        listaDoPai(c).splice(c.at(-1)!, 1);
+        destino.push(item);
+      }
+    }
+    esperando(true);
+    if (!(await salvar(caminhoTexto ? "Aba salva." : "Aba criada.", { menu: true }))) {
+      dados.menu = copia;
+      esperando(false);
+      return;
+    }
+    // página nova com texto: já abre o editor
+    if (!caminhoTexto && !ehExterno(item.href)) {
+      editor = { rota: rotaDoHref(item.href), titulo, descricao: "", html: "", carregando: false, original: false };
+      location.hash = `#/pagina/${encodeURIComponent(rotaDoHref(item.href))}`;
+    } else location.hash = "#/menu";
+  } else if (tipo === "pagina") {
+    lerEditor();
+    const rota = form.dataset.rota!;
+    const id = idDaPagina(rota);
+    const anterior = dados.paginas[id];
+    dados.paginas[id] = { rota, titulo: editor!.titulo.trim(), descricao: editor!.descricao.trim(), html: htmlParaSalvar(editor!.html) };
+    esperando(true);
+    if (!(await salvar("Texto salvo.", { pagina: id }))) {
+      if (anterior) dados.paginas[id] = anterior;
+      else delete dados.paginas[id];
+    }
+    esperando(false);
   } else if (tipo === "equipe") {
     const email = String(f.get("email")).trim().toLowerCase();
     const nome = String(f.get("nome")).trim();
@@ -1261,6 +1668,18 @@ raiz.addEventListener("submit", async (ev) => {
       esperando(false);
     }
   }
+});
+
+raiz.addEventListener("paste", (ev) => {
+  if (!(ev.target as HTMLElement).closest("[data-editor]")) return;
+  ev.preventDefault();
+  const texto = ev.clipboardData?.getData("text/plain") ?? "";
+  // cada parágrafo colado vira um parágrafo de verdade
+  const html = texto
+    .split(/\r?\n\s*\r?\n/)
+    .map((par) => `<p>${e(par).replace(/\r?\n/g, "<br>")}</p>`)
+    .join("");
+  document.execCommand("insertHTML", false, html);
 });
 
 window.addEventListener("hashchange", () => {

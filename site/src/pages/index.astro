@@ -33,7 +33,8 @@ const icones: Record<string, string> = {
   "/contatos/": "M12 21s-6.5-5.6-6.5-11a6.5 6.5 0 0 1 13 0C18.5 15.4 12 21 12 21Zm0-8.5a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5Z",
 };
 const externo = (link: string) => /^https?:/.test(link);
-import { linkSeguro } from "../lib/links";
+import { linkSeguro, linkAtual, imagemLocal } from "../lib/links";
+import { desativadas } from "../lib/menu";
 ---
 
 <Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo rodapeColado>
@@ -187,13 +188,13 @@ import { linkSeguro } from "../lib/links";
               {grupo.capas.map((capa, i) => (
                 <li class="surgir" style={`transition-delay:${i * 90}ms`}>
                   <a
-                    href={linkSeguro(capa.link)}
+                    href={linkAtual(capa.link)}
                     class="capa group"
-                    target={externo(capa.link) ? "_blank" : undefined}
-                    rel={externo(capa.link) ? "noopener" : undefined}
+                    target={externo(linkAtual(capa.link)) ? "_blank" : undefined}
+                    rel={externo(linkAtual(capa.link)) ? "noopener" : undefined}
                   >
                     <span class="capa-imagem">
-                      <img src={capa.imagem} alt="" loading="lazy" decoding="async" />
+                      <img src={imagemLocal(capa.imagem)} alt="" loading="lazy" decoding="async" />
                     </span>
                     <span class="mt-4 block font-informativo text-[0.95rem] leading-snug font-semibold text-texto group-hover:text-azul">
                       {capa.legenda}
@@ -223,7 +224,7 @@ import { linkSeguro } from "../lib/links";
         class="surgir block w-full overflow-hidden rounded-2xl ring-1 ring-branco/15 transition-transform duration-300 hover:-translate-y-1 lg:max-w-3xl lg:justify-self-end"
         style="transition-delay:120ms"
       >
-        <img src={inicioDados.transmissoes.imagem} alt="Canal do YouTube" loading="lazy" decoding="async" class="block h-auto w-full" />
+        <img src={imagemLocal(inicioDados.transmissoes.imagem)} alt="Canal do YouTube" loading="lazy" decoding="async" class="block h-auto w-full" />
       </a>
     </div>
   </section>
@@ -237,12 +238,12 @@ import { linkSeguro } from "../lib/links";
       </h2>
       <ul class="mt-10 grid grid-cols-2 gap-4 sm:gap-6 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-7">
         {
-          inicioDados.departamentos.itens.map((dep, i) => (
+          inicioDados.departamentos.itens.filter((dep) => !desativadas.has(dep.link)).map((dep, i) => (
             <li class="surgir" style={`transition-delay:${(i % 4) * 70}ms`}>
-              <a href={linkSeguro(dep.link)} class="cartao-departamento group">
+              <a href={linkAtual(dep.link)} class="cartao-departamento group">
                 <span class="block aspect-[4/3] overflow-hidden bg-branco">
                   <img
-                    src={dep.imagem}
+                    src={imagemLocal(dep.imagem)}
                     alt=""
                     loading="lazy"
                     decoding="async"
