@@ -1,16 +1,48 @@
 ---
-// CATÁLOGO DAS IGREJAS, no topo da página Contatos.
-// Cartões com foto, nome, cidade e pastor; botões para filtrar por estado e busca por nome
-// ou cidade. Sem JavaScript, todos os cartões aparecem (os filtros só escondem cartões).
-// Os dados vêm da Planilha Google (veja src/lib/igrejas.ts).
+// TOPO DA PÁGINA CONTATOS:
+//  1. Escritório central (endereço, telefone, e-mails, WhatsApp): vem de src/data/contatos.json (painel).
+//  2. Catálogo das igrejas, agrupado por estado: cartões com foto, nome, cidade e responsável.
+//     Botões para filtrar por estado e busca por nome ou cidade. Sem JavaScript, tudo aparece
+//     (os filtros só escondem). Os dados vêm da Planilha Google (veja src/lib/igrejas.ts).
+import contatos from "../data/contatos.json";
+import { linkSeguro } from "../lib/links";
 import { igrejas, estados, hrefDaIgreja, ondeFica } from "../lib/igrejas";
+
 const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+const { escritorio } = contatos;
+const whatsDigitos = (contatos.redes.whatsapp ?? "").replace(/\D/g, "");
+const whats = whatsDigitos ? linkSeguro(`https://wa.me/${whatsDigitos}`) : "";
+const telDigitos = (escritorio.telefone ?? "").replace(/\D/g, "");
+const emails = contatos.emails.filter(Boolean);
+const grupos = estados.map((e) => ({ ...e, lista: igrejas.filter((i) => i.uf === e.uf) }));
+const plural = (n: number) => (n === 1 ? "1 igreja" : `${n} igrejas`);
 ---
+
+<section class="escritorio" aria-labelledby="escritorio-titulo">
+  <div class="escritorio-dados">
+    <p class="escritorio-rotulo">Fale conosco</p>
+    <h2 id="escritorio-titulo" class="escritorio-titulo">{escritorio.titulo}</h2>
+    {escritorio.endereco && <p class="escritorio-endereco">{escritorio.endereco}</p>}
+    <ul class="escritorio-lista">
+      {escritorio.telefone && <li><span>Telefone</span>{telDigitos ? <a href={`tel:+55${telDigitos}`}>{escritorio.telefone}</a> : escritorio.telefone}</li>}
+      {emails.map((e) => <li><span>E-mail</span><a href={`mailto:${e}`}>{e}</a></li>)}
+    </ul>
+  </div>
+  {
+    whats && (
+      <a href={whats} target="_blank" rel="noopener" class="escritorio-whats">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 3.2 16.8L2 22l5.3-1.4A11 11 0 0 0 20.5 3.5ZM12 20.1a9 9 0 0 1-4.6-1.3l-.3-.2-3.2.8.9-3.1-.2-.3a9.1 9.1 0 1 1 7.4 4.1Zm5-6.8c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5l-.9-2c-.2-.5-.4-.5-.6-.5h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3Z" /></svg>
+        <span>Conversar no WhatsApp</span>
+      </a>
+    )
+  }
+</section>
 
 <section class="catalogo" aria-labelledby="catalogo-titulo">
   <h2 id="catalogo-titulo" class="catalogo-titulo">Nossas igrejas no Brasil</h2>
   <p class="catalogo-intro">
-    São {igrejas.length} igrejas em {estados.length} estados. Toque em uma igreja para ver o endereço, o mapa, os horários e o contato.
+    São {igrejas.length} igrejas em {estados.length} estados. Escolha um estado ou procure pela cidade, e toque na igreja para ver o
+    endereço, o mapa, os horários e o contato.
   </p>
 
   <div class="catalogo-filtros" data-filtros hidden>
@@ -20,34 +52,43 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
       <input type="search" placeholder="Procurar igreja ou cidade" data-busca autocomplete="off" />
     </label>
     <div class="catalogo-estados" role="group" aria-label="Filtrar por estado">
-      <button type="button" data-uf="" aria-pressed="true">Todos</button>
-      {estados.map((e) => <button type="button" data-uf={e.uf} aria-pressed="false" title={e.nome}>{e.uf}</button>)}
+      <button type="button" data-uf="" aria-pressed="true">Todos <small>{igrejas.length}</small></button>
+      {grupos.map((e) => <button type="button" data-uf={e.uf} aria-pressed="false">{e.nome} <small>{e.total}</small></button>)}
     </div>
   </div>
 
-  <ul class="catalogo-lista">
-    {
-      igrejas.map((i) => (
-        <li data-uf={i.uf} data-texto={busca(`${i.nome} ${i.cidade} ${i.estado} ${i.uf}`)}>
-          <a href={hrefDaIgreja(i)} class="cartao-igreja">
-            <span class="cartao-foto">
-              {i.fotos[0] ? (
-                <img src={i.fotos[0]} alt="" loading="lazy" decoding="async" />
-              ) : (
-                <img src="/marca/simbolo-branco.svg" alt="" class="cartao-sem-foto" />
-              )}
-              <span class="cartao-uf">{i.estado}</span>
-            </span>
-            <span class="cartao-texto">
-              <span class="cartao-nome">{i.nome}</span>
-              <span class="cartao-onde">{ondeFica(i)}</span>
-              {i.pastor && <span class="cartao-pastor">{i.pastor}</span>}
-            </span>
-          </a>
-        </li>
-      ))
-    }
-  </ul>
+  {
+    grupos.map((e) => (
+      <section class="catalogo-estado" data-estado={e.uf} aria-labelledby={`estado-${e.uf}`}>
+        <h3 id={`estado-${e.uf}`} class="catalogo-estado-titulo">
+          {e.nome} <span>{plural(e.total)}</span>
+        </h3>
+        <ul class="catalogo-lista">
+          {e.lista.map((i) => (
+            <li data-texto={busca(`${i.nome} ${i.cidade} ${i.estado} ${i.uf}`)}>
+              <a href={hrefDaIgreja(i)} class="cartao-igreja">
+                <span class="cartao-foto">
+                  {i.fotos[0] ? (
+                    <img src={i.fotos[0]} alt="" loading="lazy" decoding="async" />
+                  ) : (
+                    <img src="/marca/simbolo-branco.svg" alt="" class="cartao-sem-foto" />
+                  )}
+                </span>
+                <span class="cartao-texto">
+                  <span class="cartao-nome">{i.nome}</span>
+                  <span class="cartao-onde">{ondeFica(i)}</span>
+                  {i.pastor && <span class="cartao-pastor">{i.pastor}</span>}
+                  <span class="cartao-ver" aria-hidden="true">
+                    Ver endereço e horários <span>→</span>
+                  </span>
+                </span>
+              </a>
+            </li>
+          ))}
+        </ul>
+      </section>
+    ))
+  }
   <p class="catalogo-vazio" data-vazio hidden>Nenhuma igreja encontrada. Tente outro nome ou cidade.</p>
 </section>
 
@@ -55,7 +96,7 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
   const filtros = document.querySelector<HTMLElement>("[data-filtros]");
   if (filtros) {
     filtros.hidden = false;
-    const itens = [...document.querySelectorAll<HTMLLIElement>(".catalogo-lista li")];
+    const grupos = [...document.querySelectorAll<HTMLElement>("[data-estado]")];
     const botoes = [...filtros.querySelectorAll<HTMLButtonElement>("[data-uf]")];
     const campo = filtros.querySelector<HTMLInputElement>("[data-busca]")!;
     const vazio = document.querySelector<HTMLElement>("[data-vazio]")!;
@@ -63,13 +104,18 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
     const limpar = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
     const aplicar = () => {
       const termo = limpar(campo.value);
-      let visiveis = 0;
-      for (const li of itens) {
-        const mostra = (!uf || li.dataset.uf === uf) && (!termo || (li.dataset.texto ?? "").includes(termo));
-        li.hidden = !mostra;
-        if (mostra) visiveis++;
+      let total = 0;
+      for (const g of grupos) {
+        let noGrupo = 0;
+        for (const li of g.querySelectorAll<HTMLLIElement>("li")) {
+          const mostra = (!uf || g.dataset.estado === uf) && (!termo || (li.dataset.texto ?? "").includes(termo));
+          li.hidden = !mostra;
+          if (mostra) noGrupo++;
+        }
+        g.hidden = noGrupo === 0;
+        total += noGrupo;
       }
-      vazio.hidden = visiveis > 0;
+      vazio.hidden = total > 0;
     };
     for (const b of botoes)
       b.addEventListener("click", () => {
@@ -82,6 +128,97 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
 </script>
 
 <style>
+  /* 1. Escritório central */
+  .escritorio {
+    max-width: 68rem;
+    margin: 0 auto 3.5rem;
+    display: grid;
+    gap: 1.5rem;
+    align-items: center;
+    border-radius: 1.25rem;
+    padding: 1.75rem;
+    color: var(--color-branco);
+    background: linear-gradient(135deg, var(--color-azul-escuro), var(--color-azul) 60%, color-mix(in srgb, var(--color-verde) 55%, var(--color-azul)));
+  }
+  @media (min-width: 768px) {
+    .escritorio {
+      grid-template-columns: minmax(0, 1fr) auto;
+      padding: 2.25rem 2.5rem;
+    }
+  }
+  .escritorio-rotulo {
+    font-family: var(--font-informativo);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--color-dourado-claro);
+  }
+  .escritorio-titulo {
+    margin-top: 0.3rem;
+    font-family: var(--font-titulo);
+    font-size: clamp(1.5rem, 1.2rem + 1vw, 2rem);
+    font-weight: 500;
+  }
+  .escritorio-endereco {
+    margin-top: 0.6rem;
+    white-space: pre-line;
+    font-size: 1.05rem;
+    line-height: 1.5;
+    color: color-mix(in srgb, var(--color-branco) 88%, transparent);
+  }
+  .escritorio-lista {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.6rem 1.75rem;
+    font-size: 0.98rem;
+  }
+  .escritorio-lista li {
+    display: grid;
+  }
+  .escritorio-lista span {
+    font-family: var(--font-informativo);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-azul-claro);
+  }
+  .escritorio-lista a {
+    color: var(--color-branco);
+    text-decoration: underline;
+    text-decoration-color: color-mix(in srgb, var(--color-branco) 40%, transparent);
+    text-underline-offset: 3px;
+    overflow-wrap: anywhere;
+  }
+  .escritorio-lista a:hover {
+    text-decoration-color: var(--color-branco);
+  }
+  .escritorio-whats {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    background: var(--color-branco);
+    padding: 0.85rem 1.5rem;
+    font-family: var(--font-informativo);
+    font-weight: 800;
+    color: var(--color-azul);
+    box-shadow: 0 10px 24px -14px rgb(0 0 0 / 0.5);
+    transition: transform 0.2s;
+  }
+  .escritorio-whats:hover {
+    transform: translateY(-1px);
+  }
+  .escritorio-whats svg {
+    width: 1.35rem;
+    height: 1.35rem;
+    fill: currentColor;
+  }
+
+  /* 2. Catálogo */
   .catalogo {
     margin: 0 auto 3.5rem;
     max-width: 68rem;
@@ -94,14 +231,22 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
   }
   .catalogo-intro {
     margin-top: 0.6rem;
+    max-width: 60ch;
     font-family: var(--font-informativo);
     color: var(--color-suave);
     font-size: 1.05rem;
+    line-height: 1.55;
   }
   .catalogo-filtros {
-    margin-top: 1.5rem;
+    position: sticky;
+    top: 4.5rem;
+    z-index: 5;
+    margin: 1.5rem -0.5rem 0;
+    padding: 0.75rem 0.5rem;
     display: grid;
-    gap: 0.9rem;
+    gap: 0.8rem;
+    background: color-mix(in srgb, var(--color-branco) 94%, transparent);
+    backdrop-filter: blur(6px);
   }
   .catalogo-filtros[hidden] {
     display: none;
@@ -136,18 +281,33 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
   }
   .catalogo-estados {
     display: flex;
-    flex-wrap: wrap;
     gap: 0.45rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    padding-bottom: 0.1rem;
+  }
+  @media (min-width: 768px) {
+    .catalogo-estados {
+      flex-wrap: wrap;
+      overflow: visible;
+    }
   }
   .catalogo-estados button {
+    flex: none;
     border-radius: 999px;
-    padding: 0.4rem 0.95rem;
+    padding: 0.45rem 0.95rem;
     font-family: var(--font-informativo);
-    font-size: 0.9rem;
+    font-size: 0.92rem;
     font-weight: 700;
     color: var(--color-azul);
     box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-azul) 25%, transparent);
     cursor: pointer;
+  }
+  .catalogo-estados button small {
+    margin-left: 0.15rem;
+    font-size: 0.78rem;
+    font-weight: 800;
+    opacity: 0.6;
   }
   .catalogo-estados button:hover {
     background: color-mix(in srgb, var(--color-azul) 7%, transparent);
@@ -157,14 +317,44 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
     color: var(--color-branco);
     box-shadow: none;
   }
+  .catalogo-estado {
+    margin-top: 2.25rem;
+  }
+  .catalogo-estado[hidden],
+  .catalogo-lista li[hidden] {
+    display: none;
+  }
+  .catalogo-estado-titulo {
+    display: flex;
+    align-items: baseline;
+    gap: 0.75rem;
+    padding-bottom: 0.6rem;
+    border-bottom: 1px solid var(--color-linha);
+    font-family: var(--font-titulo);
+    font-size: 1.45rem;
+    font-weight: 600;
+    color: var(--color-azul);
+  }
+  .catalogo-estado-titulo::before {
+    content: "";
+    width: 0.55rem;
+    height: 0.55rem;
+    flex: none;
+    align-self: center;
+    border-radius: 50%;
+    background: var(--color-dourado);
+  }
+  .catalogo-estado-titulo span {
+    font-family: var(--font-informativo);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-suave);
+  }
   .catalogo-lista {
-    margin-top: 1.75rem;
+    margin-top: 1.1rem;
     display: grid;
     gap: 1.1rem;
     grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
-  }
-  .catalogo-lista li[hidden] {
-    display: none;
   }
   .cartao-igreja {
     display: flex;
@@ -198,9 +388,13 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transition: transform 0.4s;
+  }
+  .cartao-igreja:hover .cartao-foto img:not(.cartao-sem-foto) {
+    transform: scale(1.04);
   }
   .cartao-foto img.cartao-sem-foto {
-    width: 32%;
+    width: 30%;
     height: auto;
     position: absolute;
     inset: 0;
@@ -208,26 +402,12 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
     object-fit: contain;
     opacity: 0.9;
   }
-  .cartao-uf {
-    position: absolute;
-    left: 0.7rem;
-    top: 0.7rem;
-    border-radius: 999px;
-    background: rgb(21 77 125 / 0.92);
-    padding: 0.2rem 0.65rem;
-    font-family: var(--font-informativo);
-    font-size: 0.72rem;
-    font-weight: 800;
-    letter-spacing: 0.05em;
-    text-transform: uppercase;
-    color: var(--color-branco);
-  }
   .cartao-texto {
     flex: 1;
     display: grid;
     align-content: start;
     gap: 0.2rem;
-    padding: 0.95rem 1.1rem 1.15rem;
+    padding: 0.95rem 1.1rem 1.1rem;
     border-top: 3px solid var(--color-dourado);
   }
   .cartao-nome {
@@ -248,6 +428,21 @@ const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerC
     font-size: 0.9rem;
     font-weight: 600;
     color: var(--color-texto);
+  }
+  .cartao-ver {
+    margin-top: 0.7rem;
+    font-family: var(--font-informativo);
+    font-size: 0.85rem;
+    font-weight: 800;
+    color: var(--color-azul);
+  }
+  .cartao-ver span {
+    display: inline-block;
+    color: var(--color-verde);
+    transition: transform 0.2s;
+  }
+  .cartao-igreja:hover .cartao-ver span {
+    transform: translateX(3px);
   }
   .catalogo-vazio {
     margin-top: 1.5rem;

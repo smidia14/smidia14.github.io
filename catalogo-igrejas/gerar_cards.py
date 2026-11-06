@@ -1,11 +1,11 @@
 """Gera os cards 1080x1080 do catálogo do WhatsApp em cards/<id>.jpg.
 Uso: python gerar_cards.py            (todas as igrejas)
      python gerar_cards.py gandu manaus  (só algumas)
-Os dados de pastor e horários virão da planilha; por enquanto usa EXEMPLO quando não houver."""
+Os dados vêm da planilha (site/src/data/igrejas.json; rode antes python site/scripts/baixar_igrejas.py)."""
 import sys, subprocess, html, tempfile
 from pathlib import Path
 from PIL import Image
-from dados import IGREJAS, HORARIO_PADRAO
+from dados import HORARIO_PADRAO
 
 PASTA = Path(__file__).parent
 SITE = PASTA.parent / "site"
@@ -15,7 +15,6 @@ SIMBOLO = SITE / "public" / "marca" / "simbolo-branco.svg"
 CHROME = r"C:\Program Files\Google\Chrome\Application\chrome.exe"
 SAIDA = PASTA / "cards"; SAIDA.mkdir(exist_ok=True)
 
-EXEMPLO = {"pastor": "Pr. Nome do Pastor", "horarios": HORARIO_PADRAO}
 
 MODELO = """<!doctype html><html><head><meta charset="utf-8"><style>
 @font-face {{ font-family: Outfit; src: url("{outfit}") format("woff2"); font-weight: 100 900; }}
@@ -58,22 +57,29 @@ IC_PASTOR = icone('<circle cx="12" cy="8" r="4"/><path d="M4 21c0-4 4-6 8-6s8 2 
 IC_HORA = icone('<circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/>')
 IC_LOCAL = icone('<path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/>')
 
-def card(ig, extra=None):
-    id_, nome, cidade, uf, estado, end, cep, fotos, _ = ig
-    extra = extra or EXEMPLO
+def carregar():
+    """As igrejas como estão na planilha (o site baixa em site/src/data/igrejas.json)."""
+    import json
+    return json.loads((SITE / "src/data/igrejas.json").read_text(encoding="utf-8"))["igrejas"]
+
+
+def card(ig):
+    id_, nome, cidade, uf, estado = ig["id"], ig["nome"], ig["cidade"], ig["uf"], ig["estado"]
+    end, cep = ig["endereco"], ig["cep"]
     foto = PASTA / "fotos" / f"{id_}-1.jpg"
-    if fotos:
+    if foto.exists():
         fundo, simb = f'url("{foto.as_uri()}")', ""
     else:  # sem foto: degradê da marca com o símbolo
         fundo = "linear-gradient(160deg, #0E3A60 0%, #154D7D 45%, #83A371 100%)"
         simb = f'<img class="simbolo" src="{SIMBOLO.as_uri()}">'
     mesmo = cidade == nome
     endereco = ", ".join(x for x in [end, (cidade if not mesmo else ""), f"CEP {cep}" if cep else ""] if x) if end else "Endereço em breve"
+    extra = {"pastor": ig["pastor"] or "Responsável em breve", "horarios": ig["horarios"] or HORARIO_PADRAO}
     h = MODELO.format(
         outfit=(FONTES / "outfit/files/outfit-latin-wght-normal.woff2").as_uri(),
         roboto=(FONTES / "roboto/files/roboto-latin-wght-normal.woff2").as_uri(),
         fundo_foto=fundo, simbolo=simb, estado=html.escape(estado.upper()),
-        nome=html.escape(nome), tam_nome=84 if len(nome) <= 16 else 66,
+        nome=html.escape(nome), tam_nome=84 if len(nome) <= 14 else (70 if len(nome) <= 18 else 60),
         cidade_uf=html.escape(f"{cidade} · {uf}" if not mesmo else f"{estado}"),
         pastor=html.escape(extra["pastor"]), horarios=html.escape(extra["horarios"]),
         endereco=html.escape(endereco), logo=LOGO.as_uri(),
@@ -89,6 +95,6 @@ def card(ig, extra=None):
 
 if __name__ == "__main__":
     pedidos = set(sys.argv[1:])
-    for ig in IGREJAS:
-        if not pedidos or ig[0] in pedidos:
+    for ig in carregar():
+        if not pedidos or ig["id"] in pedidos:
             card(ig)

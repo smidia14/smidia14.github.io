@@ -199,38 +199,7 @@
   {
     "titulo": "Contatos",
     "href": "/contatos/",
-    "filhos": [
-      {
-        "titulo": "São Paulo",
-        "href": "/contatos/sao-paulo/",
-        "filhos": [],
-        "ativo": true
-      },
-      {
-        "titulo": "Rio de Janeiro",
-        "href": "/contatos/rio-de-janeiro/",
-        "filhos": [],
-        "ativo": true
-      },
-      {
-        "titulo": "Belo Horizonte",
-        "href": "/contatos/belo-horizonte/",
-        "filhos": [],
-        "ativo": true
-      },
-      {
-        "titulo": "Bahia",
-        "href": "/contatos/bahia/",
-        "filhos": [],
-        "ativo": true
-      },
-      {
-        "titulo": "Amazonas",
-        "href": "/contatos/amazonas/",
-        "filhos": [],
-        "ativo": true
-      }
-    ],
+    "filhos": [],
     "ativo": true
   },
   {

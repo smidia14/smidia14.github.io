@@ -1,7 +1,7 @@
 {
   "_leia": "Endereços do site antigo (smir14.com.br no Webnode) que mudaram: cada um leva sozinho para a página nova. Usado em astro.config.mjs (redirects).",
   "enderecos": {
-    "/contatos/são-paulo/": "/contatos/sao-paulo/",
+    "/contatos/são-paulo/": "/contatos/",
     "/departamento/": "/departamentos/",
     "/departamento/bom-samaritano/": "/departamentos/bom-samaritano/",
     "/departamento/bom-samaritano/photogallerycbm_437071/20/": "/departamentos/bom-samaritano/bom-samaritano-fotos-pagina-3/",
@@ -66,6 +66,11 @@
     "/publicações/semana-do-calvario/": "/download/semana-do-calvario/",
     "/publicações/semana-juvenil/": "/download/semana-juvenil/",
     "/radio-smidiaweb-24hs/": "/transmissoes-ao-vivo/",
-    "/videos-/": "/transmissoes-ao-vivo/"
+    "/videos-/": "/transmissoes-ao-vivo/",
+    "/contatos/sao-paulo/": "/contatos/",
+    "/contatos/rio-de-janeiro/": "/contatos/",
+    "/contatos/belo-horizonte/": "/contatos/",
+    "/contatos/bahia/": "/contatos/",
+    "/contatos/amazonas/": "/contatos/"
   }
 }

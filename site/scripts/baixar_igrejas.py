@@ -36,16 +36,24 @@ def slug(texto):
     return re.sub(r"[^a-z0-9]+", "-", t).strip("-")
 
 
-def telefone(texto):
-    """Devolve (como mostrar, número para links) ou (texto, "") se não der para entender."""
-    d = re.sub(r"\D", "", texto or "")
+def um_telefone(texto):
+    """Um número: devolve (como mostrar, número para links) ou (texto, "") se não der para entender."""
+    d = re.sub(r"\D", "", texto)
     if d.startswith("55") and len(d) in (12, 13):
         d = d[2:]
     if len(d) == 11:
         return f"({d[:2]}) {d[2:7]}-{d[7:]}", "55" + d
     if len(d) == 10:
         return f"({d[:2]}) {d[2:6]}-{d[6:]}", "55" + d
-    return (texto or "").strip(), ""
+    return texto.strip(), ""
+
+
+def telefone(texto):
+    """Um ou mais números na mesma célula ("11 98343-7580 / 11 97255-7165"): mostra todos,
+    e o primeiro número que der para entender vai para os botões de WhatsApp e ligar."""
+    partes = [p for p in re.split(r"\s*(?:/|;|,|\be\b|\bou\b)\s*", texto or "") if re.search(r"\d", p)]
+    lidos = [um_telefone(p) for p in partes]
+    return " / ".join(m for m, _ in lidos), next((n for _, n in lidos if n), "")
 
 
 def link_seguro(url):

@@ -85,6 +85,18 @@ def ler(caminho):
     return documento(r.json())
 
 
+# Abas que saíram do site de vez (mesmo que ainda existam no painel, nunca voltam para o menu).
+# As 5 páginas antigas de contatos por estado foram trocadas pelo catálogo das igrejas (06/11/2026);
+# quem abrir o endereço antigo é levado para /contatos/ (src/data/enderecos-antigos.json).
+ABAS_REMOVIDAS = {
+    "/contatos/sao-paulo/", "/contatos/rio-de-janeiro/", "/contatos/belo-horizonte/", "/contatos/bahia/", "/contatos/amazonas/",
+}
+
+
+def sem_abas_removidas(itens):
+    return [{**i, "filhos": sem_abas_removidas(i.get("filhos") or [])} for i in itens if i.get("href") not in ABAS_REMOVIDAS]
+
+
 def na_ordem(novo, modelo):
     """Mantém a ordem dos campos do arquivo atual (evita mudanças só de ordem no histórico)."""
     if isinstance(novo, dict) and isinstance(modelo, dict):
@@ -166,7 +178,7 @@ def main():
     menu = ler("site/menu")
     if menu and isinstance(menu.get("itens"), list) and menu["itens"]:
         caminho = DADOS / "menu.json"
-        gravar(caminho, na_ordem(menu["itens"], json.loads(caminho.read_text(encoding="utf-8"))))
+        gravar(caminho, na_ordem(sem_abas_removidas(menu["itens"]), json.loads(caminho.read_text(encoding="utf-8"))))
 
     # textos de páginas criados ou editados no painel
     PASTA_PAGINAS.mkdir(exist_ok=True)
