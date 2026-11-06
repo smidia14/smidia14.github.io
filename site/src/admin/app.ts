@@ -769,7 +769,7 @@ function telaContatos() {
 // ---------------------------------------------------------------------------
 // Tela: Transmissões (horários e aviso de culto especial)
 // ---------------------------------------------------------------------------
-const HORARIOS_PADRAO = "Transmitimos ao vivo os cultos de quarta, sábado e domingo, e também cultos especiais e congressos.";
+const HORARIOS_PADRAO = "Quarta e domingo, das 19h30 às 20h30 · Sábado, das 9h30 às 12h. Cultos especiais e congressos também são transmitidos ao vivo.";
 function telaTransmissoes() {
   const t = dados.inicio.transmissoes;
   return moldura(
@@ -779,7 +779,7 @@ function telaTransmissoes() {
     <form class="painel-folha" data-form="transmissoes">
       <label class="campo"><span>Horários dos cultos</span>
         <textarea name="horarios" rows="3" placeholder="${e(HORARIOS_PADRAO)}">${e(t.horarios ?? "")}</textarea>
-        <small>Ex.: Quarta 19h30 · Sábado 9h30 · Domingo 18h. Em branco, aparece: “${e(HORARIOS_PADRAO)}”</small></label>
+        <small>Só mude se os horários mudarem. Em branco, aparece: “${e(HORARIOS_PADRAO)}”</small></label>
       <label class="campo"><span>Aviso de culto especial (opcional)</span>
         <textarea name="aviso" rows="3" placeholder="Ex.: Congresso de Jovens — sexta, sábado e domingo, transmissão ao vivo">${e(t.aviso ?? "")}</textarea>
         <small>Use para congressos e cultos fora do horário. Aparece em destaque enquanto estiver escrito; apague quando passar.</small></label>
