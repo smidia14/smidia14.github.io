@@ -769,7 +769,7 @@ function telaContatos() {
 // ---------------------------------------------------------------------------
 // Tela: Transmissões (horários e aviso de culto especial)
 // ---------------------------------------------------------------------------
-const HORARIOS_PADRAO = "Quarta e domingo, das 19h30 às 20h30 · Sábado, das 9h30 às 12h. Cultos especiais e congressos também são transmitidos ao vivo.";
+const HORARIOS_PADRAO = "Domingo e quarta, às 19h30 · Sábado, às 9h30. Cultos especiais e congressos também são transmitidos ao vivo.";
 function telaTransmissoes() {
   const t = dados.inicio.transmissoes;
   return moldura(
