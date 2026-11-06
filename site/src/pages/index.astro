@@ -35,6 +35,7 @@ const icones: Record<string, string> = {
 const externo = (link: string) => /^https?:/.test(link);
 import { linkSeguro, linkAtual, imagemLocal } from "../lib/links";
 import { desativadas } from "../lib/menu";
+import { horarios, aviso } from "../lib/transmissoes";
 ---
 
 <Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo rodapeColado>
@@ -214,9 +215,23 @@ import { desativadas } from "../lib/menu";
   <section class="relative bg-azul text-branco">
     <Curva de="branco" para="azul" />
     <div class="relative mx-auto grid max-w-site items-center gap-10 px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-24 lg:grid-cols-[1fr_1.15fr] lg:gap-16">
-      <h2 class="surgir titulo-com-arco font-titulo text-3xl leading-tight font-medium text-balance sm:text-5xl xl:text-6xl">
-        {inicioDados.transmissoes.titulo}
-      </h2>
+      <div class="surgir">
+        <h2 class="titulo-com-arco font-titulo text-3xl leading-tight font-medium text-balance sm:text-5xl xl:text-6xl">Transmissões ao vivo</h2>
+        <p class="mt-5 max-w-xl font-informativo text-lg leading-relaxed text-azul-claro sm:text-xl">{horarios}</p>
+        {
+          aviso && (
+            <p class="mt-6 max-w-xl rounded-2xl border-l-4 border-dourado bg-branco/10 px-5 py-4 font-informativo text-lg font-semibold whitespace-pre-line">
+              {aviso}
+            </p>
+          )
+        }
+        <a
+          href="/transmissoes-ao-vivo/"
+          class="mt-8 inline-flex items-center gap-2 rounded-full bg-branco px-6 py-3 font-informativo font-bold text-azul hover:bg-azul-claro"
+        >
+          Assistir às transmissões <span aria-hidden="true">→</span>
+        </a>
+      </div>
       <a
         href={linkSeguro(inicioDados.transmissoes.link)}
         target="_blank"

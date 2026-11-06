@@ -5,12 +5,15 @@
 // aparece aqui; nos outros horários, aparece a transmissão mais recente.
 // (O YouTube não deixa o site perguntar "está ao vivo?" sem uma chave paga ou um servidor.)
 import { CANAL_YOUTUBE } from "../lib/site";
+import { horarios, aviso } from "../lib/transmissoes";
 const listaDoCanal = `UU${CANAL_YOUTUBE.slice(2)}`; // lista "Envios" do canal: troca o UC do começo por UU
 ---
 
 <section class="ao-vivo">
   <div class="ao-vivo-aviso">
-    <p class="ao-vivo-estado"><span class="ao-vivo-ponto" aria-hidden="true"></span> Ao vivo todos os sábados às 9:30</p>
+    <p class="ao-vivo-estado"><span class="ao-vivo-ponto" aria-hidden="true"></span> Transmissões ao vivo</p>
+    <p class="ao-vivo-texto">{horarios}</p>
+    {aviso && <p class="ao-vivo-especial">{aviso}</p>}
     <p class="ao-vivo-texto">
       Quando estivermos ao vivo, a transmissão aparece aqui em primeiro lugar. Nos outros horários, assista às transmissões
       anteriores ou abra o{" "}
@@ -57,6 +60,18 @@ const listaDoCanal = `UU${CANAL_YOUTUBE.slice(2)}`; // lista "Envios" do canal: 
     margin-top: 0.5rem;
     line-height: 1.7;
     color: var(--color-suave);
+  }
+  .ao-vivo-especial {
+    margin: 1rem auto 0.25rem;
+    max-width: 52ch;
+    padding: 0.9rem 1.1rem;
+    border-left: 4px solid var(--color-dourado);
+    border-radius: 0.75rem;
+    background: var(--color-branco);
+    font-family: var(--font-informativo);
+    font-weight: 700;
+    color: var(--color-azul);
+    white-space: pre-line;
   }
   .ao-vivo-texto a {
     color: var(--color-link);

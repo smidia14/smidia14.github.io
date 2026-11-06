@@ -44,7 +44,7 @@ interface Dados {
     acessoRapido: string[];
     literaturas: { titulo: string; capas: Capa[] };
     livrosDiversos: { titulo: string; capas: Capa[] };
-    transmissoes: { titulo: string; imagem: string; link: string };
+    transmissoes: { titulo: string; imagem: string; link: string; horarios?: string; aviso?: string };
     departamentos: { titulo: string; itens: { nome: string; imagem: string; link: string }[] };
   };
   livraria: { _leia?: string; livros: { titulo: string; capa: string }[]; comoComprar: string };
@@ -301,6 +301,7 @@ const ICONES: Record<string, string> = {
   direita: '<path d="M5 12h14"/><path d="m13 6 6 6-6 6"/>',
   ok: '<path d="m5 12 5 5 9-10"/>',
   menu: '<path d="M4 6h16M4 12h16M4 18h10"/>',
+  video: '<rect x="3" y="6" width="13" height="12" rx="2"/><path d="m16 10 5-3v10l-5-3"/>',
   lapis: '<path d="M4 20h4L19 9l-4-4L4 16v4Z"/><path d="m13.5 6.5 4 4"/>',
   equipe: '<circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0"/><path d="M16 4.5a3.5 3.5 0 0 1 0 7"/><path d="M18 14.5a6.5 6.5 0 0 1 3.5 5.5"/>',
   olho: '<path d="M2 12s4-7 10-7 10 7 10 7-4 7-10 7S2 12 2 12Z"/><circle cx="12" cy="12" r="3"/>',
@@ -360,6 +361,7 @@ function desenhar() {
   else if (r.startsWith("material/")) raiz.innerHTML = telaMaterial(decodeURIComponent(r.slice(9)));
   else if (r === "contatos") raiz.innerHTML = telaContatos();
   else if (r === "pagina-inicial") raiz.innerHTML = telaPaginaInicial();
+  else if (r === "transmissoes") raiz.innerHTML = telaTransmissoes();
   else if (r === "livros") raiz.innerHTML = telaLivros();
   else if (r === "equipe" && ehDono()) raiz.innerHTML = telaEquipe();
   else if (r === "menu") raiz.innerHTML = telaMenu();
@@ -451,6 +453,7 @@ function telaInicio() {
       ${cartao("#/nova", "nova", "Nova revista ou lição", "Colocar um PDF novo no site, em poucos passos.", true)}
       ${cartao("#/materiais", "livros", "Materiais publicados", `${visiveis} no site. Corrigir, esconder ou apagar.`)}
       ${cartao("#/contatos", "contato", "Contatos e redes sociais", "Endereço, telefone, e-mails, Instagram, Facebook…")}
+      ${cartao("#/transmissoes", "video", "Transmissões", "Horários dos cultos e aviso de congresso ou culto especial.")}
       ${cartao("#/pagina-inicial", "casa", "Página inicial", "Trocar as capas e os cartões da página inicial.")}
       ${cartao("#/livros", "vitrine", "Livros da vitrine", "Livros à venda e o texto de “Como comprar”.")}
       ${cartao("#/menu", "menu", "Menu e páginas", "Ligar ou desligar abas, mudar de lugar e criar páginas novas.")}
@@ -764,6 +767,32 @@ function telaContatos() {
 }
 
 // ---------------------------------------------------------------------------
+// Tela: Transmissões (horários e aviso de culto especial)
+// ---------------------------------------------------------------------------
+const HORARIOS_PADRAO = "Transmitimos ao vivo os cultos de quarta, sábado e domingo, e também cultos especiais e congressos.";
+function telaTransmissoes() {
+  const t = dados.inicio.transmissoes;
+  return moldura(
+    `
+    <h1 class="painel-titulo">Transmissões</h1>
+    <p class="painel-sub">Aparece na página Transmissões ao Vivo e na página inicial. A transmissão em si aparece sozinha: quando o canal entra ao vivo, ela vira o primeiro vídeo da página.</p>
+    <form class="painel-folha" data-form="transmissoes">
+      <label class="campo"><span>Horários dos cultos</span>
+        <textarea name="horarios" rows="3" placeholder="${e(HORARIOS_PADRAO)}">${e(t.horarios ?? "")}</textarea>
+        <small>Ex.: Quarta 19h30 · Sábado 9h30 · Domingo 18h. Em branco, aparece: “${e(HORARIOS_PADRAO)}”</small></label>
+      <label class="campo"><span>Aviso de culto especial (opcional)</span>
+        <textarea name="aviso" rows="3" placeholder="Ex.: Congresso de Jovens — sexta, sábado e domingo, transmissão ao vivo">${e(t.aviso ?? "")}</textarea>
+        <small>Use para congressos e cultos fora do horário. Aparece em destaque enquanto estiver escrito; apague quando passar.</small></label>
+      <div class="rodape-form">
+        <span class="acoes-secundarias">${t.aviso ? `<button type="button" class="botao botao-claro" data-acao="apagar-aviso">Tirar o aviso</button>` : ""}</span>
+        <button type="submit" class="botao botao-grande">Salvar</button>
+      </div>
+    </form>`,
+    { href: "#/", texto: "Início" },
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Tela: Página inicial (capas e cartões)
 // ---------------------------------------------------------------------------
 function seletorLink(nome: string, valor: string) {
@@ -823,7 +852,8 @@ function telaPaginaInicial() {
       ${
         abaInicio === "transmissoes"
           ? `<section class="painel-folha" data-bloco="transmissoes">
-              <label class="campo"><span>Título</span><input type="text" name="titulo" value="${e(t.titulo)}" /></label>
+              <p class="ajuda">Os horários dos cultos e os avisos de culto especial ficam no cartão <a href="#/transmissoes" class="link-simples">Transmissões</a>.</p>
+              <input type="hidden" name="titulo" value="${e(t.titulo)}" />
               <label class="campo"><span>Link do canal</span><input type="url" name="linkCanal" value="${e(t.link)}" /></label>
               <div class="item-capa item-capa-largo" data-indice="0">
                 <button type="button" class="capa-imagem capa-larga trocar-imagem" data-acao="trocar-imagem">${t.imagem ? `<img src="${e(img(t.imagem))}" alt="" />` : ""}<span class="trocar-texto">Trocar imagem</span></button>
@@ -1313,6 +1343,14 @@ raiz.addEventListener("click", async (ev) => {
       location.hash = "#/menu";
       break;
     }
+    case "apagar-aviso": {
+      const tr = dados.inicio.transmissoes;
+      const antes = tr.aviso;
+      tr.aviso = "";
+      if (!(await salvar("Aviso tirado.", { site: "inicio" }))) tr.aviso = antes;
+      desenhar();
+      break;
+    }
     case "tirar-pessoa":
       if (!confirm(`Tirar ${valor} da equipe? A pessoa não vai mais conseguir entrar no painel.`)) return;
       try {
@@ -1582,6 +1620,14 @@ raiz.addEventListener("submit", async (ev) => {
     });
     esperando(true);
     if (!(await salvar("Alterações salvas.", { material: m.slug }))) Object.assign(m, antes);
+    desenhar();
+  } else if (tipo === "transmissoes") {
+    const tr = dados.inicio.transmissoes;
+    const antes = { horarios: tr.horarios, aviso: tr.aviso };
+    tr.horarios = String(f.get("horarios")).trim();
+    tr.aviso = String(f.get("aviso")).trim();
+    esperando(true);
+    if (!(await salvar("Transmissões salvas.", { site: "inicio" }))) Object.assign(tr, antes);
     desenhar();
   } else if (tipo === "contatos") {
     const c = dados.contatos;
