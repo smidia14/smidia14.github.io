@@ -185,6 +185,12 @@
     "ativo": true
   },
   {
+    "titulo": "Centenário",
+    "href": "/centenario/",
+    "filhos": [],
+    "ativo": true
+  },
+  {
     "titulo": "Nossa História",
     "href": "/nossa-historia/",
     "filhos": [],

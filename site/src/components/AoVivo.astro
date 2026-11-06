@@ -1,0 +1,77 @@
+---
+// QUADRO "AO VIVO" da página Transmissões ao Vivo.
+// Mostra a lista de vídeos do canal SMIdia, do mais novo para o mais antigo. O YouTube atualiza
+// essa lista sozinho: quando a igreja entra ao vivo, a transmissão vira o primeiro vídeo e
+// aparece aqui; nos outros horários, aparece a transmissão mais recente.
+// (O YouTube não deixa o site perguntar "está ao vivo?" sem uma chave paga ou um servidor.)
+import { CANAL_YOUTUBE } from "../lib/site";
+const listaDoCanal = `UU${CANAL_YOUTUBE.slice(2)}`; // lista "Envios" do canal: troca o UC do começo por UU
+---
+
+<section class="ao-vivo">
+  <div class="ao-vivo-aviso">
+    <p class="ao-vivo-estado"><span class="ao-vivo-ponto" aria-hidden="true"></span> Ao vivo todos os sábados às 9:30</p>
+    <p class="ao-vivo-texto">
+      Quando estivermos ao vivo, a transmissão aparece aqui em primeiro lugar. Nos outros horários, assista às transmissões
+      anteriores ou abra o{" "}
+      <a href={`https://www.youtube.com/channel/${CANAL_YOUTUBE}`} target="_blank" rel="noopener">canal SMIdia no YouTube</a>.
+    </p>
+  </div>
+  <div class="ao-vivo-video">
+    <iframe
+      src={`https://www.youtube.com/embed/videoseries?list=${listaDoCanal}`}
+      title="Transmissões do canal SMIdia"
+      loading="lazy"
+      allow="encrypted-media; picture-in-picture; fullscreen"
+      allowfullscreen></iframe>
+  </div>
+</section>
+
+<style>
+  .ao-vivo {
+    max-width: 68ch;
+    margin: 0 auto 3rem;
+  }
+  .ao-vivo-aviso {
+    padding: 1.5rem;
+    border-radius: 1rem 1rem 0 0;
+    background: color-mix(in srgb, var(--color-azul) 6%, var(--color-branco));
+    text-align: center;
+  }
+  .ao-vivo-estado {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    font-family: var(--font-titulo);
+    font-size: 1.3rem;
+    font-weight: 500;
+    color: var(--color-azul);
+  }
+  .ao-vivo-ponto {
+    width: 0.7rem;
+    height: 0.7rem;
+    border-radius: 999px;
+    background: #e53935;
+  }
+  .ao-vivo-texto {
+    margin-top: 0.5rem;
+    line-height: 1.7;
+    color: var(--color-suave);
+  }
+  .ao-vivo-texto a {
+    color: var(--color-link);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
+  .ao-vivo-video {
+    aspect-ratio: 16 / 9;
+    overflow: hidden;
+    border-radius: 0 0 1rem 1rem;
+    background: #000;
+  }
+  .ao-vivo-video iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+</style>
