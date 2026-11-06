@@ -36,6 +36,27 @@ const externo = (link: string) => /^https?:/.test(link);
 import { linkSeguro, linkAtual, imagemLocal } from "../lib/links";
 import { desativadas } from "../lib/menu";
 import { horarios, aviso } from "../lib/transmissoes";
+import { materiais, ordenar, hrefDe } from "../lib/biblioteca";
+import CapaPadrao from "../components/CapaPadrao.astro";
+
+// LITERATURAS: automático. Sempre o material mais novo da biblioteca de cada tipo
+// (a lição da Escola Sabatina para adultos, a Semana de Oração e a Semana de Reavivamento).
+// Quando a equipe publica um novo pelo painel, ele aparece aqui sozinho.
+const maisNovo = (secao: string, publico?: "adulto" | "infantil") =>
+  ordenar(materiais.filter((m) => m.secao === secao && (!publico || m.publico === publico)))[0];
+const literaturas = {
+  titulo: inicioDados.literaturas.titulo || "Literaturas",
+  capas: [
+    [maisNovo("/departamentos/escola-sabatina/", "adulto"), (m: (typeof materiais)[number]) => `Lição ${m.semestre ? `${m.semestre}º semestre ` : ""}${m.ano ?? ""}`.trim()],
+    [maisNovo("/download/semana-de-oracao/"), (m: (typeof materiais)[number]) => `Semana de Oração ${m.ano ?? ""}`.trim()],
+    [maisNovo("/download/semana-de-reavivamento/"), (m: (typeof materiais)[number]) => `Semana de Reavivamento ${m.ano ?? ""}`.trim()],
+  ]
+    .filter(([m]) => m)
+    .map(([m, legenda]) => {
+      const mat = m as (typeof materiais)[number];
+      return { legenda: (legenda as (x: typeof mat) => string)(mat), imagem: mat.capa, link: hrefDe(mat), titulo: mat.titulo, ano: mat.ano };
+    }),
+};
 ---
 
 <Base titulo={NOME_DO_SITE} descricao={inicio.data.descricao} atual="/" cabecalhoSobreArte esconderLogoNoTopo rodapeColado>
@@ -174,7 +195,7 @@ import { horarios, aviso } from "../lib/transmissoes";
          a partir de 1441 px: lado a lado (3 e 4 capas), dividindo a largura toda -->
     <div class="mx-auto max-w-site px-5 pt-10 pb-20 sm:px-8 sm:pt-14 sm:pb-28 min-[1441px]:grid min-[1441px]:grid-cols-[3fr_4fr] min-[1441px]:gap-16">
       {
-        [inicioDados.literaturas, inicioDados.livrosDiversos].map((grupo, g) => (
+        [literaturas, inicioDados.livrosDiversos].map((grupo, g) => (
           <div class:list={[g > 0 && "mt-16 sm:mt-20 min-[1441px]:mt-0!"]}>
             <h2
               class:list={[
@@ -195,7 +216,11 @@ import { horarios, aviso } from "../lib/transmissoes";
                     rel={externo(linkAtual(capa.link)) ? "noopener" : undefined}
                   >
                     <span class="capa-imagem">
-                      <img src={imagemLocal(capa.imagem)} alt="" loading="lazy" decoding="async" />
+                      {capa.imagem === "padrao" ? (
+                        <CapaPadrao titulo={(capa as { titulo?: string }).titulo ?? capa.legenda} ano={(capa as { ano?: string | null }).ano} />
+                      ) : (
+                        <img src={imagemLocal(capa.imagem)} alt="" loading="lazy" decoding="async" />
+                      )}
                     </span>
                     <span class="mt-4 block font-informativo text-[0.95rem] leading-snug font-semibold text-texto group-hover:text-azul">
                       {capa.legenda}

@@ -834,10 +834,9 @@ function blocoCapas(chave: "literaturas" | "livrosDiversos" | "departamentos") {
     </section>`;
 }
 
-let abaInicio: "literaturas" | "livrosDiversos" | "departamentos" | "transmissoes" = "literaturas";
+let abaInicio: "literaturas" | "livrosDiversos" | "departamentos" | "transmissoes" = "livrosDiversos";
 function telaPaginaInicial() {
   const abas: [typeof abaInicio, string][] = [
-    ["literaturas", dados.inicio.literaturas.titulo || "Literaturas"],
     ["livrosDiversos", dados.inicio.livrosDiversos.titulo || "Livros diversos"],
     ["departamentos", dados.inicio.departamentos.titulo || "Departamentos"],
     ["transmissoes", "Transmissões ao vivo"],
@@ -846,7 +845,7 @@ function telaPaginaInicial() {
   return moldura(
     `
     <h1 class="painel-titulo">Página inicial</h1>
-    <p class="painel-sub">Escolha a parte da página inicial que quer mudar.</p>
+    <p class="painel-sub">Escolha a parte da página inicial que quer mudar. A seção <strong>Literaturas</strong> é automática: mostra sempre a lição, a Semana de Oração e a Semana de Reavivamento mais novas da biblioteca.</p>
     <div class="abas">${abas.map(([k, n]) => `<button type="button" class="aba${abaInicio === k ? " escolhida" : ""}" data-acao="aba" data-valor="${k}">${e(n)}</button>`).join("")}</div>
     <form data-form="pagina-inicial">
       ${
