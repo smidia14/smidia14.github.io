@@ -9,6 +9,7 @@ import { getCollection, render } from "astro:content";
 import MoldeInterno from "../layouts/MoldeInterno.astro";
 import Biblioteca from "../components/Biblioteca.astro";
 import AoVivo from "../components/AoVivo.astro";
+import CatalogoIgrejas from "../components/CatalogoIgrejas.astro";
 import { menu, trilhaNoMenu, desativadas, type ItemMenu } from "../lib/menu";
 import { paginasPainel, paginaPainel, htmlLimpo, type PaginaPainel } from "../lib/paginas-painel";
 
@@ -58,6 +59,7 @@ function trilha(): ItemMenu[] {
   <!-- materiais da biblioteca de PDFs (só nas páginas que têm; veja src/lib/biblioteca.ts) -->
   <Biblioteca href={href} temTexto={temTexto} />
   {href === "/transmissoes-ao-vivo/" && <AoVivo />}
+  {href === "/contatos/" && <CatalogoIgrejas />}
 
   <div class="texto prose prose-lg mx-auto max-w-[68ch]">
     {painel ? <Fragment set:html={htmlLimpo(painel.html)} /> : Content && <Content />}

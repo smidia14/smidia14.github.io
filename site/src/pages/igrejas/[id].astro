@@ -1,0 +1,212 @@
+---
+// PÁGINA DE UMA IGREJA, uma para cada linha da Planilha Google (veja src/lib/igrejas.ts).
+// Fotos, endereço com mapa, horários, pastor e os botões de contato (WhatsApp e ligar).
+import MoldeInterno from "../../layouts/MoldeInterno.astro";
+import { menu } from "../../lib/menu";
+import { igrejas, ondeFica, enderecoCompleto, mapaEmbutido, linkDoMapa, linkWhatsApp, type Igreja } from "../../lib/igrejas";
+
+export function getStaticPaths() {
+  return igrejas.map((i) => ({ params: { id: i.id }, props: { i } }));
+}
+
+const { i } = Astro.props as { i: Igreja };
+const href = `/igrejas/${i.id}/`;
+const trilha = [
+  { titulo: menu[0].titulo, href: menu[0].href },
+  { titulo: "Contatos", href: "/contatos/" },
+  { titulo: i.nome, href },
+];
+const mapa = mapaEmbutido(i);
+const abrirMapa = linkDoMapa(i);
+const whats = linkWhatsApp(i);
+const [principal, ...outras] = i.fotos;
+const descricao = `${i.nome === i.cidade ? `Igreja em ${i.cidade}` : `Igreja ${i.nome}, em ${i.cidade}`} (${i.estado})${i.horarios ? `. Cultos: ${i.horarios}` : ""}.`;
+---
+
+<MoldeInterno titulo={i.nome} descricao={descricao} atual={href} trilha={trilha}>
+  <div class="igreja">
+    {
+      principal ? (
+        <figure class="igreja-foto">
+          <img src={principal} alt={`Igreja de ${i.nome}`} decoding="async" />
+        </figure>
+      ) : (
+        <div class="igreja-foto igreja-sem-foto" aria-hidden="true">
+          <img src="/marca/simbolo-branco.svg" alt="" />
+        </div>
+      )
+    }
+
+    <dl class="igreja-dados">
+      <div>
+        <dt>Onde fica</dt>
+        <dd>
+          {i.endereco ? enderecoCompleto(i) : <span class="igreja-breve">Endereço em breve ({i.cidade} - {i.uf})</span>}
+        </dd>
+      </div>
+      {
+        i.horarios && (
+          <div>
+            <dt>Cultos</dt>
+            <dd>{i.horarios}</dd>
+          </div>
+        )
+      }
+      {
+        i.pastor && (
+          <div>
+            <dt>Responsável</dt>
+            <dd>{i.pastor}</dd>
+          </div>
+        )
+      }
+      {
+        i.telefone && (
+          <div>
+            <dt>Contato</dt>
+            <dd>{i.telefone}</dd>
+          </div>
+        )
+      }
+    </dl>
+
+    {
+      (whats || abrirMapa || i.telefoneNumero) && (
+        <div class="igreja-botoes">
+          {whats && (
+            <a href={whats} target="_blank" rel="noopener" class="botao-material igreja-whats">
+              <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M20.5 3.5A11 11 0 0 0 3.2 16.8L2 22l5.3-1.4A11 11 0 0 0 20.5 3.5ZM12 20.1a9 9 0 0 1-4.6-1.3l-.3-.2-3.2.8.9-3.1-.2-.3a9.1 9.1 0 1 1 7.4 4.1Zm5-6.8c-.3-.1-1.6-.8-1.9-.9s-.4-.1-.6.1-.7.9-.8 1-.3.2-.6.1a7.4 7.4 0 0 1-3.7-3.2c-.3-.5.3-.5.8-1.6.1-.2 0-.4 0-.5l-.9-2c-.2-.5-.4-.5-.6-.5h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.4.8 3.2.7a2.8 2.8 0 0 0 1.8-1.3 2.3 2.3 0 0 0 .2-1.3c-.1-.1-.3-.2-.6-.3Z" /></svg>
+              Chamar no WhatsApp
+            </a>
+          )}
+          {i.telefoneNumero && (
+            <a href={`tel:+${i.telefoneNumero}`} class="link-material">
+              Ligar
+            </a>
+          )}
+          {abrirMapa && (
+            <a href={abrirMapa} target="_blank" rel="noopener" class="link-material">
+              Abrir no Google Maps
+            </a>
+          )}
+        </div>
+      )
+    }
+
+    {
+      mapa && (
+        <div class="igreja-mapa">
+          <iframe src={mapa} title={`Mapa: igreja de ${i.nome}`} loading="lazy" referrerpolicy="no-referrer-when-downgrade" />
+        </div>
+      )
+    }
+
+    {
+      outras.length > 0 && (
+        <section class="igreja-galeria" aria-label="Mais fotos">
+          {outras.map((src) => (
+            <img src={src} alt={`Igreja de ${i.nome}`} loading="lazy" decoding="async" />
+          ))}
+        </section>
+      )
+    }
+
+    <p class="igreja-voltar">
+      <a href="/contatos/" class="link-material">← Ver todas as igrejas</a>
+    </p>
+  </div>
+</MoldeInterno>
+
+<style>
+  .igreja {
+    max-width: 52rem;
+    margin: 0 auto;
+  }
+  .igreja-foto {
+    overflow: hidden;
+    border-radius: 1rem;
+    aspect-ratio: 16 / 9;
+    background: var(--color-cinza);
+  }
+  .igreja-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .igreja-sem-foto {
+    display: grid;
+    place-items: center;
+    background: linear-gradient(160deg, var(--color-azul-escuro), var(--color-azul) 50%, var(--color-verde));
+  }
+  .igreja-sem-foto img {
+    width: 22%;
+    height: auto;
+  }
+  .igreja-dados {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1.25rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 14rem), 1fr));
+  }
+  .igreja-dados div {
+    border-left: 3px solid var(--color-dourado);
+    padding-left: 1rem;
+  }
+  .igreja-dados dt {
+    font-family: var(--font-informativo);
+    font-size: 0.8rem;
+    font-weight: 800;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--color-suave);
+  }
+  .igreja-dados dd {
+    margin-top: 0.3rem;
+    font-size: 1.1rem;
+    line-height: 1.5;
+    color: var(--color-texto);
+  }
+  .igreja-breve {
+    color: var(--color-suave);
+  }
+  .igreja-botoes {
+    margin-top: 2rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem 1.5rem;
+  }
+  .igreja-whats svg {
+    width: 1.25rem;
+    height: 1.25rem;
+    fill: currentColor;
+  }
+  .igreja-mapa {
+    margin-top: 2rem;
+    overflow: hidden;
+    border-radius: 1rem;
+    aspect-ratio: 16 / 9;
+    background: var(--color-cinza);
+    box-shadow: inset 0 0 0 1px var(--color-linha);
+  }
+  .igreja-mapa iframe {
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .igreja-galeria {
+    margin-top: 2rem;
+    display: grid;
+    gap: 1rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(100%, 16rem), 1fr));
+  }
+  .igreja-galeria img {
+    width: 100%;
+    aspect-ratio: 4 / 3;
+    object-fit: cover;
+    border-radius: 0.9rem;
+  }
+  .igreja-voltar {
+    margin-top: 2.5rem;
+  }
+</style>

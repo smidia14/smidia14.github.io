@@ -1,0 +1,408 @@
+{
+  "_leia": "Gerado sozinho a partir da Planilha Google 'Catálogo das Igrejas 2026' (scripts/baixar_igrejas.py). Não editar aqui: editar a planilha.",
+  "igrejas": [
+    {
+      "id": "curitiba",
+      "nome": "Curitiba",
+      "cidade": "Curitiba",
+      "uf": "PR",
+      "estado": "Paraná",
+      "endereco": "Rua Sebastião Lima, 217 – Alto do Boqueirão",
+      "cep": "81850-550",
+      "pastor": "Pr. Sabino Gonçalves",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/oN6N1jykmci6jaG7A",
+      "fotos": [
+        "/imagens/igrejas/curitiba-1.webp"
+      ]
+    },
+    {
+      "id": "camboriu",
+      "nome": "Camboriú",
+      "cidade": "Camboriú",
+      "uf": "SC",
+      "estado": "Santa Catarina",
+      "endereco": "Rua Pingo de Ouro, 96 – Monte Alegre",
+      "cep": "88340-000",
+      "pastor": "Pr. Sabino Gonçalves",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/3U8wPvDuG5iXsehS6",
+      "fotos": [
+        "/imagens/igrejas/camboriu-1.webp",
+        "/imagens/igrejas/camboriu-2.webp"
+      ]
+    },
+    {
+      "id": "vila-re",
+      "nome": "Vila Ré",
+      "cidade": "São Paulo",
+      "uf": "SP",
+      "estado": "São Paulo",
+      "endereco": "Rua Santo Henrique, 73 – Vila Ré",
+      "cep": "03664-010",
+      "pastor": "Pr. Pablo Ruiz e Miss. Nailton Almeida",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "(11) 98343-7580",
+      "telefoneNumero": "5511983437580",
+      "mapa": "https://maps.app.goo.gl/52tZMoPusAYA9Zmg9",
+      "fotos": [
+        "/imagens/igrejas/vila-re-1.webp",
+        "/imagens/igrejas/vila-re-2.webp"
+      ]
+    },
+    {
+      "id": "guarulhos",
+      "nome": "Guarulhos",
+      "cidade": "Guarulhos",
+      "uf": "SP",
+      "estado": "São Paulo",
+      "endereco": "Rua Pinhão, 127 – Jardim Santa Maria",
+      "cep": "07273-220",
+      "pastor": "Miss. Sandiel Maravilha",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/BjB917PAmCjXU2uDA",
+      "fotos": [
+        "/imagens/igrejas/guarulhos-1.webp"
+      ]
+    },
+    {
+      "id": "piracicaba",
+      "nome": "Piracicaba",
+      "cidade": "Piracicaba",
+      "uf": "SP",
+      "estado": "São Paulo",
+      "endereco": "Rua Virgílio Furlan, 1097 – Paulicéia",
+      "cep": "13424-080",
+      "pastor": "Miss. Nailton Almeida",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/acmHwHvHj88yP8CU8",
+      "fotos": [
+        "/imagens/igrejas/piracicaba-1.webp",
+        "/imagens/igrejas/piracicaba-2.webp",
+        "/imagens/igrejas/piracicaba-3.webp"
+      ]
+    },
+    {
+      "id": "itaim-paulista",
+      "nome": "Itaim Paulista",
+      "cidade": "São Paulo",
+      "uf": "SP",
+      "estado": "São Paulo",
+      "endereco": "",
+      "cep": "",
+      "pastor": "Miss. Sandiel Maravilha",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "",
+      "fotos": []
+    },
+    {
+      "id": "belo-horizonte",
+      "nome": "Belo Horizonte",
+      "cidade": "Belo Horizonte",
+      "uf": "MG",
+      "estado": "Minas Gerais",
+      "endereco": "Rua Rômulo Bressane Lopes, 45 – Parque São José",
+      "cep": "30570-560",
+      "pastor": "Miss. Kaique Gomes",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/k3TQmKxgXJ5Jrf8T9",
+      "fotos": [
+        "/imagens/igrejas/belo-horizonte-1.webp"
+      ]
+    },
+    {
+      "id": "juiz-de-fora",
+      "nome": "Juiz de Fora",
+      "cidade": "Juiz de Fora",
+      "uf": "MG",
+      "estado": "Minas Gerais",
+      "endereco": "Rua Poeta Daltemar Lima, 350 – Encosta do Sol (Francisco Bernardino)",
+      "cep": "36083-015",
+      "pastor": "Miss. Wagner Barbosa",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/i9SMAzUzoo2Yg5r9A",
+      "fotos": [
+        "/imagens/igrejas/juiz-de-fora-1.webp"
+      ]
+    },
+    {
+      "id": "ouro-fino",
+      "nome": "Ouro Fino",
+      "cidade": "Ouro Fino",
+      "uf": "MG",
+      "estado": "Minas Gerais",
+      "endereco": "Jaci Pereira de Andrade, 200 – Jardim São Paulo",
+      "cep": "37570-000",
+      "pastor": "Pr. Pablo Ruiz e Miss. Nailton Almeida",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "(11) 98343-7580",
+      "telefoneNumero": "5511983437580",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/ouro-fino-1.webp"
+      ]
+    },
+    {
+      "id": "realengo",
+      "nome": "Realengo",
+      "cidade": "Rio de Janeiro",
+      "uf": "RJ",
+      "estado": "Rio de Janeiro",
+      "endereco": "Rua Luiza Barata, 336 – Realengo",
+      "cep": "21770-230",
+      "pastor": "Pr. Samuel Maravilha",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/JLUm63pErEBV7waX6",
+      "fotos": [
+        "/imagens/igrejas/realengo-1.webp"
+      ]
+    },
+    {
+      "id": "paraty",
+      "nome": "Paraty",
+      "cidade": "Paraty",
+      "uf": "RJ",
+      "estado": "Rio de Janeiro",
+      "endereco": "",
+      "cep": "",
+      "pastor": "Pr. Pablo Ruiz e Miss. Nailton Almeida",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "(11) 98343-7580",
+      "telefoneNumero": "5511983437580",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/paraty-1.webp"
+      ]
+    },
+    {
+      "id": "manaus",
+      "nome": "Manaus",
+      "cidade": "Manaus",
+      "uf": "AM",
+      "estado": "Amazonas",
+      "endereco": "Rua Belford Roxo, 539 – Jorge Teixeira",
+      "cep": "69088-139",
+      "pastor": "Pr. Daniel Valverde",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/fzBuKgoEwhmtyiB5A",
+      "fotos": [
+        "/imagens/igrejas/manaus-1.webp",
+        "/imagens/igrejas/manaus-2.webp"
+      ]
+    },
+    {
+      "id": "valenca-ba",
+      "nome": "Valença",
+      "cidade": "Valença",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "Rua Caminho Três, 9b – Urbis",
+      "cep": "45400-000",
+      "pastor": "Miss. Jorge Araújo",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/Wfpt8ZuRMYjzYNR28",
+      "fotos": [
+        "/imagens/igrejas/valenca-ba-1.webp",
+        "/imagens/igrejas/valenca-ba-2.webp"
+      ]
+    },
+    {
+      "id": "capela",
+      "nome": "Capela",
+      "cidade": "Valença",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "Capela de São José – Orobó (zona rural), s/n",
+      "cep": "45400-000",
+      "pastor": "Miss. Jorge Araújo",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/capela-1.webp",
+        "/imagens/igrejas/capela-2.webp"
+      ]
+    },
+    {
+      "id": "colonia",
+      "nome": "Colônia",
+      "cidade": "Valença",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "Região do Orobó (zona rural), s/n",
+      "cep": "45400-000",
+      "pastor": "Miss. Jorge Araújo",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/colonia-1.webp"
+      ]
+    },
+    {
+      "id": "gandu",
+      "nome": "Gandu",
+      "cidade": "Gandu",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "Rua Antônio César de Almeida, 140 – São Serafim",
+      "cep": "45450-000",
+      "pastor": "Miss. José Victor",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/wveeemZobgyTAEct7",
+      "fotos": [
+        "/imagens/igrejas/gandu-1.webp"
+      ]
+    },
+    {
+      "id": "jequie",
+      "nome": "Jequié",
+      "cidade": "Jequié",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "Rua Leur Brito, 269 – Joaquim Romão",
+      "cep": "45200-523",
+      "pastor": "Miss. Eliezer de La Cruz",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "https://maps.app.goo.gl/1KkP9tTMV6DRaPcD6",
+      "fotos": [
+        "/imagens/igrejas/jequie-1.webp",
+        "/imagens/igrejas/jequie-2.webp"
+      ]
+    },
+    {
+      "id": "barra-da-estiva",
+      "nome": "Barra da Estiva",
+      "cidade": "Barra da Estiva",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "BA-142, SI Barro Duro, 50-A – Zona rural Pé do Morro",
+      "cep": "46650-000",
+      "pastor": "Pr. Anailton Santana",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/barra-da-estiva-1.webp",
+        "/imagens/igrejas/barra-da-estiva-2.webp"
+      ]
+    },
+    {
+      "id": "placas",
+      "nome": "Placas",
+      "cidade": "Iramaia",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "Povoado de Cruzlândia",
+      "cep": "46770-000",
+      "pastor": "Pr. Anailton Santana",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/placas-1.webp",
+        "/imagens/igrejas/placas-2.webp"
+      ]
+    },
+    {
+      "id": "vitoria-da-conquista",
+      "nome": "Vitória da Conquista",
+      "cidade": "Vitória da Conquista",
+      "uf": "BA",
+      "estado": "Bahia",
+      "endereco": "",
+      "cep": "",
+      "pastor": "Miss. Eliezer de La Cruz",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "",
+      "telefoneNumero": "",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/vitoria-da-conquista-1.webp"
+      ]
+    },
+    {
+      "id": "valenca-pi",
+      "nome": "Valença do Piauí",
+      "cidade": "Valença do Piauí",
+      "uf": "PI",
+      "estado": "Piauí",
+      "endereco": "Rua General Propício de Castro, 955 – Valentin",
+      "cep": "64300-000",
+      "pastor": "Pr. Esaú Lopez",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "(77) 9827-2389",
+      "telefoneNumero": "557798272389",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/valenca-pi-1.webp",
+        "/imagens/igrejas/valenca-pi-2.webp"
+      ]
+    },
+    {
+      "id": "campina-grande",
+      "nome": "Campina Grande",
+      "cidade": "Campina Grande",
+      "uf": "PB",
+      "estado": "Paraíba",
+      "endereco": "Rua Severino Francisco dos Santos, 212 – Malvinas",
+      "cep": "58434-627",
+      "pastor": "Pr. Esaú Lopez e Anc. Abraão Moura",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "(77) 9827-2389",
+      "telefoneNumero": "557798272389",
+      "mapa": "https://maps.app.goo.gl/vtuepnywqsKrkW9h9",
+      "fotos": [
+        "/imagens/igrejas/campina-grande-1.webp",
+        "/imagens/igrejas/campina-grande-2.webp",
+        "/imagens/igrejas/campina-grande-3.webp"
+      ]
+    },
+    {
+      "id": "princesa-isabel",
+      "nome": "Princesa Isabel",
+      "cidade": "Princesa Isabel",
+      "uf": "PB",
+      "estado": "Paraíba",
+      "endereco": "Rua Alfredo Carlos da Costa (em frente ao SAMU)",
+      "cep": "58755-000",
+      "pastor": "Pr. Esaú Lopez",
+      "horarios": "Dom e Qua 19h30 · Sáb 9h30",
+      "telefone": "(77) 9827-2389",
+      "telefoneNumero": "557798272389",
+      "mapa": "",
+      "fotos": [
+        "/imagens/igrejas/princesa-isabel-1.webp",
+        "/imagens/igrejas/princesa-isabel-2.webp"
+      ]
+    }
+  ]
+}

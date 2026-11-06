@@ -2,6 +2,7 @@
 #
 # A cada 10 minutos o GitHub:
 #   1. lê no Firebase os materiais, contatos, página inicial e livros (site/scripts/baixar_painel.py);
+#      e a lista das igrejas na Planilha Google "Catálogo das Igrejas 2026" (site/scripts/baixar_igrejas.py);
 #   2. se algo mudou, guarda a alteração no histórico do projeto (dá para desfazer depois);
 #   3. e manda publicar o site de novo (workflow "Publicar o site").
 # Se nada mudou, termina em poucos segundos. Também dá para rodar à mão:
@@ -43,6 +44,9 @@ jobs:
           pip install --quiet "requests==2.*"
           python scripts/baixar_painel.py
 
+      - name: Ler a lista das igrejas (Planilha Google)
+        run: python scripts/baixar_igrejas.py
+
       - name: Guardar e publicar (só se algo mudou)
         env:
           GH_TOKEN: ${{ github.token }}
@@ -51,6 +55,6 @@ jobs:
           if git diff --cached --quiet; then echo "Nenhuma alteração no painel."; exit 0; fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git commit -m "Alterações feitas pelo painel da equipe (automático)"
+          git commit -m "Alterações feitas pelo painel ou pela planilha das igrejas (automático)"
           git pull --rebase origin main && git push origin HEAD:main
           gh workflow run publicar.yml --ref main

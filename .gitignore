@@ -28,3 +28,12 @@ pdfs-editora/
 pdfs-organizados/
 # Cópia de histórico do site antigo (fica só neste computador)
 site-antigo-historico/
+
+# Catálogo das igrejas: a planilha tem dados pessoais (telefones) e o projeto é público.
+# Só os scripts vão para o GitHub. A fonte oficial é a Planilha Google (privada).
+catalogo-igrejas/*.xlsx
+catalogo-igrejas/fotos/
+catalogo-igrejas/cards/
+catalogo-igrejas/ids-fotos-drive.json
+catalogo-igrejas/__pycache__/
+catalogo-igrejas/Catálogo das Igrejas/

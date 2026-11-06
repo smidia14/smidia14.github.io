@@ -1,0 +1,257 @@
+---
+// CATÁLOGO DAS IGREJAS, no topo da página Contatos.
+// Cartões com foto, nome, cidade e pastor; botões para filtrar por estado e busca por nome
+// ou cidade. Sem JavaScript, todos os cartões aparecem (os filtros só escondem cartões).
+// Os dados vêm da Planilha Google (veja src/lib/igrejas.ts).
+import { igrejas, estados, hrefDaIgreja, ondeFica } from "../lib/igrejas";
+const busca = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase();
+---
+
+<section class="catalogo" aria-labelledby="catalogo-titulo">
+  <h2 id="catalogo-titulo" class="catalogo-titulo">Nossas igrejas no Brasil</h2>
+  <p class="catalogo-intro">
+    São {igrejas.length} igrejas em {estados.length} estados. Toque em uma igreja para ver o endereço, o mapa, os horários e o contato.
+  </p>
+
+  <div class="catalogo-filtros" data-filtros hidden>
+    <label class="catalogo-busca">
+      <span class="sr-only">Procurar igreja ou cidade</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"></circle><path d="m20 20-3.5-3.5"></path></svg>
+      <input type="search" placeholder="Procurar igreja ou cidade" data-busca autocomplete="off" />
+    </label>
+    <div class="catalogo-estados" role="group" aria-label="Filtrar por estado">
+      <button type="button" data-uf="" aria-pressed="true">Todos</button>
+      {estados.map((e) => <button type="button" data-uf={e.uf} aria-pressed="false" title={e.nome}>{e.uf}</button>)}
+    </div>
+  </div>
+
+  <ul class="catalogo-lista">
+    {
+      igrejas.map((i) => (
+        <li data-uf={i.uf} data-texto={busca(`${i.nome} ${i.cidade} ${i.estado} ${i.uf}`)}>
+          <a href={hrefDaIgreja(i)} class="cartao-igreja">
+            <span class="cartao-foto">
+              {i.fotos[0] ? (
+                <img src={i.fotos[0]} alt="" loading="lazy" decoding="async" />
+              ) : (
+                <img src="/marca/simbolo-branco.svg" alt="" class="cartao-sem-foto" />
+              )}
+              <span class="cartao-uf">{i.estado}</span>
+            </span>
+            <span class="cartao-texto">
+              <span class="cartao-nome">{i.nome}</span>
+              <span class="cartao-onde">{ondeFica(i)}</span>
+              {i.pastor && <span class="cartao-pastor">{i.pastor}</span>}
+            </span>
+          </a>
+        </li>
+      ))
+    }
+  </ul>
+  <p class="catalogo-vazio" data-vazio hidden>Nenhuma igreja encontrada. Tente outro nome ou cidade.</p>
+</section>
+
+<script>
+  const filtros = document.querySelector<HTMLElement>("[data-filtros]");
+  if (filtros) {
+    filtros.hidden = false;
+    const itens = [...document.querySelectorAll<HTMLLIElement>(".catalogo-lista li")];
+    const botoes = [...filtros.querySelectorAll<HTMLButtonElement>("[data-uf]")];
+    const campo = filtros.querySelector<HTMLInputElement>("[data-busca]")!;
+    const vazio = document.querySelector<HTMLElement>("[data-vazio]")!;
+    let uf = "";
+    const limpar = (t: string) => t.normalize("NFD").replace(/[̀-ͯ]/g, "").toLowerCase().trim();
+    const aplicar = () => {
+      const termo = limpar(campo.value);
+      let visiveis = 0;
+      for (const li of itens) {
+        const mostra = (!uf || li.dataset.uf === uf) && (!termo || (li.dataset.texto ?? "").includes(termo));
+        li.hidden = !mostra;
+        if (mostra) visiveis++;
+      }
+      vazio.hidden = visiveis > 0;
+    };
+    for (const b of botoes)
+      b.addEventListener("click", () => {
+        uf = b.dataset.uf ?? "";
+        botoes.forEach((x) => x.setAttribute("aria-pressed", String(x === b)));
+        aplicar();
+      });
+    campo.addEventListener("input", aplicar);
+  }
+</script>
+
+<style>
+  .catalogo {
+    margin: 0 auto 3.5rem;
+    max-width: 68rem;
+  }
+  .catalogo-titulo {
+    font-family: var(--font-titulo);
+    font-size: clamp(1.6rem, 1.2rem + 1.4vw, 2.2rem);
+    font-weight: 500;
+    color: var(--color-azul);
+  }
+  .catalogo-intro {
+    margin-top: 0.6rem;
+    font-family: var(--font-informativo);
+    color: var(--color-suave);
+    font-size: 1.05rem;
+  }
+  .catalogo-filtros {
+    margin-top: 1.5rem;
+    display: grid;
+    gap: 0.9rem;
+  }
+  .catalogo-filtros[hidden] {
+    display: none;
+  }
+  .catalogo-busca {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    border-radius: 999px;
+    background: var(--color-cinza);
+    padding: 0.7rem 1.1rem;
+    max-width: 26rem;
+  }
+  .catalogo-busca:focus-within {
+    outline: 2px solid var(--color-azul);
+  }
+  .catalogo-busca svg {
+    width: 1.2rem;
+    height: 1.2rem;
+    flex: none;
+    fill: none;
+    stroke: var(--color-suave);
+    stroke-width: 2;
+    stroke-linecap: round;
+  }
+  .catalogo-busca input {
+    width: 100%;
+    background: transparent;
+    font-family: var(--font-informativo);
+    font-size: 1rem;
+    outline: none;
+  }
+  .catalogo-estados {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.45rem;
+  }
+  .catalogo-estados button {
+    border-radius: 999px;
+    padding: 0.4rem 0.95rem;
+    font-family: var(--font-informativo);
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--color-azul);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--color-azul) 25%, transparent);
+    cursor: pointer;
+  }
+  .catalogo-estados button:hover {
+    background: color-mix(in srgb, var(--color-azul) 7%, transparent);
+  }
+  .catalogo-estados button[aria-pressed="true"] {
+    background: var(--color-azul);
+    color: var(--color-branco);
+    box-shadow: none;
+  }
+  .catalogo-lista {
+    margin-top: 1.75rem;
+    display: grid;
+    gap: 1.1rem;
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 15rem), 1fr));
+  }
+  .catalogo-lista li[hidden] {
+    display: none;
+  }
+  .cartao-igreja {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 1rem;
+    background: var(--color-branco);
+    box-shadow:
+      0 0 0 1px var(--color-linha),
+      0 10px 24px -20px rgb(14 58 96 / 0.35);
+    transition:
+      transform 0.2s,
+      box-shadow 0.2s;
+  }
+  .cartao-igreja:hover {
+    transform: translateY(-2px);
+    box-shadow:
+      0 0 0 1px color-mix(in srgb, var(--color-azul) 35%, transparent),
+      0 16px 30px -18px rgb(14 58 96 / 0.4);
+  }
+  .cartao-foto {
+    position: relative;
+    display: block;
+    flex: none;
+    overflow: hidden;
+    aspect-ratio: 16 / 10;
+    background: linear-gradient(160deg, var(--color-azul-escuro), var(--color-azul) 50%, var(--color-verde));
+  }
+  .cartao-foto img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+  .cartao-foto img.cartao-sem-foto {
+    width: 32%;
+    height: auto;
+    position: absolute;
+    inset: 0;
+    margin: auto;
+    object-fit: contain;
+    opacity: 0.9;
+  }
+  .cartao-uf {
+    position: absolute;
+    left: 0.7rem;
+    top: 0.7rem;
+    border-radius: 999px;
+    background: rgb(21 77 125 / 0.92);
+    padding: 0.2rem 0.65rem;
+    font-family: var(--font-informativo);
+    font-size: 0.72rem;
+    font-weight: 800;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+    color: var(--color-branco);
+  }
+  .cartao-texto {
+    flex: 1;
+    display: grid;
+    align-content: start;
+    gap: 0.2rem;
+    padding: 0.95rem 1.1rem 1.15rem;
+    border-top: 3px solid var(--color-dourado);
+  }
+  .cartao-nome {
+    font-family: var(--font-titulo);
+    font-size: 1.3rem;
+    font-weight: 600;
+    line-height: 1.15;
+    color: var(--color-azul);
+  }
+  .cartao-onde {
+    font-family: var(--font-informativo);
+    font-size: 0.92rem;
+    color: var(--color-suave);
+  }
+  .cartao-pastor {
+    margin-top: 0.35rem;
+    font-family: var(--font-informativo);
+    font-size: 0.9rem;
+    font-weight: 600;
+    color: var(--color-texto);
+  }
+  .catalogo-vazio {
+    margin-top: 1.5rem;
+    font-family: var(--font-informativo);
+    color: var(--color-suave);
+  }
+</style>
