@@ -30,9 +30,9 @@ const redirects = Object.fromEntries(
 // https://astro.build/config
 export default defineConfig({
   // Endereço do site publicado: usado no sitemap e na imagem de compartilhamento
-  // (WhatsApp/redes). Hoje o site está no GitHub Pages; quando o domínio smir14.com.br
-  // for apontado para ele, troque aqui (e crie o arquivo public/CNAME).
-  site: "https://smidia14.github.io",
+  // (WhatsApp/redes). O site fica no GitHub Pages com o domínio smir14.com.br
+  // (configurado no GitHub e no Registro.br em 19/11/2026; arquivo public/CNAME).
+  site: "https://smir14.com.br",
 
   redirects,
 

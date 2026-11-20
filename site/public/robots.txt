@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://smidia14.github.io/sitemap-index.xml
+Sitemap: https://smir14.com.br/sitemap-index.xml
