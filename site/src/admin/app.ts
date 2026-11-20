@@ -1050,8 +1050,7 @@ async function abrirPagina(rota: string) {
     }
   }
   // imagens enviadas pelo painel: mostra a imagem e guarda o código dela para salvar depois
-  const div = document.createElement("div");
-  div.innerHTML = html;
+  const div = htmlSemPerigo(html);
   for (const im of div.querySelectorAll<HTMLImageElement>('img[src^="painel:"]')) {
     const codigo = im.getAttribute("src")!;
     im.dataset.painel = codigo;
@@ -1060,6 +1059,37 @@ async function abrirPagina(rota: string) {
   editor.html = div.innerHTML;
   editor.carregando = false;
   desenhar();
+}
+
+// SEGURANÇA: o texto salvo é limpo ANTES de aparecer no editor. Sem isso, alguém que gravasse
+// no banco um <img onerror=...> ou <script> faria o código rodar no navegador de quem abrisse a
+// página no painel (por exemplo, a dona) e poderia agir em nome dela.
+const TAGS_PERMITIDAS = new Set(
+  "p br h2 h3 h4 strong b em i u s a ul ol li blockquote img figure figcaption iframe hr table thead tbody tr th td div span".split(" "),
+);
+const ATRIBUTOS_PERMITIDOS = new Set(["href", "src", "alt", "title", "width", "height", "colspan", "rowspan", "allowfullscreen", "data-painel"]);
+function htmlSemPerigo(html: string): HTMLDivElement {
+  // DOMParser monta o texto num documento "morto": nada roda enquanto é analisado
+  const doc = new DOMParser().parseFromString(`<div>${html}</div>`, "text/html");
+  const raiz = doc.body.firstElementChild as HTMLElement;
+  for (const el of [...raiz.querySelectorAll("*")].reverse()) {
+    const tag = el.tagName.toLowerCase();
+    if (!TAGS_PERMITIDAS.has(tag)) {
+      if (["script", "style", "object", "embed", "form", "input", "button", "svg", "math", "template", "link", "meta", "base"].includes(tag)) el.remove();
+      else el.replaceWith(...el.childNodes); // tag estranha: fica só o texto de dentro
+      continue;
+    }
+    for (const at of [...el.attributes]) {
+      const nome = at.name.toLowerCase();
+      const valor = at.value.trim();
+      if (!ATRIBUTOS_PERMITIDOS.has(nome)) el.removeAttribute(at.name);
+      else if ((nome === "href" || nome === "src") && !/^(https?:|mailto:|tel:|\/(?!\/)|#|painel:)/i.test(valor)) el.removeAttribute(at.name);
+    }
+    if (tag === "iframe" && !/^https:\/\/(www\.)?youtube(-nocookie)?\.com\/embed\//i.test(el.getAttribute("src") ?? "")) el.remove();
+  }
+  const div = document.createElement("div");
+  div.append(...[...raiz.childNodes].map((n) => document.importNode(n, true)));
+  return div;
 }
 
 function telaPagina(rota: string) {
@@ -1117,8 +1147,7 @@ function lerEditor() {
 }
 /** HTML do editor pronto para salvar: as imagens do painel voltam a ser "painel:<código>". */
 function htmlParaSalvar(html: string) {
-  const div = document.createElement("div");
-  div.innerHTML = html;
+  const div = htmlSemPerigo(html);
   for (const im of div.querySelectorAll<HTMLImageElement>("img[data-painel]")) {
     im.setAttribute("src", im.dataset.painel!);
     im.removeAttribute("data-painel");

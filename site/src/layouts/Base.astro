@@ -27,6 +27,14 @@ const enderecoCompleto = new URL(Astro.url.pathname, Astro.site).href;
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- SEGURANÇA: o navegador de quem visita só aceita código do próprio site e quadros
+         (vídeos/PDFs/mapas) do YouTube e do Google. Se alguém conseguisse colocar um link
+         para um código ou quadro de outro lugar, o navegador bloquearia. -->
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self' data:; img-src 'self' data: https:; media-src 'self' https:; frame-src https://www.youtube.com https://www.youtube-nocookie.com https://drive.google.com https://docs.google.com https://accounts.google.com https://www.google.com; connect-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'"
+    />
+    <meta name="referrer" content="strict-origin-when-cross-origin" />
     <link rel="preload" href={fonteTitulo} as="font" type="font/woff2" crossorigin />
     <title>{tituloCompleto}</title>
     <meta name="description" content={descricao} />

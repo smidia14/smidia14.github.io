@@ -66,7 +66,11 @@ const dadosPdf = processados.pdfs as Record<string, Processado>;
 function montar(caminho: string, e: Entrada): Material | null {
   const id = idDoDrive(e.linkDrive ?? "");
   if (!id || e.esconder) return null;
-  const p = dadosPdf[id] ?? {};
+  // SEGURANÇA: só entra no site o arquivo que o GitHub baixou e confirmou que é mesmo um PDF
+  // (scripts/processar_pdfs.py). Um link para outro tipo de arquivo (ex.: um programa .exe
+  // disfarçado) nunca aparece para quem visita.
+  if (!dadosPdf[id]?.paginas) return null;
+  const p = dadosPdf[id];
   const capa =
     e.capaModo === "imagem" && e.capaImagem
       ? e.capaImagem
