@@ -47,12 +47,23 @@ jobs:
       - name: Ler a lista das igrejas (Planilha Google)
         run: python scripts/baixar_igrejas.py
 
+      - name: Conferir se algum PDF do Drive foi trocado (segurança)
+        id: drive
+        run: |
+          if python scripts/processar_pdfs.py --so-conferir; then echo "trocado=nao" >> "$GITHUB_OUTPUT"; else echo "trocado=sim" >> "$GITHUB_OUTPUT"; fi
+
       - name: Guardar e publicar (só se algo mudou)
         env:
           GH_TOKEN: ${{ github.token }}
+          DRIVE_TROCADO: ${{ steps.drive.outputs.trocado }}
         run: |
           git add -A src/data public/imagens
-          if git diff --cached --quiet; then echo "Nenhuma alteração no painel."; exit 0; fi
+          if git diff --cached --quiet; then
+            echo "Nenhuma alteração no painel."
+            # um PDF foi trocado no Drive: publica de novo para a conferência completa
+            if [ "$DRIVE_TROCADO" = "sim" ]; then gh workflow run publicar.yml --ref main; fi
+            exit 0
+          fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git commit -m "Alterações feitas pelo painel ou pela planilha das igrejas (automático)"

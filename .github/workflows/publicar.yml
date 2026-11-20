@@ -3,11 +3,11 @@
 # Toda vez que algo é enviado (push) para o ramo "main", o GitHub:
 #   1. baixa o projeto;
 #   2. processa os PDFs NOVOS da biblioteca (capa da 1ª página, tamanho, prévias dos
-#      pesados) e guarda o resultado no próprio projeto (site/scripts/processar_pdfs.py);
+#      pesados) e confere se os antigos continuam iguais no Drive e sem nada perigoso;
+#      guarda o resultado no próprio projeto (site/scripts/processar_pdfs.py);
 #   3. instala o que o site precisa (pasta site/);
 #   4. gera o site final (npm run build → pasta site/dist);
 #   5. publica o resultado no GitHub Pages.
-# Os "Salvar" do painel de administração (Pages CMS, arquivo .pages.yml) também disparam isto.
 # Leva uns 2 a 3 minutos. O andamento aparece na aba "Actions" do repositório.
 # Também dá para publicar de novo à mão: aba Actions → "Publicar o site" → "Run workflow".
 
@@ -17,6 +17,10 @@ on:
   push:
     branches: [main]
   workflow_dispatch:
+  # Uma vez por dia (4h da manhã, horário de Brasília): confere se algum PDF do Drive foi trocado
+  # (segurança — veja scripts/processar_pdfs.py). Se algum foi, ele é conferido de novo ou sai do site.
+  schedule:
+    - cron: "0 7 * * *"
 
 # Permissões: nenhuma por padrão; cada etapa recebe só o que precisa (segurança).
 permissions: {}
